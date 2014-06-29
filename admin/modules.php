@@ -103,6 +103,7 @@ switch ($op)
         }		
 		//Form module save		
 		$obj->setVars(array('mod_name' => $_POST['mod_name'], 
+							'mod_dirname' => preg_replace('/[^a-zA-Z0-9]\s+/', '', strtolower($_POST['mod_dirname'])),
 							'mod_version' => $_POST['mod_version'],
 							'mod_since' => $_POST['mod_since'],
                             'mod_min_php' => $_POST['mod_min_php'], 

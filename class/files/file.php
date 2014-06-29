@@ -105,7 +105,7 @@ class TDMCreateFile extends TDMCreateTableFields
 	
 	/*
 	*  @public function create
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $subdir
 	*  @param string $filename
 	*  @param string $content
@@ -113,12 +113,13 @@ class TDMCreateFile extends TDMCreateTableFields
 	*  @param mixed $notcreated
 	*  @param string $mode
 	*/
-	public function create($module_name, $subdir = null, $filename, $content = '', $created = false, $notcreated = false, $mode = 'w+') {  		
+	public function create($module_dirname, $subdir = null, $filename, $content = '', $created = false, $notcreated = false, $mode = 'w+') 
+	{  		
 		$this->setFileName($filename);
 		$this->created = $created;
 		$this->notcreated = $notcreated;		
 		$this->setMode($mode);
-		$this->setModulePath($module_name);
+		$this->setModulePath($module_dirname);
 		if(!empty($content) && is_string($content)) {
 			$this->setContent($content);
 		}	
@@ -145,10 +146,10 @@ class TDMCreateFile extends TDMCreateTableFields
 		
 	/*
 	*  @private function setModulePath
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*/
-	private function setModulePath($module_name) {
-        $this->upload_path = TDMC_UPLOAD_REPOSITORY_PATH . DIRECTORY_SEPARATOR . strtolower($module_name);
+	private function setModulePath($module_dirname) {
+        $this->upload_path = TDMC_UPLOAD_REPOSITORY_PATH . DIRECTORY_SEPARATOR . $module_dirname;
     }
 	
 	/*
@@ -272,12 +273,12 @@ class TDMCreateFile extends TDMCreateTableFields
 	
 	/*
 	*  @public function getLanguage
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $prefix
 	*  @param string $postfix
 	*/
-	public function getLanguage($module_name, $prefix = '', $postfix = '') {  
-        $lang = '_' . $prefix . '_' . strtoupper($module_name);
+	public function getLanguage($module_dirname, $prefix = '', $postfix = '') {  
+        $lang = '_' . $prefix . '_' . strtoupper($module_dirname);
 		if(!empty($postfix) || $postfix != '_') {	
 			$ret = $lang . '_' . $postfix;
 		} elseif($postfix == '_') {
@@ -291,11 +292,12 @@ class TDMCreateFile extends TDMCreateTableFields
 	/*
 	*  @public function getHeaderFilesComments
 	*  @param string $module
-	*  @param string $file_name
+	*  @param string $filename
 	*/
-	public function getHeaderFilesComments($module, $filename) {    
-				
+	public function getHeaderFilesComments($module, $filename) 
+	{				
 		$name = $module->getVar('mod_name');
+		$dirname = $module->getVar('mod_dirname');
 		$version = $module->getVar('mod_version');
 		$since = $module->getVar('mod_since');
 		$min_xoops = $module->getVar('mod_min_xoops');
@@ -305,9 +307,7 @@ class TDMCreateFile extends TDMCreateTableFields
 		$author_website_url = $module->getVar('mod_author_website_url');
 		$license = $module->getVar('mod_license');  
 		$subversion = $module->getVar('mod_subversion');
-		$date = date('D Y/m/d G:i:s');
-		$package = strtolower($name);
-
+		$date = date('D Y/m/d G:i:s');		
 		$ret = <<<EOT
 <?php
 /*
@@ -324,7 +324,7 @@ class TDMCreateFile extends TDMCreateTableFields
  *
  * @copyright       The XOOPS Project http://sourceforge.net/projects/xoops/
  * @license         {$license}
- * @package         {$package}
+ * @package         {$dirname}
  * @since           {$since}
  * @min_xoops       {$min_xoops}
  * @author          {$author} - Email:<{$author_mail}> - Website:<{$author_website_url}>

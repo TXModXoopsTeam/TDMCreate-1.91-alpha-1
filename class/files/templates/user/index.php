@@ -58,20 +58,20 @@ class TemplatesUserIndex extends HtmlSmartyCodes
 	public function render() {    
 		$module = $this->getModule();
 		$filename = $this->getFileName();
-        $module_name = strtolower($module->getVar('mod_name'));			
-        $language = $this->getLanguage($module_name, 'MA');		
+        $module_dirname = $module->getVar('mod_dirname');			
+        $language = $this->getLanguage($module_dirname, 'MA');		
 		$content = <<<EOT
-<{include file="db:{$module_name}_header.tpl"}>
-<table class="outer {$module_name}">
+<{include file="db:{$module_dirname}_header.tpl"}>
+<table class="outer {$module_dirname}">
     <tbody>
       <tr class="left">
          <td class="pad5"><{\$smarty.const.{$language}INDEX_DESC}></td>
       </tr>
     </tbody>
 </table>
-<{include file="db:{$module_name}_footer.tpl"}>
+<{include file="db:{$module_dirname}_footer.tpl"}>
 EOT;
-		$this->tdmcfile->create($module_name, 'templates', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, 'templates', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

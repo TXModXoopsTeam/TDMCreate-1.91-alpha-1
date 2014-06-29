@@ -53,15 +53,14 @@ class TemplatesAdminPages extends HtmlSmartyCodes
 	}
 	/*
 	*  @private function getTemplatesAdminPagesHeader
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $table
 	*  @param string $language
 	*/
-	private function getTemplatesAdminPagesHeader($module_name, $table, $language) {    
-		$stl_mod_name = strtolower($module_name);
+	private function getTemplatesAdminPagesHeader($module_dirname, $table, $language) {    
 		$table_name = $table->getVar('table_name');
 		$ret = <<<EOT
-<{include file="db:{$stl_mod_name}_header.tpl"}>
+<{include file="db:{$module_dirname}_admin_header.tpl"}>
 <{if {$table_name}_list}>
 	<table class="outer {$table_name} width100">
 		<thead>
@@ -84,13 +83,13 @@ EOT;
 	}
 	/*
 	*  @private function getTemplatesAdminPagesBody
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $table
 	*  @param string $language
 	*/
-	private function getTemplatesAdminPagesBody($module_name, $table, $language) 
+	private function getTemplatesAdminPagesBody($module_dirname, $table, $language) 
 	{    
-		$stl_mod_name = strtolower($module_name);
+		$module_dirname = strtolower($module_dirname);
 		$table_name = $table->getVar('table_name');
 		$ret = <<<EOT
 		<tbody>
@@ -117,7 +116,7 @@ EOT;
 				break;
 				case 9:
 					$ret .= <<<EOT
-					<td class="center"><img src="<{\${$stl_mod_name}_upload_url}>/images/{$table_name}/<{\$list.{$rp_field_name}}>" alt="{$table_name}"></td>\n
+					<td class="center"><img src="<{\${$module_dirname}_upload_url}>/images/{$table_name}/<{\$list.{$rp_field_name}}>" alt="{$table_name}"></td>\n
 EOT;
 				break;
 				default:
@@ -137,13 +136,12 @@ EOT;
 	}
 	/*
 	*  @private function getTemplatesAdminPagesBodyFieldnameEmpty
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $table
 	*  @param string $language
 	*/
-	private function getTemplatesAdminPagesBodyFieldnameEmpty($module_name, $table, $language) 
+	private function getTemplatesAdminPagesBodyFieldnameEmpty($module_dirname, $table, $language) 
 	{ 		
-		$stl_mod_name = strtolower($module_name);
 		$table_name = $table->getVar('table_name');		
 		$ret = <<<EOT
 	<tbody>
@@ -163,7 +161,7 @@ EOT;
 				break;
 				case 9:
 					$ret .= <<<EOT
-					<td class="center"><img src="<{\${$stl_mod_name}_upload_url}>/images/{$table_name}/<{\$list.{$field_name}}>" alt="{$table_name}"></td>\n
+					<td class="center"><img src="<{\${$module_dirname}_upload_url}>/images/{$table_name}/<{\$list.{$field_name}}>" alt="{$table_name}"></td>\n
 EOT;
 				break;
 				default:
@@ -183,10 +181,9 @@ EOT;
 	}
 	/*
 	*  @private function getTemplatesAdminPagesFooter
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*/
-	private function getTemplatesAdminPagesFooter($module_name) {    
-		$stl_mod_name = strtolower($module_name);
+	private function getTemplatesAdminPagesFooter($module_dirname) {    
 		$ret = <<<EOT
 	<div class="clear">&nbsp;</div>
 	<{if \$pagenav}><br />
@@ -205,7 +202,7 @@ EOT;
 <{/if}>
 <br />
 <!-- Footer -->
-<{include file="db:{$stl_mod_name}_footer.tpl"}>
+<{include file="db:{$module_dirname}_admin_footer.tpl"}>
 EOT;
 		return $ret;
 	}
@@ -216,23 +213,20 @@ EOT;
 	public function renderFile($filename) {    
 		$module = $this->getModule();
 		$table = $this->getTable(); 	
-		$module_name = $module->getVar('mod_name');		
-        $stl_mod_name = strtolower($module_name);		
+		$module_dirname = $module->getVar('mod_name');		
 		$table_name = $table->getVar('table_name');
 		$table_fieldname = $table->getVar('table_fieldname');		
-		//
-		$stu_module_name = strtoupper($module_name);	 
-		$language = $this->getLanguage($module_name, 'AM');			
-		$content = $this->getTemplatesAdminPagesHeader($module_name, $table, $language);
+		$language = $this->getLanguage($module_dirname, 'AM');			
+		$content = $this->getTemplatesAdminPagesHeader($module_dirname, $table, $language);
 		// Verify if table_fieldname is not empty
 		if(!empty($table_fieldname)) {
-			$content .= $this->getTemplatesAdminPagesBody($module_name, $table, $language);
+			$content .= $this->getTemplatesAdminPagesBody($module_dirname, $table, $language);
 		} else {
-			$content .= $this->getTemplatesAdminPagesBodyFieldnameEmpty($module_name, $table, $language);
+			$content .= $this->getTemplatesAdminPagesBodyFieldnameEmpty($module_dirname, $table, $language);
 		}
-		$content .= $this->getTemplatesAdminPagesFooter($module_name);
+		$content .= $this->getTemplatesAdminPagesFooter($module_dirname);
 		//
-		$this->tdmcfile->create($module_name, 'templates/admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, 'templates/admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

@@ -84,30 +84,30 @@ SQL;
 	
 	/*
 	*  @public function getHeadDatabaseTable
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $table_name
 	*  @param integer $nb_fields
 	*
 	*  Unused IF NOT EXISTS
 	*/
-	public function getHeadDatabaseTable($module_name, $table_name, $nb_fields) 
+	public function getHeadDatabaseTable($module_dirname, $table_name, $nb_fields) 
 	{    
 		$ret = <<<SQL
 
 #
-# Structure table for `{$module_name}_{$table_name}` {$nb_fields}
+# Structure table for `{$module_dirname}_{$table_name}` {$nb_fields}
 #
 		
-CREATE TABLE `{$module_name}_{$table_name}` (\n
+CREATE TABLE `{$module_dirname}_{$table_name}` (\n
 SQL;
 		return $ret;
 	}
 	
 	/*
 	*  @public function getDatabaseTables
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*/
-	public function getDatabaseTables($module_name) 
+	public function getDatabaseTables($module_dirname) 
 	{    
 		$ret = null;
 		$tables = $this->getTables();
@@ -117,26 +117,26 @@ SQL;
 			$table_name = $tables[$t]->getVar('table_name');
 			$table_autoincrement = $tables[$t]->getVar('table_autoincrement');
 			$nb_fields = $tables[$t]->getVar('table_nbfields');					
-			$ret .= $this->getDatabaseFields($module_name, $table_id, $table_name, $table_autoincrement, $nb_fields);
+			$ret .= $this->getDatabaseFields($module_dirname, $table_id, $table_name, $table_autoincrement, $nb_fields);
 		}		
 		return $ret;
 	}
 	
 	/*
 	*  @public function getDatabaseFields
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $table_name
 	*  @param boolean $table_autoincrement
 	*  @param integer $nb_fields
 	*/
-	public function getDatabaseFields($module_name, $table_id, $table_name, $table_autoincrement, $nb_fields) 
+	public function getDatabaseFields($module_dirname, $table_id, $table_name, $table_autoincrement, $nb_fields) 
 	{    		
 		$ret = null; $j = 0; $comma = array(); $row = array();
         $fields = $this->getTableFields($table_id);		
 		foreach(array_keys($fields) as $f) 
 		{
 			// Creation of database table  
-			$ret = $this->getHeadDatabaseTable($module_name, $table_name, $nb_fields);
+			$ret = $this->getHeadDatabaseTable($module_dirname, $table_name, $nb_fields);
 			$field_name = $fields[$f]->getVar('field_name');
 			$field_type = $fields[$f]->getVar('field_type');
 			$field_value = $fields[$f]->getVar('field_value');
@@ -317,10 +317,11 @@ SQL;
 	public function render() {    
 		$module = $this->getModule();		
 		$filename = $this->getFileName();
-		$module_name = strtolower($module->getVar('mod_name'));	
+		$module_name = strtolower($module->getVar('mod_name'));
+        $module_dirname = strtolower($module->getVar('mod_name'));		
 		$content = $this->getHeaderSqlComments($module_name);
-		$content .= $this->getDatabaseTables($module_name);
-		$this->tdmcfile->create($module_name, 'sql', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$content .= $this->getDatabaseTables($module_dirname);
+		$this->tdmcfile->create($module_dirname, 'sql', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

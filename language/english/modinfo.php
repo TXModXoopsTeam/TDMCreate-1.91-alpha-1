@@ -33,6 +33,9 @@ define('_MI_TDMCREATE_EDITOR', "Editor");
 define('_MI_TDMCREATE_EDITOR_DESC', "Select an editor for the description");
 //1.381
 define('_MI_TDMCREATE_MODULE_NAME', "Module Name");
+// Added in version 1.91
+define('_MI_TDMCREATE_MODULE_DIRNAME', "Directory Name");
+// ---------------------
 define('_MI_TDMCREATE_MODULE_VERSION', "Module Version");
 define('_MI_TDMCREATE_MODULE_SINCE', "Module Since");
 define('_MI_TDMCREATE_MODULE_DESC', "Module Description");

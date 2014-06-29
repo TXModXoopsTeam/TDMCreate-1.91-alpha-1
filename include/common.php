@@ -89,6 +89,7 @@ include_once TDMC_PATH . $cfta .'header.php';
 include_once TDMC_PATH . $cfta .'index.php';
 include_once TDMC_PATH . $cfta .'footer.php';
 include_once TDMC_PATH . $cfta .'pages.php';
+include_once TDMC_PATH . $cfta .'permissions.php';
 include_once TDMC_PATH . $cftb .'blocks.php';
 include_once TDMC_PATH . $cftu .'header.php';
 include_once TDMC_PATH . $cftu .'index.php';

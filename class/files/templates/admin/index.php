@@ -58,16 +58,16 @@ class TemplatesAdminIndex extends TDMCreateFile
 	public function render() { 		
 		$module = $this->getModule();
 		$filename = $this->getFileName();
-		$module_name = strtolower($module->getVar('mod_name'));				
+		$module_dirname = $module->getVar('mod_dirname');				
 		$content = <<<EOT
 <!-- Header -->
-<{includeq file="db:{$module_name}_header.tpl"}>
+<{includeq file="db:{$module_dirname}_admin_header.tpl"}>
 <!-- Index Page -->
 <div class="top"><{\$index}></div>
 <!-- Footer -->
-<{includeq file="db:{$module_name}_footer.tpl"}>
+<{includeq file="db:{$module_dirname}_admin_footer.tpl"}>
 EOT;
-		$this->tdmcfile->create($module_name, 'templates/admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, 'templates/admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

@@ -58,7 +58,7 @@ class IncludeJquery extends TDMCreateFile
 	public function render() { 		
 		$module = $this->getModule();		
 		$filename = $this->getFileName();
-		$module_name = $module->getVar('mod_name');	
+		$module_dirname = $module->getVar('mod_dirname');	
 		//$content = $this->getHeaderFilesComments($module, $filename);
 		$content = <<<EOT
 $(document).ready(function(){
@@ -68,7 +68,7 @@ $(document).ready(function(){
 	$( ".toolbar" ).css("color","#000").buttonset();       
 });
 EOT;
-		$this->tdmcfile->create($module_name, 'assets/js', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, 'assets/js', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

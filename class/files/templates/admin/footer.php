@@ -58,10 +58,11 @@ class TemplatesAdminFooter extends TDMCreateFile
 	public function render() { 		
 		$module = $this->getModule();
 		$filename = $this->getFileName();
-		$module_name = strtolower($module->getVar('mod_name'));
+		$module_name = $module->getVar('mod_name');
+		$module_dirname = $module->getVar('mod_dirname');
 		$support_name = $module->getVar('mod_support_name');
 		$support_url = $module->getVar('mod_support_url');
-		$language = $this->getLanguage($module_name, 'AM');		
+		$language = $this->getLanguage($module_dirname, 'AM');		
 		$content = <<<EOT
 <div class='center'>
     <a href='http://www.xoops.org' title='Visit XOOPS' target='_blank'><img src='<{xoModuleIcons32 xoopsmicrobutton.gif}>' alt='XOOPS' /></a>
@@ -70,7 +71,7 @@ class TemplatesAdminFooter extends TDMCreateFile
             <a href='{$support_url}' title='Visit {$support_name}' class='tooltip' rel='external'>{$support_name}</a>
 </div>
 EOT;
-		$this->tdmcfile->create($module_name, 'templates/admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, 'templates/admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

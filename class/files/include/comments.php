@@ -58,13 +58,13 @@ class IncludeComments extends TDMCreateFile
 	*/
 	public function renderCommentsIncludes($module, $filename) 
 	{		
-		$module_name = strtolower($module->getVar('mod_name'));
+		$module_dirname = $module->getVar('mod_dirname');
 		$content = $this->getHeaderFilesComments($module, $filename.'.php');
 		$content .= <<<EOT
 include_once '../../mainfile.php';
 include_once XOOPS_ROOT_PATH.'/include/{$filename}.php';
 EOT;
-		$this->tdmcfile->create($module_name, 'include', $filename.'.php', $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, 'include', $filename.'.php', $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();	
 	}
 	/*
@@ -75,7 +75,7 @@ EOT;
 	public function renderCommentsNew($module, $filename) 
 	{ 			
 		$table = $this->getTable();
-		$module_name = strtolower($module->getVar('mod_name'));
+		$module_dirname = strtolower($module->getVar('mod_dirname'));
 		$table_name = $table->getVar('table_name');
 		$table_fieldname = $table->getVar('table_fieldname');
 		$fpmf = null;
@@ -89,16 +89,16 @@ EOT;
 		$content = $this->getHeaderFilesComments($module, $filename.'.php');
 		$content .= <<<EOT
 include '../../mainfile.php';
-include_once XOOPS_ROOT_PATH.'/modules/{$module_name}/class/{$table_name}.php';
+include_once XOOPS_ROOT_PATH.'/modules/{$module_dirname}/class/{$table_name}.php';
 \$com_itemid = isset(\$_REQUEST['com_itemid']) ? intval(\$_REQUEST['com_itemid']) : 0;
 if (\$com_itemid > 0) {
-	\${$table_name}Handler =& xoops_getModuleHandler('{$table_name}', '{$module_name}');
+	\${$table_name}Handler =& xoops_getModuleHandler('{$table_name}', '{$module_dirname}');
 	\${$table_name} = \${$table_name}handler->get(\$com_itemid);
 	\$com_replytitle = \${$table_name}->getVar('{$fpmf}');
 	include XOOPS_ROOT_PATH.'/include/{$filename}.php';
 }
 EOT;
-		$this->tdmcfile->create($module_name, 'include', $filename.'.php', $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, 'include', $filename.'.php', $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 	/*
@@ -109,33 +109,33 @@ EOT;
 		$module = $this->getModule();
 		$table = $this->getTable();
 		$filename = $this->getFileName();
-		$module_name = $module->getVar('mod_name');
+		$module_dirname = $module->getVar('mod_dirname');
 				
 		$content = $this->getHeaderFilesComments($module, $filename);
 		switch($filename) {
 			case 'comment_edit.php':
 				$content .= $this->getCommentsIncludes('comment_edit');
-				$this->tdmcfile->create($module_name, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+				$this->tdmcfile->create($module_dirname, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 				return $this->tdmcfile->renderFile();
 			break;
 			case 'comment_delete.php':
 				$content .= $this->getCommentsIncludes('comment_delete');
-				$this->tdmcfile->create($module_name, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+				$this->tdmcfile->create($module_dirname, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 				return $this->tdmcfile->renderFile();
 			break;
 			case 'comment_post.php':
 				$content .= $this->getCommentsIncludes('comment_post');
-				$this->tdmcfile->create($module_name, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+				$this->tdmcfile->create($module_dirname, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 				return $this->tdmcfile->renderFile();
 			break;
 			case 'comment_reply.php':
 				$content .= $this->getCommentsIncludes('comment_reply');
-				$this->tdmcfile->create($module_name, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+				$this->tdmcfile->create($module_dirname, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 				return $this->tdmcfile->renderFile();
 			break;
 			case 'comment_new.php':
-				$content .= $this->getCommentsNew($module_name, 'comment_new');
-				$this->tdmcfile->create($module_name, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+				$content .= $this->getCommentsNew($module_dirname, 'comment_new');
+				$this->tdmcfile->create($module_dirname, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 				return $this->tdmcfile->renderFile();				
 			break;
 		}		

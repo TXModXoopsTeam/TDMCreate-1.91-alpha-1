@@ -61,29 +61,23 @@ class TemplatesUserHeader extends HtmlSmartyCodes
 		$module = $this->getModule();
 		$tables = $this->getTables();        		
 		$filename = $this->getFileName();
-		$module_name = strtolower($module->getVar('mod_name'));		
-        $language = $this->getLanguage($module_name, 'MA');		
+		$module_dirname = $module->getVar('mod_dirname');		
+        $language = $this->getLanguage($module_dirname, 'MA');		
 		$content = <<<EOT
-<div class="header">
-<span class="left"><b><{\$smarty.const.{$language}TITLE}></b>&#58;&#160;</span>
-<span class="left"><{\$smarty.const.{$language}DESC}></span><br />
-</div>
-<div class="head">
-	<{if \$adv != ''}>
-		<div class="center"><{\$adv}></div>
-	<{/if}>
-</div>
-<table class="{$module_name}">
-    <thead>
-          <tr class="center" colspan="2">
-	      <th><{\$smarty.const.{$language}TITLE}>  -  <{\$smarty.const.{$language}DESC}></th>
+<{if \$adv != ''}>
+	<div class="center"><{\$adv}></div>
+<{/if}>
+<table class="{$module_dirname}">
+    <thead>          
+		  <tr class="center">
+			<th><{\$smarty.const.{$language}TITLE}>  -  <{\$smarty.const.{$language}DESC}></th>
           </tr>  
     </thead>
     <tbody>
         <tr class="center">
             <td class="center bold pad5">
                 <ul class="menu">
-					<li><a href="<{\${$module_name}_url}>"><{\$smarty.const.{$language}INDEX}></a></li>\n
+					<li><a href="<{\${$module_dirname}_url}>"><{\$smarty.const.{$language}INDEX}></a></li>\n
 EOT;
 		foreach (array_keys($tables) as $i)
 		{	
@@ -91,20 +85,24 @@ EOT;
 			$stu_table_name = strtoupper($table_name);
 			$content .= <<<EOT
 					<li> | </li>
-					<li><a href="<{\${$module_name}_url}>/{$table_name}.php"><{\$smarty.const.{$language}{$stu_table_name}}></a></li>					
+					<li><a href="<{\${$module_dirname}_url}>/{$table_name}.php"><{\$smarty.const.{$language}{$stu_table_name}}></a></li>\n
 EOT;
 		}					 
 		$content .= <<<EOT
-              \n</ul>
+				</ul>
             </td>
-        </tr>
-        <{if \$adv != ''}>
-			<tr class="center"><td class="center bold pad5"><{\$adv}></td></tr>        
-        <{/if}>
+        </tr>        
     </tbody>
+	<tfoot>
+		<{if \$adv != ''}>
+			<tr class="center"><td class="center bold pad5"><{\$adv}></td></tr>
+        <{else}>  
+			<tr class="center"><td class="center bold pad5">&nbsp;</td></tr>
+        <{/if}>
+	</tfoot>
 </table>
 EOT;
-		$this->tdmcfile->create($module_name, 'templates', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, 'templates', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

@@ -35,34 +35,35 @@ class UserObjects
         return $instance;
     }
 	/*
-	*  @public function getCodeUserHeader
-	*  @param string $fieldname
+	*  @public function getPhpUserHeader
+	*  @param string $module_dirname
+	*  @param string $table_name
 	*/
-	public function getCodeUserHeader($fieldname) {    
+	public function getPhpUserHeader($module_dirname, $table_name) {    
 		$ret = <<<EOT
 include_once 'header.php';
-\$xoopsOption['template_main'] = '{$fieldname}.tpl';
+\$GLOBALS['xoopsOption']['template_main'] = '{$module_dirname}_{$table_name}.tpl';
 include_once XOOPS_ROOT_PATH.'/header.php';\n	
 EOT;
 		return $ret;
 	}
 	/*
-	*  @public function getCodeUserIndex
-	*  @param null
+	*  @public function getPhpUserIndex
+	*  @param string $module_dirname
 	*/
-	public function getCodeUserIndex() {    
+	public function getPhpUserIndex($module_dirname) {    
 		$ret = <<<EOT
 include_once 'header.php';
-\$xoopsOption['template_main'] = 'index.tpl';
+\$GLOBALS['xoopsOption']['template_main'] = '{$module_dirname}_index.tpl';
 include_once XOOPS_ROOT_PATH.'/header.php';\n	
 EOT;
 		return $ret;
 	}
 	/*
-	*  @public function getCodeUserFooter
+	*  @public function getPhpUserFooter
 	*  @param null
 	*/
-	public function getCodeUserFooter() {    
+	public function getPhpUserFooter() {    
 		$ret = <<<EOT
 include_once 'footer.php';	
 EOT;

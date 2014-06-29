@@ -60,8 +60,8 @@ class AdminMenu extends TDMCreateFile
         $module = $this->getModule();
 		$tables = $this->getTables();
 		$filename = $this->getFileName();
-		$module_name = $module->getVar('mod_name');		
-		$language = $this->getLanguage($module_name, 'MI', 'ADMENU');
+		$module_dirname = $module->getVar('mod_dirname');		
+		$language = $this->getLanguage($module_dirname, 'MI', 'ADMENU');
 		$menu = 1;
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= <<<EOT
@@ -109,7 +109,7 @@ unset( \$i );
 EOT;
 		unset( $menu );
 		
-		$this->tdmcfile->create($module_name, 'admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, 'admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

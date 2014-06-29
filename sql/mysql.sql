@@ -8,16 +8,17 @@
 # PHP Version: 5.3.13
 
 #
-# Table structure for table `tdmcreate_modules` 37
+# Table structure for table `tdmcreate_modules` 38
 #
 
 CREATE TABLE `tdmcreate_modules` (
   `mod_id`                  INT(5)     UNSIGNED NOT NULL AUTO_INCREMENT,
   `mod_name`                VARCHAR(255)        NOT NULL DEFAULT '',
+  `mod_dirname`             VARCHAR(100)        NOT NULL DEFAULT '',
   `mod_version`             VARCHAR(5)          NOT NULL DEFAULT '1.0',
   `mod_since`               VARCHAR(5)          NOT NULL DEFAULT '1.0',
   `mod_min_php`             VARCHAR(5)          NOT NULL DEFAULT '5.3',
-  `mod_min_xoops`           VARCHAR(5)          NOT NULL DEFAULT '2.5.6',
+  `mod_min_xoops`           VARCHAR(5)          NOT NULL DEFAULT '2.5.7',
   `mod_min_admin`           VARCHAR(5)          NOT NULL DEFAULT '1.1',
   `mod_min_mysql`           VARCHAR(5)          NOT NULL DEFAULT '5.0.7',
   `mod_description`         TEXT,
@@ -50,7 +51,8 @@ CREATE TABLE `tdmcreate_modules` (
   `mod_donations`           VARCHAR(50)         NOT NULL DEFAULT '6KJ7RW5DR3VTJ',
   `mod_subversion`          VARCHAR(10)         NOT NULL DEFAULT '12550',
   PRIMARY KEY (`mod_id`),
-  UNIQUE KEY `mod_name` (`mod_name`)
+  UNIQUE KEY `mod_name` (`mod_name`),
+  KEY `mod_dirname` (`mod_dirname`)
 )ENGINE =MyISAM;
 
 
@@ -187,6 +189,7 @@ CREATE TABLE `tdmcreate_fieldnull` (
 )ENGINE =MyISAM;
 
 INSERT INTO `tdmcreate_fieldnull` (`fieldnull_name`, `fieldnull_value`) VALUES
+  ('', ''),
   ('NOT NULL', 'NOT NULL'),
   ('NULL', 'NULL');
 

@@ -54,33 +54,34 @@ class UserPages extends TDMCreateFile
 		
 	/*
 	*  @private function getUserPages
+	*  @param string $module_dirname
 	*  @param string $language
 	*/
-	private function getUserPages($module_name, $language)
+	private function getUserPages($module_dirname, $language)
 	{  
 		$table = $this->getTable();        		
 		$table_name = $table->getVar('table_name');
 		$table_fieldname = $table->getVar('table_fieldname');
-		$stu_mod_name = strtoupper($module_name);
-        $stl_mod_name = strtolower($module_name);
+		$stu_mod_name = strtoupper($module_dirname);
         $stu_table_name = strtoupper($table_name);
         $stl_table_name = strtolower($table_name);
 		$ret = <<<EOT
 \ninclude_once 'header.php';
-\$xoopsOption['template_main'] = '{$stl_mod_name}_{$table_name}.tpl';	
+\$GLOBALS['xoopsOption']['template_main'] = '{$module_dirname}_{$table_name}.tpl';	
 include_once XOOPS_ROOT_PATH . '/header.php';
-\$start = {$stl_mod_name}_CleanVars( \$_REQUEST, 'start', 0);
-\$limit = xoops_getModuleOption('userpager', \$dirname);
+\$start = {$module_dirname}_CleanVars( \$_REQUEST, 'start', 0);
+\$limit = \${$module_dirname}->getConfig('userpager');
 // Define Stylesheet
 \$xoTheme->addStylesheet( \$style );
 // Get Handler
-\${$stl_table_name}Handler =& xoops_getModuleHandler('{$stl_table_name}', \$dirname);
+\${$stl_table_name}Handler =& \${$module_dirname}->getHandler('{$stl_table_name}');
 //
-\$GLOBALS['xoopsTpl']->assign('{$stl_mod_name}_upload_url', {$stu_mod_name}_UPLOAD_URL);
+\$GLOBALS['xoopsTpl']->assign('{$module_dirname}_upload_url', {$stu_mod_name}_UPLOAD_URL);
 //
 \$criteria = new CriteriaCompo();
 \${$stl_table_name}_count = \${$stl_table_name}Handler->getCount(\$criteria);
 \${$stl_table_name}_arr = \${$stl_table_name}Handler->getAll(\$criteria);
+\$keywords = array();
 if (\${$stl_table_name}_count > 0) {
 	foreach (array_keys(\${$stl_table_name}_arr) as \$i) 
 	{\n
@@ -146,9 +147,10 @@ EOT;
     }
 }
 // keywords
-{$stl_mod_name}_meta_keywords(xoops_getModuleOption('keywords', \$dirname) .', '. implode(', ', \$keywords));
+{$module_dirname}_meta_keywords(xoops_getModuleOption('keywords', \$dirname) .', '. implode(', ', \$keywords));
+unset(\$keywords);
 // description
-{$stl_mod_name}_meta_description({$language}{$stu_table_name}_DESC);
+{$module_dirname}_meta_description({$language}{$stu_table_name}_DESC);
 //
 \$GLOBALS['xoopsTpl']->assign('xoops_mpageurl', {$stu_mod_name}_URL.'/{$stl_table_name}.php');
 //
@@ -162,12 +164,12 @@ EOT;
 	*/
 	public function renderFile($filename) {    
 		$module = $this->getModule();
-		$module_name = $module->getVar('mod_name');				
-		$language = $this->getLanguage($module_name, 'MA');			
+		$module_dirname = $module->getVar('mod_dirname');				
+		$language = $this->getLanguage($module_dirname, 'MA');			
 		$content = $this->getHeaderFilesComments($module, $filename);	
-		$content .= $this->getUserPages($module_name, $language);	
+		$content .= $this->getUserPages($module_dirname, $language);	
 		//
-		$this->tdmcfile->create($module_name, '/', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, '/', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

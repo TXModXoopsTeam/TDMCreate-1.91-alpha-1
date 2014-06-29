@@ -56,14 +56,13 @@ class UserFooter extends TDMCreateFile
 	*/
 	public function render() {    
 		$module = $this->getModule();
-		$module_name = $module->getVar('mod_name');
-		$stl_mod_name = strtolower($module_name);
-		$stu_mod_name = strtoupper($module_name);
+		$module_dirname = $module->getVar('mod_dirname');
+		$stu_mod_name = strtoupper($module_dirname);
 		$filename = $this->getFileName();			
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= <<<EOT
 \$GLOBALS['xoopsTpl']->assign('sysPathIcon32', \$sysPathIcon32);
-\$GLOBALS['xoopsTpl']->assign('{$stl_mod_name}_url', {$stu_mod_name}_URL);
+\$GLOBALS['xoopsTpl']->assign('{$module_dirname}_url', {$stu_mod_name}_URL);
 \$GLOBALS['xoopsTpl']->assign('adv', xoops_getModuleOption('advertise', \$dirname));
 //
 \$GLOBALS['xoopsTpl']->assign('bookmarks', xoops_getModuleOption('bookmarks', \$dirname));
@@ -74,7 +73,7 @@ class UserFooter extends TDMCreateFile
 // User footer
 include_once XOOPS_ROOT_PATH.'/footer.php';	
 EOT;
-		$this->tdmcfile->create($module_name, '/', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, '/', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

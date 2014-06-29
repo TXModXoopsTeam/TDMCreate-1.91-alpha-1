@@ -64,16 +64,18 @@ class LanguageMain extends TDMCreateFile
 		$tables = $this->getTables();
 		$filename = $this->getFileName();
 		$module_name = $module->getVar('mod_name');
+		$module_dirname = $module->getVar('mod_dirname');
 		$module_description = $module->getVar('mod_description');        
 		$ucf_mod_name = ucfirst($module_name);
-		$language = $this->getLanguage($module_name, 'MA');
+		$language = $this->getLanguage($module_dirname, 'MA');
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= <<<EOT
 // ---------------- Main ----------------
 define('{$language}INDEX', "Home");
 define('{$language}TITLE', "{$ucf_mod_name}");
 define('{$language}DESC', "{$module_description}");
-define('{$language}INDEX_DESC', "{$module_description}");\n
+define('{$language}INDEX_DESC', "Welcome to the homepage of your new module!<br /> 
+As you can see, you've created a page with a list of links at the top to navigate between the pages of your module. This description is only visible on the homepage of this module, the other pages you will see the content you created when you built this module with the module TDMCreate. In order to expand this module with other resources, just add the code you need to extend the functionality of the same. The files are grouped by type, from the header to the footer to see how divided the source code.");\n
 EOT;
 		foreach (array_keys($tables) as $i) 
 		{
@@ -103,7 +105,7 @@ EOT;
 define('{$language}ADMIN', "Admin");
 // ---------------- ----------------
 EOT;
-		$this->tdmcfile->create($module_name, 'language/'.$GLOBALS['xoopsConfig']['language'], $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, 'language/'.$GLOBALS['xoopsConfig']['language'], $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

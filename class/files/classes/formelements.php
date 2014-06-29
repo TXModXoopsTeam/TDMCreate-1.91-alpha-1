@@ -68,7 +68,7 @@ class TDMCreateFormElements extends TDMCreateFile
 	*/
 	public function getXoopsFormText($language, $field_name, $required = 'false') {    
 		$ret = <<<EOT
-		\$form->addElement(new XoopsFormText({$language}, '{$field_name}', 50, 255, \$this->getVar('{$field_name}')){$required});\n
+		\$form->addElement( new XoopsFormText({$language}, '{$field_name}', 50, 255, \$this->getVar('{$field_name}')){$required} );\n
 EOT;
 		return $ret;
 	}
@@ -80,18 +80,18 @@ EOT;
 	*/
 	public function getXoopsFormTextArea($language, $field_name, $required = 'false') {    
 		$ret = <<<EOT
-		\$form->addElement(new XoopsFormTextArea({$language}, '{$field_name}', \$this->getVar('{$field_name}'), 4, 47){$required});\n
+		\$form->addElement( new XoopsFormTextArea({$language}, '{$field_name}', \$this->getVar('{$field_name}'), 4, 47){$required} );\n
 EOT;
 		return $ret;
 	}
 	/*
 	*  @public function getXoopsFormDhtmlTextArea
 	*  @param string $language
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $field_name
 	*  @param string $required
 	*/
-	public function getXoopsFormDhtmlTextArea($language, $module_name, $field_name, $required = 'false') {    
+	public function getXoopsFormDhtmlTextArea($language, $module_dirname, $field_name, $required = 'false') {    
 		$ret = <<<EOT
 		\$editor_configs = array();
 		\$editor_configs['name'] = '{$field_name}';
@@ -100,8 +100,8 @@ EOT;
 		\$editor_configs['cols'] = 40;
 		\$editor_configs['width'] = '100%';
 		\$editor_configs['height'] = '400px';
-		\$editor_configs['editor'] = xoops_getModuleOption('{$module_name}_editor', '{$module_name}');			
-		\$form->addElement( new XoopsFormEditor({$language}, '{$field_name}', \$editor_configs){$required});\n
+		\$editor_configs['editor'] = \$this->{$module_dirname}->getConfig('{$module_dirname}_editor');			
+		\$form->addElement( new XoopsFormEditor({$language}, '{$field_name}', \$editor_configs){$required} );\n
 EOT;
 		return $ret;
 	}
@@ -116,7 +116,7 @@ EOT;
 		\${$field_name} = \$this->isNew() ? 0 : \$this->getVar('{$field_name}');
 		\$check_{$field_name} = new XoopsFormCheckBox({$language}, '{$field_name}', \${$field_name});
 		\$check_{$field_name}->addOption(1, " ");
-		\$form->addElement(\$check_{$field_name}{$required});\n
+		\$form->addElement( \$check_{$field_name}{$required} );\n
 EOT;
 		return $ret;
 	}
@@ -126,7 +126,7 @@ EOT;
 	*/
 	public function getXoopsFormHidden($field_name) {    
 		$ret = <<<EOT
-		\$form->addElement(new XoopsFormHidden('{$field_name}', \$this->getVar('{$field_name}')));\n
+		\$form->addElement( new XoopsFormHidden('{$field_name}', \$this->getVar('{$field_name}')) );\n
 EOT;
 		return $ret;
 	}
@@ -136,9 +136,9 @@ EOT;
 	*  @param string $field_name
 	*  @param string $required
 	*/
-	public function getXoopsFormUploadFile($language, $field_name, $required = 'false') {    
+	public function getXoopsFormUploadFile($language, $module_dirname, $field_name, $required = 'false') {    
 		$ret = <<<EOT
-		\$form->addElement(new XoopsFormUploadFile({$language}, '{$field_name}', \$GLOBALS['xoopsModuleConfig']['maxsize']){$required});\n
+		\$form->addElement( new XoopsFormFile({$language}, '{$field_name}', \$this->{$module_dirname}->getConfig('maxsize')){$required} );\n
 EOT;
 		return $ret;
 	}
@@ -149,10 +149,10 @@ EOT;
 	*  @param string $field_name
 	*  @param string $required
 	*/
-	public function getXoopsFormUploadImage($language, $table_name, $field_name, $required = 'false') {		
+	public function getXoopsFormUploadImage($language, $module_dirname, $table_name, $field_name, $required = 'false') {		
 		$stu_field_name = strtoupper($field_name);
 		$ret = <<<EOT
-		//\$form->addElement(new XoopsFormUploadImage({$language}, '{$field_name}', \$GLOBALS['xoopsModuleConfig']['maxsize']){$required});
+		//\$form->addElement(new XoopsFormImage({$language}, '{$field_name}', \$this->{$module_dirname}->getConfig('maxsize')){$required});
 		\$get_{$field_name} = \$this->getVar('{$field_name}');
 		\${$field_name} = \$get_{$field_name} ? \$get_{$field_name} : 'blank.gif';
 		\$iconsdir = '/Frameworks/moduleclasses/icons/32';
@@ -179,10 +179,10 @@ EOT;
 		\$imgtray1->addElement(\$imageselect1, false);
 		\$imgtray1->addElement( new XoopsFormLabel( '', "<br /><img src='".XOOPS_URL."/".\$iconsdirectory."/".\${$field_name}."' name='image1' id='image1' alt='' />" ) );		
 		\$fileseltray1 = new XoopsFormElementTray('','<br />');
-		\$fileseltray1->addElement(new XoopsFormFile({$language}FORMUPLOAD , 'attachedfile', \$GLOBALS['xoopsModuleConfig']['maxsize']));
+		\$fileseltray1->addElement(new XoopsFormFile({$language}FORMUPLOAD , 'attachedfile', \$this->{$module_dirname}->getConfig('maxsize')));
 		\$fileseltray1->addElement(new XoopsFormLabel(''));
 		\$imgtray1->addElement(\$fileseltray1);
-		\$form->addElement(\$imgtray1{$required});\n
+		\$form->addElement( \$imgtray1{$required} );\n
 EOT;
 		return $ret;
 	}
@@ -192,9 +192,9 @@ EOT;
 	*  @param string $field_name
 	*  @param string $required
 	*/
-	public function getXoopsFormColorPicker($language, $field_name, $required = 'false') {    
+	public function getXoopsFormColorPicker($language, $module_dirname, $field_name, $required = 'false') {    
 		$ret = <<<EOT
-		\$form->addElement(new XoopsFormColorPicker({$language}, '{$field_name}', \$xoopsModuleConfig['maxsize']){$required});\n
+		\$form->addElement( new XoopsFormColorPicker({$language}, '{$field_name}', \$this->{$module_dirname}->getConfig('maxsize')){$required} );\n
 EOT;
 		return $ret;
 	}
@@ -209,7 +209,7 @@ EOT;
 		$ret = <<<EOT
 		\${$field_name}_select = new XoopsFormSelect({$language}, '{$field_name}', \$this->getVar('{$field_name}'));
 		\${$field_name}_select->addOptionArray({$table_name}Handler->getList()); 
-		\$form->addElement(\${$field_name}_select{$required});\n
+		\$form->addElement( \${$field_name}_select{$required} );\n
 EOT;
 		return $ret;
 	}
@@ -221,7 +221,7 @@ EOT;
 	*/
 	public function getXoopsFormSelectUser($language, $field_name, $required = 'false') {    
 		$ret = <<<EOT
-		\$form->addElement(new XoopsFormSelectUser({$language}, '{$field_name}', false, \$this->getVar('{$field_name}'), 1, false){$required});\n
+		\$form->addElement( new XoopsFormSelectUser({$language}, '{$field_name}', false, \$this->getVar('{$field_name}'), 1, false){$required} );\n
 EOT;
 		return $ret;
 	}
@@ -234,7 +234,7 @@ EOT;
 	public function getXoopsFormRadioYN($language, $field_name, $required = 'false') {    
 		$ret = <<<EOT
 		${$field_name} = \$this->isNew() ? 0 : \$this->getVar('{$field_name}');
-		\$form->addElement(new XoopsFormRadioYN({$language}, '{$field_name}', ${$field_name}){$required});\n
+		\$form->addElement( new XoopsFormRadioYN({$language}, '{$field_name}', ${$field_name}){$required} );\n
 EOT;
 		return $ret;
 	}
@@ -244,21 +244,21 @@ EOT;
 	*  @param string $field_name
 	*  @param string $required
 	*/
-	public function getXoopsFormTextDateSelect($language, $field_name, $required = 'false') {    
+	public function getXoopsFormTextDateSelect($language, $module_dirname, $field_name, $required = 'false') {    
 		$ret = <<<EOT
-		\$form->addElement(new XoopsFormTextDateSelect({$language}, '{$field_name}', '', \$this->getVar('{$field_name}')){$required});\n
+		\$form->addElement( new XoopsFormTextDateSelect({$language}, '{$field_name}', '', \$this->getVar('{$field_name}')){$required} );\n
 EOT;
 		return $ret;
 	}
 	/*
 	*  @public function getXoopsFormTable
 	*  @param string $language
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $table_name
 	*  @param string $fields
 	*  @param string $required
 	*/
-	public function getXoopsFormTable($language, $module_name, $table_name, $fields, $required = 'false') 
+	public function getXoopsFormTable($language, $module_dirname, $table_name, $fields, $required = 'false') 
 	{    
 	    $field_name = '';
 		foreach(array_keys($fields) as $f) 
@@ -268,22 +268,22 @@ EOT;
 			}						
 		}
 		$ret = <<<XFT
-		\${$table_name}Handler =& xoops_getModuleHandler('{$table_name}', '{$module_name}');				
+		\${$table_name}Handler =& \$this->{$module_dirname}->getHandler('{$table_name}');				
 		\${$field_name}_select = new XoopsFormSelect({$language}, '{$field_name}', \$this->getVar('{$field_name}'));
 		\${$field_name}_select->addOptionArray(\${$field_name}Handler->getList());
-		\$form->addElement(\${$field_name}_select{$required});\n
+		\$form->addElement( \${$field_name}_select{$required} );\n
 XFT;
 		return $ret;
 	}
 	/*
 	*  @public function getXoopsFormTopic
 	*  @param string $language
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $table_name
 	*  @param string $fields
 	*  @param string $required
 	*/
-	public function getXoopsFormTopic($language, $module_name, $table_name, $fields, $required = 'false') 
+	public function getXoopsFormTopic($language, $module_dirname, $table_name, $fields, $required = 'false') 
 	{    
 		foreach(array_keys($fields) as $f) 
 		{	
@@ -300,13 +300,13 @@ XFT;
 		}
 		$ret = <<<XFT
 		include_once(XOOPS_ROOT_PATH . '/class/tree.php');				
-		\${$table_name}Handler = xoops_getModuleHandler('{$table_name}', '\${$module_name}' );
+		\${$table_name}Handler = \$this->{$module_dirname}->getHandler('{$table_name}');
 		\$criteria = new CriteriaCompo();
 		\${$table_name} = \${$table_name}Handler->getObjects( \$criteria );
 		if(\${$table_name}) {
 			\${$table_name}_tree = new XoopsObjectTree( \${$table_name}, '{$field_id}', '{$field_pid}' );
 			\${$field_pid} = \${$table_name}_tree->makeSelBox( '{$field_pid}', '{$field_main}','--', \$this->getVar('{$field_pid}', 'e' ), true );
-			\$form->addElement( new XoopsFormLabel ( {$language}, \${$field_pid} ){$required});
+			\$form->addElement( new XoopsFormLabel ( {$language}, \${$field_pid} ){$required} );
 		}\n		
 XFT;
 		return $ret;
@@ -318,9 +318,9 @@ XFT;
 	public function renderElements() { 
 		$module = $this->getModule();
 		$table = $this->getTable();
-		$module_name = $module->getVar('mod_name');		
+		$module_dirname = $module->getVar('mod_dirname');		
 		$table_name = $table->getVar('table_name');		
-		$language_funct = $this->getLanguage($module_name, 'AM');
+		$language_funct = $this->getLanguage($module_dirname, 'AM');
 		$language_table = $language_funct . strtoupper($table_name);
 		$ret = '';
 		$fields = $this->getTableFields($table->getVar('table_id'));
@@ -341,7 +341,7 @@ XFT;
 						$ret .= $this->getXoopsFormTextArea($language, $field_name, $required);
 					break;
 					case 3:
-						$ret .= $this->getXoopsFormDhtmlTextArea($language, $module_name, $field_name, $required);
+						$ret .= $this->getXoopsFormDhtmlTextArea($language, $module_dirname, $field_name, $required);
 					break;
 					case 4:
 						$ret .= $this->getXoopsFormCheckBox($language, $field_name, $required);
@@ -356,16 +356,16 @@ XFT;
 						$ret .= $this->getXoopsFormSelectUser($language, $field_name, $required);
 					break;
 					case 8:
-						$ret .= $this->getXoopsFormColorPicker($language, $field_name, $required);
+						$ret .= $this->getXoopsFormColorPicker($language, $module_dirname, $field_name, $required);
 					break;
 					case 9:
-						$ret .= $this->getXoopsFormUploadImage($language_funct, $table_name, $field_name, $required);
+						$ret .= $this->getXoopsFormUploadImage($language_funct, $module_dirname, $table_name, $field_name, $required);
 					break;
 					case 10:
-						$ret .= $this->getXoopsFormUploadFile($language, $field_name, $required);
+						$ret .= $this->getXoopsFormUploadFile($language, $module_dirname, $field_name, $required);
 					break;
 					case 11:
-						$ret .= $this->getXoopsFormTextDateSelect($language, $field_name, $required);
+						$ret .= $this->getXoopsFormTextDateSelect($language, $module_dirname, $field_name, $required);
 					break;
 					default:
 						$ret .= $this->getXoopsFormHidden($field_name);					
@@ -373,9 +373,9 @@ XFT;
 				}
 				if ($field_element > 11) {
 					if($table->getVar('table_category') == 1) {
-						$ret .= $this->getXoopsFormTopic($language, $module_name, $table_name, $fields, $required);
+						$ret .= $this->getXoopsFormTopic($language, $module_dirname, $table_name, $fields, $required);
 					} else {
-						$ret .= $this->getXoopsFormTable($language, $module_name, $table_name, $fields, $required);
+						$ret .= $this->getXoopsFormTable($language, $module_dirname, $table_name, $fields, $required);
 					}
 				}
 			//}

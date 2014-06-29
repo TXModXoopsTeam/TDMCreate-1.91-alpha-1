@@ -60,9 +60,9 @@ class AdminIndex extends TDMCreateFile
 		$module = $this->getModule();
 		$tables = $this->getTables();
 		$filename = $this->getFileName();        
-		$module_name = strtolower($module->getVar('mod_name'));
-		$language = $this->getLanguage($module_name, 'AM');
-		$language_thereare = $this->getLanguage($module_name, 'AM', 'THEREARE_');
+		$module_dirname = $module->getVar('mod_dirname');
+		$language = $this->getLanguage($module_dirname, 'AM');
+		$language_thereare = $this->getLanguage($module_dirname, 'AM', 'THEREARE_');
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= <<<EOT
 include_once 'header.php';\n
@@ -77,7 +77,7 @@ EOT;
 		}
 		$content .= <<<EOT
 // Template Index
-\$template_main = '{$module_name}_index.tpl';
+\$template_main = '{$module_dirname}_admin_index.tpl';
 // InfoBox Statistics
 \$adminMenu->addInfoBox({$language}STATISTICS);
 // InfoBox\n
@@ -96,7 +96,7 @@ echo \$adminMenu->addNavigation('index.php');
 echo \$adminMenu->renderIndex();
 include_once 'footer.php';
 EOT;
-		$this->tdmcfile->create($module_name, 'admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, 'admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

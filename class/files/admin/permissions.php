@@ -45,21 +45,20 @@ class AdminPermissions extends TDMCreateFile
 	/*
 	*  @public function write
 	*  @param string $module
-	*  @param mixed $table
 	*  @param mixed $tables
 	*  @param string $filename
 	*/
 	public function write($module, $tables, $filename) {    
 		$this->setModule($module);
-		$this->setFileName($filename);
 		$this->setTables($tables);
+		$this->setFileName($filename);
 	}
 	/*
 	*  @private function getPermissionsCodeHeader
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $language
 	*/
-	private function getPermissionsCodeHeader($module_name, $language) 
+	private function getPermissionsCodeHeader($module_dirname, $language) 
 	{        
 		$ret = <<<PRM
 \ninclude_once 'header.php';
@@ -74,10 +73,10 @@ if( !empty(\$_POST['submit']) )
 if (count ( array_intersect ( \$group, \$groups ) ) <= 0) {
 	redirect_header ( 'index.php', 3, _NOPERM );
 }*/
-
+\$template_main = '{$module_dirname}_admin_permissions.tpl';
 echo \$adminMenu->addNavigation('permissions.php');
 
-\$permission = {$module_name}_CleanVars(\$_REQUEST, 'permission', 1, 'int');
+\$permission = {$module_dirname}_CleanVars(\$_REQUEST, 'permission', 1, 'int');
 \$selected = array('', '', '', '');
 \$selected[\$permission-1] = ' selected';
 xoops_load('XoopsFormLoader');
@@ -96,10 +95,10 @@ PRM;
 	
 	/*
 	*  @private function getPermissionsCodeSwitch
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $language
 	*/
-	private function getPermissionsCodeSwitch($module_name, $language) 
+	private function getPermissionsCodeSwitch($module_dirname, $language) 
 	{        
 		$ret = <<<PRM
 \$module_id = \$xoopsModule->getVar('mid');
@@ -107,7 +106,7 @@ switch(\$permission)
 {
 	case 1:
         \$formTitle = {$language}GLOBAL;
-        \$permName = '{$module_name}_ac';
+        \$permName = '{$module_dirname}_ac';
         \$permDesc = {$language}GLOBAL_DESC;
         \$globalPerms = array(	'4' => {$language}GLOBAL_4,
 								'8' => {$language}GLOBAL_8,
@@ -115,17 +114,17 @@ switch(\$permission)
 		break;
 	case 2:
 		\$formTitle = {$language}APPROVE;
-		\$permName = '{$module_name}_access';
+		\$permName = '{$module_dirname}_access';
 		\$permDesc = {$language}APPROVE_DESC;
 		break;
 	case 3:
 		\$formTitle = {$language}SUBMIT;
-		\$permName = '{$module_name}_submit';
+		\$permName = '{$module_dirname}_submit';
 		\$permDesc = {$language}SUBMIT_DESC;
 		break;
 	case 4:
 		\$formTitle = {$language}VIEW;
-		\$permName = '{$module_name}_view';
+		\$permName = '{$module_dirname}_view';
 		\$permDesc = {$language}VIEW_DESC;
 		break;
 }\n
@@ -135,11 +134,11 @@ PRM;
 	
 	/*
 	*  @private function getPermissionsCodeBody
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $table_name
 	*  @param string $language
 	*/
-	private function getPermissionsCodeBody($module_name, $language) 
+	private function getPermissionsCodeBody($module_dirname, $language) 
 	{    
 		$tables = $this->getTables();
 		foreach(array_keys($tables) as $t) 
@@ -209,15 +208,15 @@ PRM;
 	public function render() {    
         $module = $this->getModule();
 		$filename = $this->getFileName();
-		$module_name = strtolower($module->getVar('mod_name'));	
-		$language = $this->getLanguage($module_name, 'AM');
+		$module_dirname = strtolower($module->getVar('mod_dirname'));	
+		$language = $this->getLanguage($module_dirname, 'AM');
 		$content = $this->getHeaderFilesComments($module, $filename);
-		$content .= $this->getPermissionsCodeHeader($module_name, $language);
-		$content .= $this->getPermissionsCodeSwitch($module_name, $language);
-		$content .= $this->getPermissionsCodeBody($module_name, $language);
+		$content .= $this->getPermissionsCodeHeader($module_dirname, $language);
+		$content .= $this->getPermissionsCodeSwitch($module_dirname, $language);
+		$content .= $this->getPermissionsCodeBody($module_dirname, $language);
 		$content .= $this->getPermissionsCodeFooter();
 		//
-		$this->tdmcfile->create($module_name, 'admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, 'admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

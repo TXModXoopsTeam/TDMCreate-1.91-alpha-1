@@ -58,7 +58,7 @@ class AdminFooter extends TDMCreateFile
 	public function render() { 		
 		$module = $this->getModule();
 		$filename = $this->getFileName();
-		$module_name = strtolower($module->getVar('mod_name'));			
+		$module_dirname = $module->getVar('mod_dirname');			
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= <<<EOT
 if ( isset(\$template_main)  ) {
@@ -67,7 +67,7 @@ if ( isset(\$template_main)  ) {
 xoops_cp_footer();
 ?>  
 EOT;
-		$this->tdmcfile->create($module_name, 'admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, 'admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

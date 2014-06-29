@@ -56,33 +56,33 @@ class IncludeInstall extends TDMCreateFile
 	}
 	/*
 	*  @private function getInstallModuleFolder
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*/
-	private function getInstallModuleFolder($module_name) {    
+	private function getInstallModuleFolder($module_dirname) {    
 		$ret = <<<EOT
 //
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
 // Copy base file
 \$indexFile = XOOPS_UPLOAD_PATH.'/index.html';
 \$blankFile = XOOPS_UPLOAD_PATH.'/blank.gif';
-// Making of "uploads/{$module_name}" folder
-\${$module_name} = XOOPS_UPLOAD_PATH.'/{$module_name}';
-if(!is_dir(\${$module_name}))
-	mkdir(\${$module_name}, 0777);
-	chmod(\${$module_name}, 0777);
-copy(\$indexFile, \${$module_name}.'/index.html');\n
+// Making of "uploads/{$module_dirname}" folder
+\${$module_dirname} = XOOPS_UPLOAD_PATH.'/{$module_dirname}';
+if(!is_dir(\${$module_dirname}))
+	mkdir(\${$module_dirname}, 0777);
+	chmod(\${$module_dirname}, 0777);
+copy(\$indexFile, \${$module_dirname}.'/index.html');\n
 EOT;
 		return $ret;
 	}
 	/*
 	*  @private function getHeaderTableFolder
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $table_name
 	*/
-	private function getInstallTableFolder($module_name, $table_name) {    
+	private function getInstallTableFolder($module_dirname, $table_name) {    
 		$ret = <<<EOT
 // Making of {$table_name} uploads folder
-\${$table_name} = \${$module_name}.'/{$table_name}';
+\${$table_name} = \${$module_dirname}.'/{$table_name}';
 if(!is_dir(\${$table_name}))
 	mkdir(\${$table_name}, 0777);
 	chmod(\${$table_name}, 0777);
@@ -92,12 +92,12 @@ EOT;
 	}
 	/*
 	*  @private function getInstallImagesFolder
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*/
-	private function getInstallImagesFolder($module_name) {    
+	private function getInstallImagesFolder($module_dirname) {    
 		$ret = <<<EOT
 // Making of images folder
-\$images = \${$module_name}.'/images';
+\$images = \${$module_dirname}.'/images';
 if(!is_dir(\$images))
 	mkdir(\$images, 0777);
 	chmod(\$images, 0777);
@@ -124,12 +124,12 @@ EOT;
 	}
 	/*
 	*  @private function getInstallFilesFolder
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*/
-	private function getInstallFilesFolder($module_name) {    
+	private function getInstallFilesFolder($module_dirname) {    
 		$ret = <<<EOT
 // Making of files folder
-\$files = \${$module_name}.'/files';
+\$files = \${$module_dirname}.'/files';
 if(!is_dir(\$files))
 	mkdir(\$files, 0777);
 	chmod(\$files, 0777);
@@ -169,12 +169,12 @@ EOT;
 	public function render() 
 	{  		
 		$module = $this->getModule();
-		$module_name = strtolower($module->getVar('mod_name'));
+		$module_dirname = $module->getVar('mod_dirname');
 		$table = $this->getTable();
 		$tables = $this->getTables();
 		$filename = $this->getFileName();
 		$content = $this->getHeaderFilesComments($module, $filename);
-		$content .= $this->getInstallModuleFolder($module_name);				
+		$content .= $this->getInstallModuleFolder($module_dirname);				
 		$fields = $this->getTableFields($table->getVar('table_id'));
 		foreach(array_keys($fields) as $f) 
 		{				
@@ -182,7 +182,7 @@ EOT;
 			// All fields elements selected
 			switch( $field_element ) {
 				case 9:
-					$content .= $this->getInstallImagesFolder($module_name);
+					$content .= $this->getInstallImagesFolder($module_dirname);
 					foreach(array_keys($tables) as $t) 
 					{	
 						$table_name = $tables[$t]->getVar('table_name');	
@@ -190,7 +190,7 @@ EOT;
 					}
 				break;
 				case 10:
-					$content .= $this->getInstallFileFolder($module_name);
+					$content .= $this->getInstallFilesFolder($module_dirname);
 					foreach(array_keys($tables) as $t) 
 					{	
 						$table_name = $tables[$t]->getVar('table_name');	
@@ -201,7 +201,7 @@ EOT;
 		}					
 		$content .= $this->getInstallFooter();
 		//
-		$this->tdmcfile->create($module_name, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

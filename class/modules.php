@@ -43,6 +43,7 @@ class TDMCreateModules extends XoopsObject
 		$this->tdmcreate = TDMCreate::getInstance();
 		$this->initVar('mod_id',XOBJ_DTYPE_INT);
 		$this->initVar('mod_name',XOBJ_DTYPE_TXTBOX, $this->tdmcreate->getConfig('name'));
+		$this->initVar('mod_dirname',XOBJ_DTYPE_TXTBOX, $this->tdmcreate->getConfig('dirname'));
 		$this->initVar('mod_version',XOBJ_DTYPE_TXTBOX, $this->tdmcreate->getConfig('version'));
 		$this->initVar('mod_since',XOBJ_DTYPE_TXTBOX, $this->tdmcreate->getConfig('since'));
 		$this->initVar('mod_min_php',XOBJ_DTYPE_TXTBOX, $this->tdmcreate->getConfig('min_php'));
@@ -125,7 +126,12 @@ class TDMCreateModules extends XoopsObject
 		$form->setExtra('enctype="multipart/form-data"');
 		
 		$form->insertBreak('<div class="center"><b>'._AM_TDMCREATE_MODULE_IMPORTANT.'</b></div>','head');
-		$form->addElement(new XoopsFormText(_AM_TDMCREATE_MODULE_NAME, 'mod_name', 50, 255, $this->getVar('mod_name')), true);
+		$mod_name = new XoopsFormText(_AM_TDMCREATE_MODULE_NAME, 'mod_name', 50, 255, $this->getVar('mod_name'));
+		$mod_name->setDescription(_AM_TDMCREATE_MODULE_NAME_DESC);
+		$form->addElement($mod_name, true);
+		$mod_dirname = new XoopsFormText(_AM_TDMCREATE_MODULE_DIRNAME, 'mod_dirname', 25, 255, $this->getVar('mod_dirname'));
+		$mod_dirname->setDescription(_AM_TDMCREATE_MODULE_DIRNAME_DESC);
+		$form->addElement($mod_dirname, true);
 		$form->addElement(new XoopsFormText(_AM_TDMCREATE_MODULE_VERSION, 'mod_version', 10, 25, $this->getVar('mod_version')), true);
 		$form->addElement(new XoopsFormText(_AM_TDMCREATE_MODULE_SINCE, 'mod_since', 10, 25, $this->getVar('mod_since')), true);
 		$form->addElement(new XoopsFormText(_AM_TDMCREATE_MODULE_MIN_PHP, 'mod_min_php', 10, 25, $this->getVar('mod_min_php')), true);

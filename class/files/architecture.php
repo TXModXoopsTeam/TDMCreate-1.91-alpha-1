@@ -103,7 +103,7 @@ class TDMCreateArchitecture extends TDMCreateStructure
 		$indexFile = $this->path.'/index.html';	
 		$docs_folder = $this->path.'/docs';
 		$logos_folder = $this->path.'/assets/images/logos';
-		$stl_module_name = str_replace(' ', '', strtolower($module->getVar('mod_name')));
+		$stl_module_name = $module->getVar('mod_dirname');
 		$stl_module_author = str_replace(' ', '', strtolower($module->getVar('mod_author')));
 		// Creation of the Directory in repository
 		$targetDirectory = $this->upload_path.'/repository/'. $stl_module_name;			
@@ -203,8 +203,7 @@ class TDMCreateArchitecture extends TDMCreateStructure
 	{	
 		// Module
 		$mod_id = $module->getVar('mod_id');
-        $mod_name = $module->getVar('mod_name');
-		$stl_mod_name = strtolower($mod_name);		
+        $mod_dirname = $module->getVar('mod_dirname');
 		// Id of tables
 		$criteria_tables = new CriteriaCompo();
 		$criteria_tables->add(new Criteria('table_mid', $mod_id));		
@@ -237,7 +236,7 @@ class TDMCreateArchitecture extends TDMCreateStructure
 				// Admin Templates File
 				$adminTemplatesPages = TemplatesAdminPages::getInstance();
 				$adminTemplatesPages->write($module, $table);
-				$ret[] = $adminTemplatesPages->renderFile($stl_mod_name.'_'.$table_name.'.tpl');
+				$ret[] = $adminTemplatesPages->renderFile($mod_dirname.'_admin_'.$table_name.'.tpl');
 			}
 			// Creation of blocks
 			if ( $table_blocks == 1) {				
@@ -248,7 +247,7 @@ class TDMCreateArchitecture extends TDMCreateStructure
 				// Templates Blocks Files
 				$templatesFiles = TemplatesBlocks::getInstance();
 				$templatesFiles->write($module, $table);
-				$ret[] = $templatesFiles->renderFile($stl_mod_name.'_block_'.$table_name.'.tpl');
+				$ret[] = $templatesFiles->renderFile($mod_dirname.'_block_'.$table_name.'.tpl');
 			}
 			// Blocks Templates File
 			/*$blocksTemplates = BlocksTemplates::getInstance();
@@ -270,7 +269,7 @@ class TDMCreateArchitecture extends TDMCreateStructure
 				// User Templates File
 				$userTemplatesPages = TemplatesUserPages::getInstance();
 				$userTemplatesPages->write($module, $table);
-				$ret[] = $userTemplatesPages->renderFile($stl_mod_name.'_'.$table_name.'.tpl');
+				$ret[] = $userTemplatesPages->renderFile($mod_dirname.'_'.$table_name.'.tpl');
 			}					
 			/*var_dump($table_name); */           						
 		}	
@@ -306,7 +305,11 @@ class TDMCreateArchitecture extends TDMCreateStructure
 					// Admin Permissions File
 					$adminPermissions = AdminPermissions::getInstance();
 					$adminPermissions->write($module, $tables, 'permissions.php');
-					$ret[] = $adminPermissions->render();	
+					$ret[] = $adminPermissions->render();
+					// Templates Admin Permissions File
+					$adminTemplatesPermissions = TemplatesAdminPermissions::getInstance();
+					$adminTemplatesPermissions->write($module, $mod_dirname.'_admin_permissions.tpl');
+					$ret[] = $adminTemplatesPermissions->render();
 				}
 				// Admin Aboutr File 
 				$adminAbout = AdminAbout::getInstance();
@@ -320,21 +323,21 @@ class TDMCreateArchitecture extends TDMCreateStructure
 				$languageAdmin = LanguageAdmin::getInstance();	
 				$languageAdmin->write($module, $tables, 'admin.php');
 				$ret[] = $languageAdmin->render();
-				// Templates Index File
+				// Templates Admin About File
 				$adminTemplatesAbout = TemplatesAdminAbout::getInstance();
-				$adminTemplatesAbout->write($module, $stl_mod_name.'_about.tpl');
+				$adminTemplatesAbout->write($module, $mod_dirname.'_admin_about.tpl');
 				$ret[] = $adminTemplatesAbout->render();
-				// Templates Index File
+				// Templates Admin Index File
 				$adminTemplatesIndex = TemplatesAdminIndex::getInstance();
-				$adminTemplatesIndex->write($module, $stl_mod_name.'_index.tpl');
+				$adminTemplatesIndex->write($module, $mod_dirname.'_admin_index.tpl');
 				$ret[] = $adminTemplatesIndex->render();
-				// Templates Footer File 
+				// Templates Admin Footer File 
 				$adminTemplatesFooter = TemplatesAdminFooter::getInstance();
-				$adminTemplatesFooter->write($module, $stl_mod_name.'_footer.tpl');				
+				$adminTemplatesFooter->write($module, $mod_dirname.'_admin_footer.tpl');				
 				$ret[] = $adminTemplatesFooter->render();	
-				// Templates Header File 
+				// Templates Admin Header File 
 				$adminTemplatesHeader = TemplatesAdminHeader::getInstance();
-				$adminTemplatesHeader->write($module, $stl_mod_name.'_header.tpl');
+				$adminTemplatesHeader->write($module, $mod_dirname.'_admin_header.tpl');
 				$ret[] = $adminTemplatesHeader->render();
 			}		
 			// Creation of notifications files
@@ -397,15 +400,15 @@ class TDMCreateArchitecture extends TDMCreateStructure
 			if ( ($table->getVar('table_user') == 1)) {							
 				// Templates Index File
 				$userTemplatesIndex = TemplatesUserIndex::getInstance();
-				$userTemplatesIndex->write($module, $stl_mod_name.'_index.tpl');
+				$userTemplatesIndex->write($module, $mod_dirname.'_index.tpl');
 				$ret[] = $userTemplatesIndex->render();
 				// Templates Footer File 
 				$userTemplatesFooter = TemplatesUserFooter::getInstance();
-				$userTemplatesFooter->write($module, $table, $stl_mod_name.'_footer.tpl');				
+				$userTemplatesFooter->write($module, $table, $mod_dirname.'_footer.tpl');				
 				$ret[] = $userTemplatesFooter->render();	
 				// Templates Header File 
 				$userTemplatesHeader = TemplatesUserHeader::getInstance();
-				$userTemplatesHeader->write($module, $tables, $stl_mod_name.'_header.tpl');
+				$userTemplatesHeader->write($module, $tables, $mod_dirname.'_header.tpl');
 				$ret[] = $userTemplatesHeader->render();	
 				// User Footer File 
 				$userFooter = UserFooter::getInstance();
@@ -436,7 +439,7 @@ class TDMCreateArchitecture extends TDMCreateStructure
 		$classHelper->write($module, 'helper.php');
 		$ret[] = $classHelper->render();
 		// Css Styles File
-		$cssStyles = CssStyles::getInstance($module, 'style.css');	
+		$cssStyles = CssStyles::getInstance();	
 		$cssStyles->write($module, 'style.css');
 		$ret[] = $cssStyles->render();	
 		// Include Common File

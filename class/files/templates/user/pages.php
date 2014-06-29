@@ -54,15 +54,15 @@ class TemplatesUserPages extends TDMCreateFile
 	}
     /*
 	*  @private function getTemplatesUserPagesHeader
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $table
 	*  @param string $language
 	*/
-	private function getTemplatesUserPagesHeader($module_name, $table, $language) {    
-		$stl_mod_name = strtolower($module_name);
+	private function getTemplatesUserPagesHeader($module_dirname, $table, $language) 
+	{  
 		$ret = <<<EOT
-<{include file="db:{$stl_mod_name}_header.tpl"}>
-<table class="{$module_name}">
+<{include file="db:{$module_dirname}_header.tpl"}>
+<table class="{$module_dirname}">
 	<thead class="outer">
 		<tr class="head">\n
 EOT;
@@ -83,13 +83,12 @@ EOT;
 	}
 	/*
 	*  @private function getTemplatesUserPagesBody
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $table
 	*  @param string $language
 	*/
-	private function getTemplatesUserPagesBody($module_name, $table, $language) 
+	private function getTemplatesUserPagesBody($module_dirname, $table, $language) 
 	{    
-		$stl_mod_name = strtolower($module_name);
 		$table_name = $table->getVar('table_name');
 		$ret = <<<EOT
 	<tbody>
@@ -116,7 +115,7 @@ EOT;
 				break;
 				case 9:
 					$ret .= <<<EOT
-			<td class="center"><img src="<{\${$stl_mod_name}_upload_url}>/images/{$table_name}/<{\$list.{$rp_field_name}}>" alt="{$table_name}"></td>\n
+			<td class="center"><img src="<{\${$module_dirname}_upload_url}>/images/{$table_name}/<{\$list.{$rp_field_name}}>" alt="{$table_name}"></td>\n
 EOT;
 				break;
 				default:
@@ -136,13 +135,12 @@ EOT;
 	}
 	/*
 	*  @private function getTemplatesUserPagesBodyFieldnameEmpty
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $table
 	*  @param string $language
 	*/
-	private function getTemplatesUserPagesBodyFieldnameEmpty($module_name, $table, $language) 
+	private function getTemplatesUserPagesBodyFieldnameEmpty($module_dirname, $table, $language) 
 	{ 		
-		$stl_mod_name = strtolower($module_name);
 		$table_name = $table->getVar('table_name');		
 		$ret = <<<EOT
 	<tbody>
@@ -162,7 +160,7 @@ EOT;
 				break;
 				case 9:
 					$ret .= <<<EOT
-			<td class="center"><img src="<{\${$stl_mod_name}_upload_url}>/images/{$table_name}/<{\$list.{$field_name}}>" alt="{$table_name}"></td>\n
+			<td class="center"><img src="<{\${$module_dirname}_upload_url}>/images/{$table_name}/<{\$list.{$field_name}}>" alt="{$table_name}"></td>\n
 EOT;
 				break;
 				default:
@@ -182,12 +180,11 @@ EOT;
 	}
 	/*
 	*  @private function getTemplatesUserPagesFooter
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*/
-	private function getTemplatesUserPagesFooter($module_name) {    
-		$stl_mod_name = strtolower($module_name);
+	private function getTemplatesUserPagesFooter($module_dirname) {    
 		$ret = <<<EOT
-<{include file="db:{$stl_mod_name}_footer.tpl"}>
+<{include file="db:{$module_dirname}_footer.tpl"}>
 EOT;
 		return $ret;
 	}
@@ -198,19 +195,19 @@ EOT;
 	public function renderFile($filename) {    
 		$module = $this->getModule();		
 		$table = $this->getTable();
-		$module_name = $module->getVar('mod_name');
+		$module_dirname = $module->getVar('mod_dirname');
 		$table_fieldname = $table->getVar('table_fieldname');
-        $language = $this->getLanguage($module_name, 'MA');		
-		$content = $this->getTemplatesUserPagesHeader($module_name, $table, $language);
+        $language = $this->getLanguage($module_dirname, 'MA');		
+		$content = $this->getTemplatesUserPagesHeader($module_dirname, $table, $language);
 		// Verify if table_fieldname is not empty
 		if(!empty($table_fieldname)) {
-			$content .= $this->getTemplatesUserPagesBody($module_name, $table, $language);
+			$content .= $this->getTemplatesUserPagesBody($module_dirname, $table, $language);
 		} else {
-			$content .= $this->getTemplatesUserPagesBodyFieldnameEmpty($module_name, $table, $language);
+			$content .= $this->getTemplatesUserPagesBodyFieldnameEmpty($module_dirname, $table, $language);
 		}
-		$content .= $this->getTemplatesUserPagesFooter($module_name);
+		$content .= $this->getTemplatesUserPagesFooter($module_dirname);
 		//
-		$this->tdmcfile->create($module_name, 'templates', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, 'templates', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

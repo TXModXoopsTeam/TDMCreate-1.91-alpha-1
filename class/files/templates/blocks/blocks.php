@@ -53,12 +53,11 @@ class TemplatesBlocks extends TDMCreateFile
 	}
 	/*
 	*  @private function getTemplatesBlocksHeader
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $table
 	*  @param string $language
 	*/
-	private function getTemplatesBlocksHeader($module_name, $table, $language) {    
-		$stl_mod_name = strtolower($module_name);
+	private function getTemplatesBlocksHeader($module_dirname, $table, $language) {    
 		$table_name = $table->getVar('table_name');
 		$ret = <<<EOT
 <table class="{$table_name} width100">
@@ -82,13 +81,12 @@ EOT;
 	}
 	/*
 	*  @private function getTemplatesBlocksBody
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $table
 	*  @param string $language
 	*/
-	private function getTemplatesBlocksBody($module_name, $table, $language) 
+	private function getTemplatesBlocksBody($module_dirname, $table, $language) 
 	{    
-		$stl_mod_name = strtolower($module_name);
 		$table_name = $table->getVar('table_name');
 		$ret = <<<EOT
 	<tbody>
@@ -110,7 +108,7 @@ EOT;
 			if( $field_element == 9 ) {
 				$ret .= <<<EOT
 				<td class="center">
-					<img src="<{\${$module_name}_upload_url}>/images/{$table_name}/<{\$list.{$rp_field_name}}>" alt="{$table_name}">
+					<img src="<{\${$module_dirname}_upload_url}>/images/{$table_name}/<{\$list.{$rp_field_name}}>" alt="{$table_name}">
 				</td>\n
 EOT;
 			} elseif( $field_element == 8 ) {			
@@ -133,13 +131,12 @@ EOT;
 	}
 	/*
 	*  @private function getTemplatesBlocksBodyFieldnameEmpty
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $table
 	*  @param string $language
 	*/
-	private function getTemplatesBlocksBodyFieldnameEmpty($module_name, $table, $language) 
+	private function getTemplatesBlocksBodyFieldnameEmpty($module_dirname, $table, $language) 
 	{ 		
-		$stl_mod_name = strtolower($module_name);
 		$table_name = $table->getVar('table_name');		
 		$ret = <<<EOT
 	<tbody>
@@ -154,7 +151,7 @@ EOT;
 			if( $field_element == 9 ) {
 				$ret .= <<<EOT
 				<td class="center">
-					<img src="<{\${$module_name}_upload_url}>/images/{$table_name}/<{\$list.{$field_name}}>" alt="{$table_name}">
+					<img src="<{\${$module_dirname}_upload_url}>/images/{$table_name}/<{\$list.{$field_name}}>" alt="{$table_name}">
 				</td>\n
 EOT;
 			} elseif( $field_element == 8 ) {			
@@ -182,20 +179,20 @@ EOT;
 	public function renderFile($filename) {    
 		$module = $this->getModule();		
 		$table = $this->getTable();
-		$module_name = strtolower($module->getVar('mod_name'));
+		$module_dirname = $module->getVar('mod_dirname');
 		$table_name = $table->getVar('table_name');
 		$table_fieldname = $table->getVar('table_fieldname');
-        $language = $this->getLanguage($module_name, 'MB');		
-		$content = $this->getTemplatesBlocksHeader($module_name, $table, $language);
+        $language = $this->getLanguage($module_dirname, 'MB');		
+		$content = $this->getTemplatesBlocksHeader($module_dirname, $table, $language);
 		// Verify if table_fieldname is not empty
 		if(!empty($table_fieldname)) {
-			$content .= $this->getTemplatesBlocksBody($module_name, $table, $language);
+			$content .= $this->getTemplatesBlocksBody($module_dirname, $table, $language);
 		} else {
-			$content .= $this->getTemplatesBlocksBodyFieldnameEmpty($module_name, $table, $language);
+			$content .= $this->getTemplatesBlocksBodyFieldnameEmpty($module_dirname, $table, $language);
 		}
-		//$content .= $this->getTemplatesBlocksFooter($module_name);
+		//$content .= $this->getTemplatesBlocksFooter($module_dirname);
 		//
-		$this->tdmcfile->create($module_name, 'templates/blocks', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, 'templates/blocks', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

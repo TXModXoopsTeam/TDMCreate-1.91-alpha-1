@@ -57,27 +57,26 @@ class UserIndex extends TDMCreateFile
 	public function render() {    
 		$module = $this->getModule();
 		$filename = $this->getFileName();
-		$module_name = $module->getVar('mod_name');
-		$stl_mod_name = strtolower($module_name);
-        $stu_mod_name = strtoupper($module_name);		
-		$language = $this->getLanguage($module_name, 'MA');			
+		$module_dirname = $module->getVar('mod_dirname');
+        $stu_mod_name = strtoupper($module_dirname);		
+		$language = $this->getLanguage($module_dirname, 'MA');			
 		$content = $this->getHeaderFilesComments($module, $filename);	
 		$content .= <<<EOT
-\ninclude_once 'header.php';
-\$xoopsOption['template_main'] = '{$stl_mod_name}_index.tpl';
+include_once 'header.php';
+\$GLOBALS['xoopsOption']['template_main'] = '{$module_dirname}_index.tpl';
 include_once XOOPS_ROOT_PATH.'/header.php';
 // Define Stylesheet
 \$xoTheme->addStylesheet( \$style );
 // keywords
-{$stl_mod_name}_meta_keywords(xoops_getModuleOption('keywords', \$dirname));
+{$module_dirname}_meta_keywords(xoops_getModuleOption('keywords', \$dirname));
 // description
-{$stl_mod_name}_meta_description({$language}DESC);
+{$module_dirname}_meta_description({$language}DESC);
 //
 \$GLOBALS['xoopsTpl']->assign('xoops_mpageurl', {$stu_mod_name}_URL.'/index.php'); 
 //
 include_once 'footer.php';	
 EOT;
-		$this->tdmcfile->create($module_name, '/', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, '/', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

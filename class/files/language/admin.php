@@ -226,8 +226,8 @@ EOT;
 		$module = $this->getModule();
 		$tables = $this->getTables();        		
 		$filename = $this->getFileName();
-		$module_name = $module->getVar('mod_name');		
-		$language = $this->getLanguage($module_name, 'AM');
+		$module_dirname = $module->getVar('mod_dirname');		
+		$language = $this->getLanguage($module_dirname, 'AM');
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= $this->getLanguageAdminIndex($language, $tables);
 		$content .= $this->getLanguageAdminPages($language, $tables);
@@ -235,7 +235,7 @@ EOT;
 		$content .= $this->getLanguageAdminPermissions($language);
 		$content .= $this->getLanguageAdminFoot($language);
 		//
-		$this->tdmcfile->create($module_name, 'language/'.$GLOBALS['xoopsConfig']['language'], $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, 'language/'.$GLOBALS['xoopsConfig']['language'], $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

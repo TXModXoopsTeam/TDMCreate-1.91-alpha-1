@@ -277,8 +277,8 @@ EOT;
 		$table = $this->getTable();        		
 		$tables = $this->getTables();
 		$filename = $this->getFileName();
-		$module_name = $module->getVar('mod_name');		
-		$language = $this->getLanguage($module_name, 'MI');
+        $module_dirname = $module->getVar('mod_dirname');		
+		$language = $this->getLanguage($module_dirname, 'MI');
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= $this->getMain($language, $module);			
 		if (is_object($table)) {
@@ -303,7 +303,7 @@ EOT;
 			}
 		}
 		//
-		$this->tdmcfile->create($module_name, 'language/'.$GLOBALS['xoopsConfig']['language'], $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, 'language/'.$GLOBALS['xoopsConfig']['language'], $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

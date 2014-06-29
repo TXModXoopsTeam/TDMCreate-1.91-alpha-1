@@ -16,19 +16,20 @@
  * @package         tdmcreate
  * @since           2.5.0
  * @author          Txmod Xoops http://www.txmodxoops.org
- * @version         $Id: 1.91 admin_about.php 12258 2014-01-02 09:33:29Z timgno $
+ * @version         $Id: pages.php 12258 2014-01-02 09:33:29Z timgno $
  */
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
-
-class AdminAbout extends TDMCreateFile
+require_once TDMC_PATH . '/class/files/htmlsmartycodes.php';
+class TemplatesAdminPermissions extends HtmlSmartyCodes
 {	
 	/*
 	*  @public function constructor
 	*  @param null
 	*/
-	public function __construct() {    
-		$this->tdmcfile = TDMCreateFile::getInstance();
-	}
+	public function __construct() { 
+		parent::__construct();
+		$this->tdmcfile = TDMCreateFile::getInstance();	
+	}		
 	/*
 	*  @static function &getInstance
 	*  @param null
@@ -40,34 +41,39 @@ class AdminAbout extends TDMCreateFile
             $instance = new self();
         }
         return $instance;
-    }
+    } 
 	/*
 	*  @public function write
 	*  @param string $module
-	*  @param string $filename
+	*  @param string $table
 	*/
 	public function write($module, $filename) {    
 		$this->setModule($module);
 		$this->setFileName($filename);
 	}
 	/*
+	*  @private function getTemplatesAdminPagesHeader
+	*  @param string $module_dirname
+	*/
+	private function getTemplatesAdminPermissions($module_dirname) {    
+		$ret = <<<EOT
+<{include file="db:{$module_dirname}_admin_header.tpl"}>\n
+EOT;
+		return $ret;
+	}
+		
+	/*
 	*  @public function render
 	*  @param null
 	*/
-	public function render() { 		
+	public function render() {    
 		$module = $this->getModule();
-		$filename = $this->getFileName();
-		$module_dirname = $module->getVar('mod_dirname');
-        $module_donations = $module->getVar('mod_donations');			
-		$content = $this->getHeaderFilesComments($module, $filename);
-		$content .= <<<EOT
-include 'header.php';
-\$template_main = '{$module_dirname}_admin_about.tpl'; 
-\$GLOBALS['xoopsTpl']->assign('navigation', \$adminMenu->addNavigation('about.php'));
-\$GLOBALS['xoopsTpl']->assign('about', \$adminMenu->renderAbout('{$module_donations}', false));
-include 'footer.php';  
-EOT;
-		$this->tdmcfile->create($module_dirname, 'admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+        $filename = $this->getFileName();		
+		$module_dirname = $module->getVar('mod_name');		
+		$language = $this->getLanguage($module_dirname, 'AM');
+		$content = $this->getTemplatesAdminPermissions($module_dirname);
+		//
+		$this->tdmcfile->create($module_dirname, 'templates/admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

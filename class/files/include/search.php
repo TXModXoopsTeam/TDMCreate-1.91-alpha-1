@@ -82,7 +82,7 @@ class IncludeSearch extends TDMCreateFile
 	*  @static function getSearchFunction
 	*  @param string $fpsf
 	*/
-	public function getSearchFunction($module_name)
+	public function getSearchFunction($module_dirname)
 	{
 		$table = $this->getTable(); 
 		$table_name = $table->getVar('table_name');
@@ -105,10 +105,10 @@ class IncludeSearch extends TDMCreateFile
 		$img_search = 'blank.gif';
 		$ret = <<<EOT
 \n// search callback functions
-function {$module_name}_search(\$queryarray, \$andor, \$limit, \$offset, \$userid)
+function {$module_dirname}_search(\$queryarray, \$andor, \$limit, \$offset, \$userid)
 {
 	global \$xoopsDB;	
-	\$sql = "SELECT '{$fpif}', '{$fpmf}' FROM ".\$xoopsDB->prefix('mod_{$module_name}_{$table_name}')." WHERE {$fpif} != 0";	
+	\$sql = "SELECT '{$fpif}', '{$fpmf}' FROM ".\$xoopsDB->prefix('mod_{$module_dirname}_{$table_name}')." WHERE {$fpif} != 0";	
 	if ( \$userid != 0 ) {
 		\$sql .= " AND {$table_fieldname}_submitter=".intval(\$userid);
 	}	
@@ -149,11 +149,11 @@ EOT;
 	public function render() {    
 		$module = $this->getModule();
 		$filename = $this->getFileName();
-		$module_name = strtolower($module->getVar('mod_name'));        				
+		$module_dirname = $module->getVar('mod_dirname');        				
 		$content = $this->getHeaderFilesComments($module, $filename);
-		$content .= $this->getSearchFunction($module_name);
+		$content .= $this->getSearchFunction($module_dirname);
 		//
-		$this->tdmcfile->create($module_name, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

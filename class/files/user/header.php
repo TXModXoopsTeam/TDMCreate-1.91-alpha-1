@@ -56,12 +56,13 @@ class UserHeader extends TDMCreateFile
 	*/
 	public function render() {    
 		$module = $this->getModule();
-		$module_name = $module->getVar('mod_name');
+		$module_dirname = $module->getVar('mod_dirname');
 		$filename = $this->getFileName();
-		$stu_mod_name = strtoupper($module_name);			
+		$stu_mod_name = strtoupper($module_dirname);
+        $ucf_mod_name = ucfirst($module_dirname);			
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= <<<EOT
-\nrequire_once dirname(dirname(dirname(__FILE__))) . '/mainfile.php';
+require_once dirname(dirname(dirname(__FILE__))) . '/mainfile.php';
 \$dirname = \$GLOBALS['xoopsModule']->getVar('dirname');
 \$pathname = XOOPS_ROOT_PATH. '/modules/'.\$dirname;
 include_once \$pathname . '/include/common.php';
@@ -79,8 +80,10 @@ if(file_exists(\$style)) { return true; }
 //
 xoops_loadLanguage('modinfo', \$dirname);
 xoops_loadLanguage('main', \$dirname);
+//
+\${$module_dirname} = {$ucf_mod_name}Helper::getInstance();
 EOT;
-		$this->tdmcfile->create($module_name, '/', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, '/', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

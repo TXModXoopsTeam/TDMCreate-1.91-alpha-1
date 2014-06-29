@@ -60,15 +60,16 @@ class DocsChangelog extends TDMCreateFile
 	public function render() {    
 		$module = $this->getModule();
 		$filename = $this->getFileName();
-		$module_name = strtolower($module->getVar('mod_name'));		
+		$module_name = $module->getVar('mod_name');	
+        $module_dirname = $module->getVar('mod_dirname');		
 		$date = date('Y/m/d G:i:s');
 		$content = <<<EOT
 ==============================================================
 Change Log for {$module_name} - {$date} Version {$module->getVar('mod_version')}
 ==============================================================
- - Original release {$module_name} ({$module->getVar('mod_author')})
+ - Original release {$module_dirname} ({$module->getVar('mod_author')})
 EOT;
-		$this->tdmcfile->create($module_name, 'docs', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, 'docs', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

@@ -51,40 +51,40 @@ class IncludeCommon extends TDMCreateFile
 		$this->setFileName($filename);
 	}	
 	/*
-	*  @public function getCommonCode
+	*  @private function getCommonCode
 	*  @param object $module
 	*/
-	public function getCommonCode($module) { 
-        $module_name = $module->getVar('mod_name');	
-		$stu_mn = strtoupper($module_name); 
-		$stl_mn = strtolower($module_name);	
+	private function getCommonCode($module) 
+	{ 		
+		$module_dirname = $module->getVar('mod_dirname');
+		$stu_mn = strtoupper($module_dirname); 
+		$mod_author = $module->getVar('mod_author');
 		$mod_a_w_name = $module->getVar('mod_author_website_name');
 		$mod_a_w_url = $module->getVar('mod_author_website_url');
-		$awn = str_replace(" ", "", strtolower($mod_a_w_name));
-		
+		$awn = str_replace(' ', '', strtolower($mod_a_w_name));
+		$mod_author_image = str_replace(' ', '', strtolower($mod_author));
 		$ret = <<<EOT
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
 if (!defined('{$stu_mn}_MODULE_PATH')) {
-	define('{$stu_mn}_DIRNAME', '{$stl_mn}');
+	define('{$stu_mn}_DIRNAME', '{$module_dirname}');
 	define('{$stu_mn}_PATH', XOOPS_ROOT_PATH.'/modules/'.{$stu_mn}_DIRNAME);
 	define('{$stu_mn}_URL', XOOPS_URL.'/modules/'.{$stu_mn}_DIRNAME);	
 	define('{$stu_mn}_UPLOAD_PATH', XOOPS_UPLOAD_PATH.'/'.{$stu_mn}_DIRNAME);
 	define('{$stu_mn}_UPLOAD_URL', XOOPS_UPLOAD_URL.'/'.{$stu_mn}_DIRNAME);
-	define('{$stu_mn}_IMAGE_PATH', {$stu_mn}_PATH.'/images');
-	define('{$stu_mn}_IMAGE_URL', {$stu_mn}_URL.'/images/');
+	define('{$stu_mn}_IMAGE_PATH', {$stu_mn}_PATH.'/assets/images');
+	define('{$stu_mn}_IMAGE_URL', {$stu_mn}_URL.'/assets/images/');
 	define('{$stu_mn}_ADMIN', {$stu_mn}_URL . '/admin/index.php');
-	\$local_logo = {$stu_mn}_IMAGE_URL . '/{$awn}_logo.png';
-	if(is_dir({$stu_mn}_IMAGE_PATH) && file_exists(\$local_logo)) {
+	\$local_logo = {$stu_mn}_IMAGE_URL . '/{$mod_author_image}_logo.gif';
+	/*if(is_dir({$stu_mn}_IMAGE_PATH) && file_exists(\$local_logo)) {
 		\$logo = \$local_logo;
 	} else {
 		\$sysPathIcon32 = \$GLOBALS['xoopsModule']->getInfo('icons32');
 		\$logo = \$sysPathIcon32.'/xoopsmicrobutton.gif';
-	}
-	define('{$stu_mn}_AUTHOR_LOGOIMG', \$logo);
+	}*/	
 }
 // module information
 \$copyright = "<a href='{$mod_a_w_url}' title='{$mod_a_w_name}' target='_blank'>
-                     <img src='".{$stu_mn}_AUTHOR_LOGOIMG."' alt='{$mod_a_w_name}' /></a>";
+                     <img src='".\$local_logo."' alt='{$mod_a_w_name}' /></a>";
 					 
 include_once XOOPS_ROOT_PATH.'/class/xoopsrequest.php';
 include_once {$stu_mn}_PATH.'/class/helper.php';
@@ -97,11 +97,11 @@ EOT;
 	*/
 	public function render() {    
 		$module = $this->getModule();
-		$module_name = $module->getVar('mod_name');
+		$module_dirname = $module->getVar('mod_dirname');
 		$filename = $this->getFileName();		
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= $this->getCommonCode($module);
-		$this->tdmcfile->create($module_name, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

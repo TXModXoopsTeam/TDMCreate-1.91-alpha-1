@@ -54,16 +54,15 @@ class UserPrint extends TDMCreateFile
 	}
 	/*
 	*  @public function getUserPrint
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $language
 	*/
-	public function getUserPrint($module_name, $language) 
+	public function getUserPrint($module_dirname, $language) 
 	{  
-		$stu_mod_name = strtoupper($module_name);
-        $stl_mod_name = strtolower($module_name);        
+		$stu_mod_name = strtoupper($module_dirname);
 		$table = $this->getTable();
 		$table_name = $table->getVar('table_name');
-        $ucf_mod_name = ucfirst($module_name);		
+        $ucf_mod_name = ucfirst($module_dirname);		
         $ucf_table_name = ucfirst($table_name);		
 		$fields = $this->getTableFields($table->getVar('table_id'));
 		foreach(array_keys($fields) as $f) 
@@ -93,7 +92,7 @@ if ( empty({$fpif}) ) {
 	redirect_header({$stu_mod_name}_URL . '/index.php', 2, {$language}NO{$stu_lp_field_name});
 }
 EOT;
-		if(( $field_name == $lp_field_name.'_published' ) {
+		if( $field_name == $lp_field_name.'_published' ) {
 			$ret .= <<<EOT
 // Verify that the article is published
 {$lp_field_name} = new {$ucf_mod_name}{$ucf_table_name}({$fpif});
@@ -104,10 +103,30 @@ if ( {$lp_field_name}->getVar('{$lp_field_name}_published') == 0 || {$lp_field_n
 }
 EOT;
 		}
-		if(( $field_name == $lp_field_name.'_expired' ) {
+		if( $field_name == 'published' ) {
+			$ret .= <<<EOT
+// Verify that the article is published
+{$lp_field_name} = new {$ucf_mod_name}{$ucf_table_name}({$fpif});
+// Not yet published
+if ( {$lp_field_name}->getVar('published') == 0 || {$lp_field_name}->getVar('published') > time() ) {
+    redirect_header({$stu_mod_name}_URL . '/index.php', 2, {$language}NO{$stu_lp_field_name});
+    exit();
+}
+EOT;
+		}
+		if( $field_name == $lp_field_name.'_expired' ) {
 			$ret .= <<<EOT
 // Expired
 if ( {$lp_field_name}->getVar('{$lp_field_name}_expired') != 0 && {$lp_field_name}->getVar('{$lp_field_name}_expired') < time() ) {
+    redirect_header({$stu_mod_name}_URL . '/index.php', 2, {$language}NO{$stu_lp_field_name});
+    exit();
+}
+EOT;
+		}
+		if( $field_name == 'expired' ) {
+			$ret .= <<<EOT
+// Expired
+if ( {$lp_field_name}->getVar('expired') != 0 && {$lp_field_name}->getVar('expired') < time() ) {
     redirect_header({$stu_mod_name}_URL . '/index.php', 2, {$language}NO{$stu_lp_field_name});
     exit();
 }
@@ -122,7 +141,7 @@ if (is_object(\$xoopsUser)) {
 } else {
 	\$groups = XOOPS_GROUP_ANONYMOUS;
 }
-if (!\$gperm_handler->checkRight('{$stl_mod_name}_view', {$lp_field_name}->getVat('{$fpif}'), \$groups, \$xoopsModule->getVar('mid'))) {
+if (!\$gperm_handler->checkRight('{$module_dirname}_view', {$lp_field_name}->getVat('{$fpif}'), \$groups, \$xoopsModule->getVar('mid'))) {
 	redirect_header({$stu_mod_name}_URL . '/index.php', 3, _NOPERM);
 	exit();
 }	
@@ -137,11 +156,11 @@ EOT;
 	public function render() {    
 		$module = $this->getModule();		        		
 		$filename = $this->getFileName();
-		$module_name = $module->getVar('mod_name');
-		$language = $this->getLanguage($module_name, 'MA');			
+		$module_dirname = $module->getVar('mod_dirname');
+		$language = $this->getLanguage($module_dirname, 'MA');			
 		$content = $this->getHeaderFilesComments($module, $filename);	
-		$content .= $this->getUserPrint($module_name, $language);
-		$this->tdmcfile->create($module_name, '/', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$content .= $this->getUserPrint($module_dirname, $language);
+		$this->tdmcfile->create($module_dirname, '/', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

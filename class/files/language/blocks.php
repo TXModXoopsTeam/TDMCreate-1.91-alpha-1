@@ -61,8 +61,8 @@ class LanguageBlocks extends TDMCreateFile
 		$module = $this->getModule();
 		$tables = $this->getTables();
 		$filename = $this->getFileName();
-		$module_name = $module->getVar('mod_name');        
-		$language = $this->getLanguage($module_name, 'MB');
+		$module_dirname = $module->getVar('mod_dirname');        
+		$language = $this->getLanguage($module_dirname, 'MB');
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= <<<EOT
 // Main
@@ -91,7 +91,7 @@ define('{$lng_fields}', "{$ucf_table_field}");\n
 EOT;
 			}	
 		}
-		$this->tdmcfile->create($module_name, 'language/'.$GLOBALS['xoopsConfig']['language'], $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, 'language/'.$GLOBALS['xoopsConfig']['language'], $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

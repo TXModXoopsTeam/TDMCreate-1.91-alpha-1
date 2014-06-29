@@ -69,17 +69,17 @@ EOT;
 	}
 	/*
 	*  @public function getUploadImage
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $table_name
 	*  @param string $field_name
 	*/
-	public function getUploadImage($module_name, $table_name, $field_name) {    
+	public function getUploadImage($module_dirname, $table_name, $field_name) {    
 		$ret = <<<EOT
 		// Set Var Image
 		include_once XOOPS_ROOT_PATH.'/class/uploader.php';
-		\$uploaddir = XOOPS_UPLOAD_PATH.'/{$module_name}/images/{$table_name}/';
-		\$uploader = new XoopsMediaUploader(\$uploaddir, xoops_getModuleOption('mimetypes', '{$module_name}'),
-												       xoops_getModuleOption('maxsize', '{$module_name}'), null, null);
+		\$uploaddir = XOOPS_UPLOAD_PATH.'/{$module_dirname}/images/{$table_name}/';
+		\$uploader = new XoopsMediaUploader(\$uploaddir, \${$module_dirname}->getConfig('mimetypes'),
+														 \${$module_dirname}->getConfig('maxsize'), null, null);
 		if (\$uploader->fetchMedia(\$_POST['xoops_upload_file'][0])) {
 			\$uploader->setPrefix('{$field_name}_');
 			\$uploader->fetchMedia(\$_POST['xoops_upload_file'][0]);
@@ -97,17 +97,17 @@ EOT;
 	}
 	/*
 	*  @public function getUploadFile
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $table_name
 	*  @param string $field_name
 	*/
-	public function getUploadFile($module_name, $table_name, $field_name) {    
+	public function getUploadFile($module_dirname, $table_name, $field_name) {    
 		$ret = <<<EOT
 		// Set Var File
 		include_once XOOPS_ROOT_PATH.'/class/uploader.php';
-		\$uploaddir = XOOPS_UPLOAD_PATH.'/{$module_name}/files/{$table_name}/';
-		\$uploader = new XoopsMediaUploader(\$uploaddir, xoops_getModuleOption('mimetypes', '{$module_name}'),
-												       xoops_getModuleOption('maxsize', '{$module_name}'), null, null);
+		\$uploaddir = XOOPS_UPLOAD_PATH.'/{$module_dirname}/files/{$table_name}/';
+		\$uploader = new XoopsMediaUploader(\$uploaddir, \${$module_dirname}->getConfig('mimetypes'),
+														 \${$module_dirname}->getConfig('maxsize'), null, null);
 		if (\$uploader->fetchMedia(\$_POST['xoops_upload_file'][0])) {
 			\$uploader->setPrefix('{$field_name}_') ;
 			\$uploader->fetchMedia(\$_POST['xoops_upload_file'][0]);

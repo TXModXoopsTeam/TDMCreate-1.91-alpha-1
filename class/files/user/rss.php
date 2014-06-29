@@ -54,10 +54,10 @@ class UserRss extends TDMCreateFile
 	}
 	/*
 	*  @public function getUserRss
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $language
 	*/
-	public function getUserRss($module_name, $language) 
+	public function getUserRss($module_dirname, $language) 
 	{  
 		$table = $this->getTable();
 		$table_name = $table->getVar('table_name');
@@ -86,7 +86,7 @@ class UserRss extends TDMCreateFile
 		
 		$ret = <<<EOT
 include_once 'header.php';
-\${$fppf} = {$module_name}_CleanVars(\$_GET, '{$fppf}', 0);
+\${$fppf} = {$module_dirname}_CleanVars(\$_GET, '{$fppf}', 0);
 include_once XOOPS_ROOT_PATH.'/class/template.php';
 \$items_count = \$xoopsModuleConfig['perpagerss'];
 
@@ -97,16 +97,16 @@ if (function_exists('mb_http_output')) {
 \$xoopsModuleConfig["utf8"] = false;
 
 \$tpl = new XoopsTpl();
-\$tpl->xoops_setCaching(2); //1 = Cache global, 2 = Cache individuel (par template)
-\$tpl->xoops_setCacheTime(\$xoopsModuleConfig['timecacherss']*60); // Temps de cache en secondes
-\$categories = {$module_name}_MygetItemIds('{$module_name}_view', '{$module_name}');
+\$tpl->xoops_setCaching(2); //1 = Cache global, 2 = Cache individual (for template)
+\$tpl->xoops_setCacheTime(\$xoopsModuleConfig['timecacherss']*60); // Time of the cache on seconds
+\$categories = {$module_dirname}_MygetItemIds('{$module_dirname}_view', '{$module_dirname}');
 \$criteria = new CriteriaCompo();
 \$criteria->add(new Criteria('cat_status', 0, '!='));
 \$criteria->add(new Criteria('{$fppf}', '(' . implode(',', \$categories) . ')','IN'));
 if (\${$fppf} != 0){
     \$criteria->add(new Criteria('{$fppf}', \${$fppf}));
-    \$cat = \${$table_name}Handler->get(\${$fppf});
-    \$title = \$xoopsConfig['sitename'] . ' - ' . \$xoopsModule->getVar('name') . ' - ' . \$cat->getVar('{$fpmf}');
+    \${$table_name} = \${$table_name}Handler->get(\${$fppf});
+    \$title = \$xoopsConfig['sitename'] . ' - ' . \$xoopsModule->getVar('name') . ' - ' . \${$table_name}->getVar('{$fpmf}');
 }else{
     \$title = \$xoopsConfig['sitename'] . ' - ' . \$xoopsModule->getVar('name');
 }
@@ -153,8 +153,8 @@ if (!\$tpl->is_cached('db:rss.tpl', \${$fppf})) {
             \$description_short = substr(\$description,0,strpos(\$description,'[pagebreak]'));
         }
         \$tpl->append('items', array('title' => htmlspecialchars(\${$table_name}_arr[\$i]->getVar('{$fpmf}'), ENT_QUOTES),
-                                    'link' => XOOPS_URL . '/modules/{$module_name}/singlefile.php?{$fppf}=' . \${$table_name}_arr[\$i]->getVar('{$fppf}') . '&amp;{$fpif}=' . \${$table_name}_arr[\$i]->getVar('{$fpif}'),
-                                    'guid' => XOOPS_URL . '/modules/{$module_name}/singlefile.php?{$fppf}=' . \${$table_name}_arr[\$i]->getVar('{$fppf}') . '&amp;{$fpif}=' . \${$table_name}_arr[\$i]->getVar('{$fpif}'),
+                                    'link' => XOOPS_URL . '/modules/{$module_dirname}/singlefile.php?{$fppf}=' . \${$table_name}_arr[\$i]->getVar('{$fppf}') . '&amp;{$fpif}=' . \${$table_name}_arr[\$i]->getVar('{$fpif}'),
+                                    'guid' => XOOPS_URL . '/modules/{$module_dirname}/singlefile.php?{$fppf}=' . \${$table_name}_arr[\$i]->getVar('{$fppf}') . '&amp;{$fpif}=' . \${$table_name}_arr[\$i]->getVar('{$fpif}'),
                                     'pubdate' => formatTimestamp(\${$table_name}_arr[\$i]->getVar('date'), 'rss'),
                                     'description' => htmlspecialchars(\$description_short, ENT_QUOTES)));
     }
@@ -172,11 +172,11 @@ EOT;
 	public function render() {    
 		$module = $this->getModule();
 		$filename = $this->getFileName();
-		$module_name = $module->getVar('mod_name');
-		$language = $this->getLanguage($module_name, 'MA');			
+		$module_dirname = $module->getVar('mod_dirname');
+		$language = $this->getLanguage($module_dirname, 'MA');			
 		$content = $this->getHeaderFilesComments($module, $filename);	
-		$content .= $this->getUserRss($module_name, $language);
-		$this->tdmcfile->create($module_name, '/', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$content .= $this->getUserRss($module_dirname, $language);
+		$this->tdmcfile->create($module_dirname, '/', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

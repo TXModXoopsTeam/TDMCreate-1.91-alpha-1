@@ -55,23 +55,23 @@ class BlocksFiles extends TDMCreateFile
 	*  @public function getBlocksShow
 	*  @param null
 	*/
-	public function getBlocksShow($module_name, $table_name, $table_fieldname, $table_category, $fields, $fpif) {		
-		$stu_module_name = strtoupper($module_name);
-		$stl_module_name = strtolower($module_name);
+	public function getBlocksShow($module_dirname, $table_name, $table_fieldname, $table_category, $fields, $fpif) {		
+		$stu_module_dirname = strtoupper($module_dirname);
+		$ucfmod_name = ucfirst($module_dirname);
 		$ret = <<<EOT
-include_once XOOPS_ROOT_PATH.'/modules/{$stl_module_name}/include/common.php';
-include_once XOOPS_ROOT_PATH.'/modules/{$stl_module_name}/include/functions.php';	
-function b_{$stl_module_name}_{$table_name}_show(\$options) 
+include_once XOOPS_ROOT_PATH.'/modules/{$module_dirname}/include/common.php';
+include_once XOOPS_ROOT_PATH.'/modules/{$module_dirname}/include/functions.php';	
+function b_{$module_dirname}_{$table_name}_show(\$options) 
 {
-	include_once XOOPS_ROOT_PATH.'/modules/{$stl_module_name}/class/{$table_name}.php';
+	include_once XOOPS_ROOT_PATH.'/modules/{$module_dirname}/class/{$table_name}.php';
 	\$myts =& MyTextSanitizer::getInstance();
-    \$GLOBALS['xoopsTpl']->assign('{$stl_module_name}_upload_url', {$stu_module_name}_UPLOAD_URL);
+    \$GLOBALS['xoopsTpl']->assign('{$module_dirname}_upload_url', {$stu_module_dirname}_UPLOAD_URL);
 	\${$table_fieldname} = array();
 	\$type_block = \$options[0];
 	\$nb_{$table_name} = \$options[1];
 	\$lenght_title = \$options[2];
-
-	\${$table_name}Handler =& xoops_getModuleHandler('{$table_name}', '{$module_name}');
+	\${$module_dirname} = {$ucfmod_name}Helper::getInstance();
+	\${$table_name}Handler =& \${$module_dirname}->getHandler('{$table_name}');
 	\$criteria = new CriteriaCompo();
 	array_shift(\$options);
 	array_shift(\$options);
@@ -80,7 +80,7 @@ EOT;
 		if ( $table_category == 1 ) {
 			$ret .= <<<EOT
 	if (!(count(\$options) == 1 && \$options[0] == 0)) {
-		\$criteria->add(new Criteria('{$table_fieldname}_category', {$module_name}_block_addCatSelect(\$options), 'IN'));
+		\$criteria->add(new Criteria('{$table_fieldname}_category', {$module_dirname}_block_addCatSelect(\$options), 'IN'));
 	}\n
 EOT;
 		}			
@@ -129,21 +129,22 @@ EOT;
 	}
 	/*
 	*  @public function getBlocksEdit
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $table_name
 	*  @param string $fpif
 	*  @param string $fpmf
 	*  @param string $language
 	*/
-	public function getBlocksEdit($module_name, $table_name, $fpif, $fpmf, $language) {    
-		$stu_module_name = strtoupper($module_name);
-		$stl_module_name = strtolower($module_name);
+	public function getBlocksEdit($module_dirname, $table_name, $fpif, $fpmf, $language) {    
+		$stu_module_dirname = strtoupper($module_dirname);
+		$ucfmod_name = ucfirst($module_dirname);
 		$ret = <<<EOT
-function b_{$stl_module_name}_{$table_name}_edit(\$options) 
+function b_{$module_dirname}_{$table_name}_edit(\$options) 
 {	
-    include_once XOOPS_ROOT_PATH.'/modules/{$stl_module_name}/class/{$table_name}.php';		
-	\${$table_name}Handler =& xoops_getModuleHandler('{$table_name}', '{$module_name}');
-	\$GLOBALS['xoopsTpl']->assign('{$stl_module_name}_upload_url', {$stu_module_name}_UPLOAD_URL);	
+    include_once XOOPS_ROOT_PATH.'/modules/{$module_dirname}/class/{$table_name}.php';		
+	\${$module_dirname} = {$ucfmod_name}Helper::getInstance();
+	\${$table_name}Handler =& \${$module_dirname}->getHandler('{$table_name}');
+	\$GLOBALS['xoopsTpl']->assign('{$module_dirname}_upload_url', {$stu_module_dirname}_UPLOAD_URL);	
 	\$form = {$language}DISPLAY;
 	\$form .= "<input type='hidden' name='options[0]' value='".\$options[0]."' />";
 	\$form .= "<input name='options[1]' size='5' maxlength='255' value='".\$options[1]."' type='text' />&nbsp;<br />";
@@ -177,11 +178,11 @@ EOT;
 	{  		
 		$module = $this->getModule();		
 		$table = $this->getTable();
-		$module_name = strtolower($module->getVar('mod_name'));
+		$module_dirname = $module->getVar('mod_dirname');
 		$table_name = $table->getVar('table_name');
 		$table_fieldname = $table->getVar('table_fieldname');
 		$table_category = $table->getVar('table_category');
-		$language = $this->getLanguage($module_name, 'MB');
+		$language = $this->getLanguage($module_dirname, 'MB');
 		$fields = $this->getTableFields($table->getVar('table_id'));
 		foreach(array_keys($fields) as $f) 
 		{
@@ -193,10 +194,10 @@ EOT;
 			}
 		}		
 		$content = $this->getHeaderFilesComments($module, $filename);
-		$content .= $this->getBlocksShow($module_name, $table_name, $table_fieldname, $table_category, $fields, $fpif);
-		$content .= $this->getBlocksEdit($module_name, $table_name, $fpif, $fpmf, $language);
+		$content .= $this->getBlocksShow($module_dirname, $table_name, $table_fieldname, $table_category, $fields, $fpif);
+		$content .= $this->getBlocksEdit($module_dirname, $table_name, $fpif, $fpmf, $language);
 		//
-		$this->tdmcfile->create($module_name, 'blocks', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, 'blocks', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

@@ -27,12 +27,12 @@ switch ($op) {
 	case 'build':		 
 		$template_main = 'tdmcreate_building.tpl';	
 		$GLOBALS['xoopsTpl']->assign('navigation', $adminMenu->addNavigation('building.php'));
-		// Get var module name
-		$mod_name = $moduleObj->getVar('mod_name');
+		// Get var module dirname
+		$mod_dirname = $moduleObj->getVar('mod_dirname');
 		// Directories for copy from to
-		$from_dir = TDMC_UPLOAD_REPOSITORY_PATH.'/'.strtolower($mod_name);
-		$to_dir = XOOPS_ROOT_PATH.'/modules/'.strtolower($mod_name);
-		if(isset($mod_name)) {
+		$from_dir = TDMC_UPLOAD_REPOSITORY_PATH.'/'.strtolower($mod_dirname);
+		$to_dir = XOOPS_ROOT_PATH.'/modules/'.strtolower($mod_dirname);
+		if(isset($mod_dirname)) {
 			// Clear this module if it's in repository
 			if(is_dir($from_dir)) {
 				TDMCreate_clearDir($from_dir);
@@ -65,7 +65,7 @@ switch ($op) {
 		}
 		unset($build);
 		// Directory to saved all files        
-		$GLOBALS['xoopsTpl']->assign('building_directory', sprintf(_AM_TDMCREATE_BUILDING_DIRECTORY, str_replace(' ', '', strtolower($mod_name))));
+		$GLOBALS['xoopsTpl']->assign('building_directory', sprintf(_AM_TDMCREATE_BUILDING_DIRECTORY, $mod_dirname));
 		// Copy this module in root modules
 		if ( $moduleObj->getVar('mod_inroot_copy') == 1 ) {	
 			TDMCreate_copyr($from_dir, $to_dir);

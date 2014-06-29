@@ -101,10 +101,10 @@ EOT;
 	
 	/*
 	*  @public function getUserSubmitSave
-	*  @param string $module_name
+	*  @param string $module_dirname
 	*  @param string $table_name
 	*/
-	public function getUserSubmitSave($module_name, $table_id, $table_name) 
+	public function getUserSubmitSave($module_dirname, $table_id, $table_name) 
 	{    
 		$ret = <<<EOT
 	case 'save':
@@ -125,9 +125,9 @@ EOT;
 			if(($field_element == 4) || ($field_element == 5)) {
 				$ret .= $this->adminobjects->getCheckBoxOrRadioYN($table_name, $field_name);
 			} elseif($field_element == 9) {
-				$ret .= $this->adminobjects->getUploadImage($module_name, $table_name, $field_name);
+				$ret .= $this->adminobjects->getUploadImage($module_dirname, $table_name, $field_name);
 			} elseif($field_element == 10) {
-				$ret .= $this->adminobjects->getUploadFile($module_name, $table_name, $field_name);
+				$ret .= $this->adminobjects->getUploadFile($module_dirname, $table_name, $field_name);
 			} elseif($field_element == 11) {
 				$ret .= $this->adminobjects->getTextDateSelect($table_name, $field_name);
 			} else {
@@ -169,16 +169,16 @@ EOT;
 		$module = $this->getModule();
 		$table = $this->getTable();        		
 		$filename = $this->getFileName();
-		$module_name = $module->getVar('mod_name');
+		$module_dirname = $module->getVar('mod_dirname');
 		$table_id = $table->getVar('table_id');
 		$table_name = $table->getVar('table_name');
-		$language = $this->getLanguage($module_name, 'MA');			
+		$language = $this->getLanguage($module_dirname, 'MA');			
 		$content = $this->getHeaderFilesComments($module, $filename);	
 		$content .= $this->getUserSubmitHeader();
 		$content .= $this->getUserSubmitForm($table_name, $language);
-		$content .= $this->getUserSubmitSave($module_name, $table_id, $table_name);
+		$content .= $this->getUserSubmitSave($module_dirname, $table_id, $table_name);
 		$content .= $this->getUserSubmitFooter();
-		$this->tdmcfile->create($module_name, '/', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, '/', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

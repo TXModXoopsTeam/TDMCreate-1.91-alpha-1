@@ -57,13 +57,13 @@ class ClassHelper extends TDMCreateFile
 	public function render() { 		
 		$module = $this->getModule();
 		$filename = $this->getFileName();
-		$module_name = $module->getVar('mod_name');
-		$ucf_module_name = ucfirst($module_name);
+		$module_dirname = $module->getVar('mod_dirname');
+		$ucf_module_dirname = ucfirst($module_dirname);
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= <<<EOT
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
 
-class {$ucf_module_name}Helper
+class {$ucf_module_dirname}Helper
 {
     /**
      * @var string
@@ -215,7 +215,7 @@ class {$ucf_module_name}Helper
     }
 }
 EOT;
-		$this->tdmcfile->create($module_name, 'class', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($module_dirname, 'class', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }
