@@ -101,9 +101,10 @@ switch ($op)
         } else {
            $obj =& $tdmcreate->getHandler('modules')->create();
         }		
+		$mod_dirname = preg_replace('/[^a-zA-Z0-9]\s+/', '', strtolower($_POST['mod_dirname']));
 		//Form module save		
 		$obj->setVars(array('mod_name' => $_POST['mod_name'], 
-							'mod_dirname' => preg_replace('/[^a-zA-Z0-9]\s+/', '', strtolower($_POST['mod_dirname'])),
+							'mod_dirname' => $mod_dirname,
 							'mod_version' => $_POST['mod_version'],
 							'mod_since' => $_POST['mod_since'],
                             'mod_min_php' => $_POST['mod_min_php'], 
@@ -126,9 +127,9 @@ switch ($op)
 		$uploader = new XoopsMediaUploader(TDMC_UPLOAD_IMGMOD_PATH, $tdmcreate->getConfig('mimetypes'), 
 																	$tdmcreate->getConfig('maxsize'), null, null);
 		if ($uploader->fetchMedia($_POST['xoops_upload_file'][0])) {
-		    $extension = preg_replace( '/^.+\.([^.]+)$/sU' , '\\1' , $_FILES['attachedfile']['name']);
-            $name_img = strtolower($_POST['mod_name']).'_slogo.'.$extension;
-			$uploader->setPrefix($name_img);
+		    /*$extension = preg_replace( '/.*\.([^.]+)$/', '\\1', $_FILES['attachedfile']['name']);
+            $logo_image = $mod_dirname.'_slogo.'.$extension;
+			$uploader->setPrefix($logo_image);*/
 			$uploader->fetchMedia($_POST['xoops_upload_file'][0]);
 			if (!$uploader->upload()) {
 				$errors = $uploader->getErrors();

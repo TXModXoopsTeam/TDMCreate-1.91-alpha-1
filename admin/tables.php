@@ -24,14 +24,10 @@ $op = XoopsRequest::getString('op', 'list');
 //
 $mod_id = XoopsRequest::getInt('mod_id');
 //
-$table_id = TDMCreate_CleanVars($_REQUEST, 'table_id');
-$table_mid = TDMCreate_CleanVars($_REQUEST, 'table_mid');
-$table_nbfields = TDMCreate_CleanVars($_REQUEST, 'table_nbfields');  
-$table_fieldname = TDMCreate_CleanVars($_REQUEST, 'table_fieldname', '', 'string');
-/*$table_id = XoopsRequest::getInt('table_id');
+$table_id = XoopsRequest::getInt('table_id');
 $table_mid = XoopsRequest::getInt('table_mid');
 $table_nbfields = XoopsRequest::getInt('table_nbfields');
-$table_fieldname = XoopsRequest::getString('table_fieldname', '');*/
+$table_fieldname = XoopsRequest::getString('table_fieldname', '');
 //
 switch ($op) 
 {   
@@ -48,8 +44,10 @@ switch ($op)
 		$GLOBALS['xoopsTpl']->assign('buttons', $adminMenu->renderButton()); 
 		$GLOBALS['xoopsTpl']->assign('tdmc_url', TDMC_URL);
 		$GLOBALS['xoopsTpl']->assign('tdmc_icons_url', TDMC_ICONS_URL);
-		$GLOBALS['xoopsTpl']->assign('tdmc_upload_imgmod_url', TDMC_UPLOAD_IMGMOD_URL);
-        $GLOBALS['xoopsTpl']->assign('tdmc_upload_imgtab_url', TDMC_UPLOAD_IMGTAB_URL);
+		$GLOBALS['xoopsTpl']->assign('tdmc_upload_imgmod_url', TDMC_UPLOAD_IMGMOD_URL);		
+        /*$tdmc_upload_image_url = is_dir($sysPathIcon32) ? $sysPathIcon32 : TDMC_UPLOAD_IMGTAB_PATH;
+		$GLOBALS['xoopsTpl']->assign('tdmc_table_image_url', $tdmc_upload_image_url);*/
+		$GLOBALS['xoopsTpl']->assign('tdmc_upload_imgtab_url', TDMC_UPLOAD_IMGTAB_URL);
 		$GLOBALS['xoopsTpl']->assign('modPathIcon16', $modPathIcon16);
 		$GLOBALS['xoopsTpl']->assign('sysPathIcon32', $sysPathIcon32);
 		// Get the list of modules
@@ -175,13 +173,11 @@ switch ($op)
 								'table_fieldname' => $table_fieldname));
 			//Form table_image	
 			include_once XOOPS_ROOT_PATH.'/class/uploader.php';
-			$uploaddir = is_dir($sysPathIcon32) ? $sysPathIcon32 : TDMC_UPLOAD_IMGTAB_PATH;			
+			$framePathIcon32 = XOOPS_ROOT_PATH . '/Frameworks/moduleclasses/icons/32';
+			$uploaddir = is_dir($framePathIcon32) ? $framePathIcon32 : TDMC_UPLOAD_IMGTAB_PATH;			
 			$uploader = new XoopsMediaUploader($uploaddir, $tdmcreate->getConfig('mimetypes'), 
 														   $tdmcreate->getConfig('maxsize'), null, null);
-			if ($uploader->fetchMedia($_POST['xoops_upload_file'][0])) {
-				$extension = preg_replace( '/^.+\.([^.]+)$/sU' , '\\1' , $_FILES['attachedfile']['name']);
-				$name_img = $_POST['table_name'].'.'.$extension;
-				$uploader->setPrefix($name_img);			
+			if ($uploader->fetchMedia($_POST['xoops_upload_file'][0])) {							
 				$uploader->fetchMedia($_POST['xoops_upload_file'][0]);
 				if (!$uploader->upload()) {
 					$errors = $uploader->getErrors();

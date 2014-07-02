@@ -36,7 +36,7 @@ function phpFunction($val='')
 
 class logoGenerator
 {
-    static function createLogo($logoIcon, $moduleName)
+    static function createLogo($logoIcon, $moduleDirname)
 	{
 		if (!extension_loaded("gd")) {
 			return false;
@@ -65,13 +65,13 @@ class logoGenerator
 
 		// Write text
 		$text_color = imagecolorallocate($imageModule, 0, 0, 0);
-		$space_to_border = (92 - strlen($moduleName) * 7.5) / 2;
-		imagefttext($imageModule, 8.5, 0, $space_to_border, 45, $text_color, $font, ucfirst($moduleName), array());
+		$space_to_border = (92 - strlen($moduleDirname) * 7.5) / 2;
+		imagefttext($imageModule, 8.5, 0, $space_to_border, 45, $text_color, $font, ucfirst($moduleDirname), array());
 
 		imagecopy($imageModule, $imageIcon, 29, 2, 0, 0, 32, 32);
 
-		//$targetImage = TDMC_UPLOAD_IMGMOD_URL . "/" . $moduleName . "_logo.png";
-		$targetImage = "/uploads/" . $dirname . "/images/repository/" . $moduleName . "_logo.png";
+		//$targetImage = TDMC_UPLOAD_IMGMOD_URL . "/" . $moduleDirname . "_slogo.png";
+		$targetImage = "/uploads/" . $dirname . "/images/repository/" . $moduleDirname . "_slogo.png";
 
 		imagepng($imageModule, XOOPS_ROOT_PATH . $targetImage );
 

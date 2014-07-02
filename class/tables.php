@@ -98,7 +98,7 @@ class TDMCreateTables extends XoopsObject
 		$isNew = $this->isNew(); 
 		$table_name = $this->getVar('table_name');
 		$table_mid = $this->getVar('table_mid');
-		$title = $isNew ? sprintf(_AM_TDMCREATE_TABLE_ADD) : sprintf(_AM_TDMCREATE_TABLE_EDIT);
+		$title = $isNew ? sprintf(_AM_TDMCREATE_TABLE_NEW) : sprintf(_AM_TDMCREATE_TABLE_EDIT);
 		
 		xoops_load('xoopsformloader');
 		$form = new XoopsThemeForm($title, 'tableform', $action, 'post', true);
@@ -140,12 +140,13 @@ class TDMCreateTables extends XoopsObject
 		$get_table_image = $this->getVar('table_image');
 		$table_image = $get_table_image ? $get_table_image : 'blank.gif';
 		$iconsdir = '/Frameworks/moduleclasses/icons/32';
-		$uploads_dir = '/uploads/'.$GLOBALS['xoopsModule']->dirname().'/images/tables';
+		$uploads_dir = '/uploads/tdmcreate/images/tables';
         if(is_dir(XOOPS_ROOT_PATH . $iconsdir)){
 		    $iconsdirectory = $iconsdir;
 		}else{
 		    $iconsdirectory = $uploads_dir;
 		}
+		/*$iconsdirectory = $isNew ? $iconsdir : $uploads_dir;*/
         //		
 		$imgtray1 = new XoopsFormElementTray(_AM_TDMCREATE_TABLE_IMAGE,'<br />');
 		if(is_dir(XOOPS_ROOT_PATH . $iconsdir)) {

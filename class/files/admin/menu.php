@@ -74,7 +74,7 @@ class AdminMenu extends TDMCreateFile
 \$i = 1;
 \$adminmenu[\$i]['title'] = {$language}{$menu};
 \$adminmenu[\$i]['link'] = 'admin/index.php';
-\$adminmenu[\$i]['icon'] = \$sysPathIcon32.'/home.png';
+\$adminmenu[\$i]['icon'] = \$sysPathIcon32.'/dashboard.png';
 \$i++;\n
 EOT;
 		foreach (array_keys($tables) as $i)
@@ -86,7 +86,7 @@ EOT;
 				$content .= <<<EOT
 \$adminmenu[\$i]['title'] = {$language}{$menu};
 \$adminmenu[\$i]['link'] = 'admin/{$tables[$i]->getVar('table_name')}.php';
-\$adminmenu[\$i]['icon'] = \$sysPathIcon32.'/{$tables[$i]->getVar('table_image')}';
+\$adminmenu[\$i]['icon'] = 'assets/images/32/{$tables[$i]->getVar('table_image')}';
 \$i++;\n
 EOT;
 			}

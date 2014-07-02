@@ -68,7 +68,7 @@ define('_AM_TDMCREATE_DISPLAY_USER', "Visible in User View");
 //Buttons
 define('_AM_TDMCREATE_ADD_MODULE', "Add new module");
 //Form
-define('_AM_TDMCREATE_MODULE_ADD', "Add a new module");
+define('_AM_TDMCREATE_MODULE_NEW', "New module");
 define('_AM_TDMCREATE_MODULE_EDIT', "Edit module");
 //define('_AM_TDMCREATE_MODULE_IMPORTANT', "Required Information");
 
@@ -131,7 +131,7 @@ define('_AM_TDMCREATE_MODULE_MIN_MYSQL', "Minimum Database");
 // Buttons
 define('_AM_TDMCREATE_ADD_TABLE', "Add new table");
 //Form1
-define('_AM_TDMCREATE_TABLE_ADD', "Add Table");
+define('_AM_TDMCREATE_TABLE_NEW', "New Table");
 define('_AM_TDMCREATE_TABLE_EDIT', "Edit Table");
 define('_AM_TDMCREATE_TABLE_MODULES', "Choose a module");
 define('_AM_TDMCREATE_TABLE_NAME', "Table Name");
@@ -166,10 +166,12 @@ define('_AM_TDMCREATE_TABLE_IMAGE_DESC', "<span class='red bold'>WARNING</span>:
 define('_AM_TDMCREATE_TABLE_FORM_SAVED_OK', "The table <b class='green'>%s</b> is successfully saved");
 define('_AM_TDMCREATE_TABLE_FORM_UPDATED_OK', "The table <b class='green'>%s</b> is successfully updated");
 
-//Form2
-define('_AM_TDMCREATE_FIELD_ADD', "Add fields");
-define('_AM_TDMCREATE_FIELD_EDIT', "Edit fields");
-define('_AM_TDMCREATE_FIELD_NUMBER', "N&#176;");
+// ------------------ Form Fields ------------------
+// Caption
+define('_AM_TDMCREATE_FIELDS_NEW', "New fields");
+define('_AM_TDMCREATE_FIELDS_EDIT', "Edit fields");
+// Fields
+define('_AM_TDMCREATE_FIELD_ID', "N&#176;");
 define('_AM_TDMCREATE_FIELD_NAME', "Field Name");
 define('_AM_TDMCREATE_FIELD_TYPE', "Type");
 define('_AM_TDMCREATE_FIELD_VALUE', "Value");

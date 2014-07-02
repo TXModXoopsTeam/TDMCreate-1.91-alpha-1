@@ -204,6 +204,7 @@ class TDMCreateArchitecture extends TDMCreateStructure
 		// Module
 		$mod_id = $module->getVar('mod_id');
         $mod_dirname = $module->getVar('mod_dirname');
+		$uploadTablesIcons32 = $this->upload_path.'/images/tables';
 		// Id of tables
 		$criteria_tables = new CriteriaCompo();
 		$criteria_tables->add(new Criteria('table_mid', $mod_id));		
@@ -217,6 +218,7 @@ class TDMCreateArchitecture extends TDMCreateStructure
 			$table_mid = $tables[$t]->getVar('table_mid');
 			$table_id = $tables[$t]->getVar('table_id');
 			$table_name = $tables[$t]->getVar('table_name');
+			$table_image = $tables[$t]->getVar('table_image');
 			$table_admin = $tables[$t]->getVar('table_admin');
 			$table_user = $tables[$t]->getVar('table_user');
 			$table_blocks = $tables[$t]->getVar('table_blocks');
@@ -224,9 +226,12 @@ class TDMCreateArchitecture extends TDMCreateStructure
 			$table_comments = $tables[$t]->getVar('table_comments');
 			$table_notifications = $tables[$t]->getVar('table_notifications');
 			$table_permissions = $tables[$t]->getVar('table_permissions');
-						
-			$table = $this->tdmcreate->getHandler('tables')->get($table_id);							
-													
+			// Get Table Object		
+			$table = $this->tdmcreate->getHandler('tables')->get($table_id);
+			// Copy of tables images file
+			if( file_exists($upload_table_image = $uploadTablesIcons32.'/'.$table_image)) {
+				$this->structure->copyFile('assets/images/32', $upload_table_image, $table_image);
+			}										
 			// Creation of admin files
 			if ( $table_admin == 1) {	
 				// Admin Pages File

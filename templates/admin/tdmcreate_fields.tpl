@@ -46,8 +46,8 @@
     	        <td class='xo-actions txtcenter width6'>
 		    <a href="tables.php?op=edit&amp;table_id=<{$table.id}>" title="<{$smarty.const._AM_TDMCREATE_EDIT_TABLE}>">
                        <img src="<{xoModuleIcons16 edit.png}>" alt="<{$smarty.const._AM_TDMCREATE_EDIT_TABLE}>" />
-                    </a>  <!-- &amp;field_mid=<{$table.mid}>&amp;field_tid=<{$table.id}>&amp;field_numb=<{$table.nbfields}> -->
-                    <a href="fields.php?op=edit&amp;field_tid=<{$table.id}>" title="<{$smarty.const._AM_TDMCREATE_EDIT_FIELDS}>">
+                    </a>  
+                    <a href="fields.php?op=edit&amp;field_mid=<{$table.mid}>&amp;field_tid=<{$table.id}>" title="<{$smarty.const._AM_TDMCREATE_EDIT_FIELDS}>">
                        <img src="<{xoModuleIcons16 inserttable.png}>" alt="<{$smarty.const._AM_TDMCREATE_EDIT_FIELDS}>" />
                     </a>
                     <a href="tables.php?op=delete&amp;table_id=<{$table.id}>" title="<{$smarty.const._DELETE}>">

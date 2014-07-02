@@ -143,7 +143,7 @@ switch ($op)
 		$GLOBALS['xoopsTpl']->assign('buttons', $adminMenu->renderButton());
 		// Form Add
         $fieldsObj =& $tdmcreate->getHandler('fields')->create();        	
-		$form = $fieldsObj->getFormAdd($field_mid, $field_tid, $field_numb, $field_name);
+		$form = $fieldsObj->getFormNew($field_mid, $field_tid, $field_numb, $field_name);
 		$GLOBALS['xoopsTpl']->assign('form', $form->render());
 		// Test -> Will be removed
 		var_dump($field_mid);

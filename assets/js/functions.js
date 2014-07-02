@@ -47,7 +47,7 @@ function showImgSelected2(imgId, selectId, imgDir, extra, xoopsUrl) {
 function createNewModuleLogo(xoopsUrl) {  // this is JavaScript  function
 	iconDom = xoopsGetElementById(image4);
 	iconName = iconDom.src;
-	str = xoopsGetElementById(mod_name).value;
+	str = xoopsGetElementById(mod_dirname).value;
 	res = str.toLowerCase();
 	caption = res.replace(' ', '');
 	logoDom = xoopsGetElementById(image3);
@@ -63,7 +63,7 @@ function createNewModuleLogo(xoopsUrl) {  // this is JavaScript  function
 			//alert(data1);
 			logoDom.src = data1.split('\n')[0];//the data returned has too many lines. We need only the link to the image
 			logoDom.load; //refresh the logo
-			mycheck=caption+'_logo.png'; //name of the new logo file
+			mycheck=caption+'_slogo.png'; //name of the new logo file
 			//if file is not in the list of logo files, add it to the dropdown menu
 			var fileExist;
 			elems = moduleImageDom.options;

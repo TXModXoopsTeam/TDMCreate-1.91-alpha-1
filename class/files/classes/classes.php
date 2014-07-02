@@ -60,21 +60,21 @@ class ClassFiles extends TDMCreateFormElements
 		$this->setTables($tables);
 	}
 	/*
-	*  @public function getInitVar
+	*  @private function getInitVar
 	*  @param string $field_name
 	*  @param string $type
 	*/
-	public function getInitVar($field_name, $type = 'INT') {    
+	private function getInitVar($field_name, $type = 'INT') {    
 		$ret = <<<EOT
 		\$this->initVar('{$field_name}', XOBJ_DTYPE_{$type});\n
 EOT;
 		return $ret;
 	}
 	/*
-	*  @public function getInitVars
+	*  @private function getInitVars
 	*  @param array $fields
 	*/
-	public function getInitVars($fields) {    
+	private function getInitVars($fields) {    
 		$ret = '';
 		// Creation of the initVar functions list
 		foreach (array_keys($fields) as $f) 
@@ -126,12 +126,12 @@ EOT;
 		return $ret;
 	}
 	/*
-	*  @public function getHeadClass
+	*  @private function getHeadClass
 	*  @param string $module_dirname
 	*  @param string $table_name
 	*  @param array $fields
 	*/
-	public function getHeadClass($module_dirname, $table_name, $fields) {    
+	private function getHeadClass($module_dirname, $table_name, $fields) {    
 		$ucf_module_dirname = ucfirst($module_dirname);
 		$ucf_table_name = ucfirst($table_name);	
 		$ret = <<<EOT
@@ -167,11 +167,11 @@ EOT;
 	}
 	
 	/*
-	*  @public function getHeadFunctionForm
+	*  @private function getHeadFunctionForm
 	*  @param string $module
 	*  @param string $table
 	*/
-	public function getHeadFunctionForm($module, $table) 
+	private function getHeadFunctionForm($module, $table) 
 	{    
 		$module_dirname = $module->getVar('mod_dirname');
 		$language = $this->getLanguage($module_dirname, 'AM');		
@@ -199,11 +199,11 @@ EOT;
 		return $ret;
 	}
 	/*
-	*  @public function getPermissionsInFunctionForm
+	*  @private function getPermissionsInFunctionForm
 	*  @param string $module_dirname
 	*  @param string $fpif
 	*/
-	public function getPermissionsInFunctionForm($module_dirname, $fpif) {    
+	private function getPermissionsInFunctionForm($module_dirname, $fpif) {    
 		$perm_approve = $this->getLanguage($module_dirname, 'AM', 'PERMISSIONS_APPROVE');
 		$perm_submit = $this->getLanguage($module_dirname, 'AM', 'PERMISSIONS_SUBMIT');
 		$perm_view = $this->getLanguage($module_dirname, 'AM', 'PERMISSIONS_VIEW');
@@ -246,7 +246,7 @@ EOT;
 	*  @public function getFootFunctionForm
 	*  @param null
 	*/
-	public function getFootFunctionForm() {    
+	private function getFootFunctionForm() {    
 		$ret = <<<EOT
 		\$form->addElement(new XoopsFormHidden('op', 'save'));
 		\$form->addElement(new XoopsFormButton('', 'submit', _SUBMIT, 'submit'));
@@ -263,7 +263,7 @@ EOT;
 	*  @param string $fpif
 	*  @param string $fpmf
 	*/
-	public function getClassHandler($module_dirname, $table_name, $fpif, $fpmf) {		
+	private function getClassHandler($module_dirname, $table_name, $fpif, $fpmf) {		
 		$ucf_module_dirname = ucfirst($module_dirname);
         $ucf_table_name = ucfirst($table_name);
         $ucf_mod_table_handler = $ucf_module_dirname . $ucf_table_name;		

@@ -54,7 +54,7 @@
                 <a href="modules.php?op=delete&amp;mod_id=<{$module.id}>" title="<{$smarty.const._DELETE}>">
                    <img src="<{xoModuleIcons16 delete.png}>" alt="<{$smarty.const._DELETE}>" alt="<{$smarty.const._DELETE}>" />
                 </a>
-	    </td>               
+	    </td>                       
          </tr>  
          <{foreach item=table from=$module.tables}>
              <tr id="table<{$table.id}>" class="<{cycle values='even,odd'}> toggleChild">
@@ -79,7 +79,7 @@
                 <td class='center'><img id="loading_img_table_permissions<{$table.id}>" src="<{$modPathIcon16}>/spinner.gif" style="display:none;" title="<{$smarty.const._AM_SYSTEM_LOADING}>" alt="<{$smarty.const._AM_SYSTEM_LOADING}>" /><img style="cursor:pointer;" class="tooltip" id="img_table_permissions<{$table.id}>" onclick="tdmcreate_setStatus( { op: 'display', table_id: <{$table.id}>, table_permissions: <{if $table.permissions}>0<{else}>1<{/if}> }, 'img_table_permissions<{$table.id}>', 'tables.php' )" src="<{xoModuleIcons16}><{$table.permissions}>.png" alt="<{$smarty.const._AM_TDMCREATE_CHANGE_DISPLAY}>&nbsp;<{$table.name}>" title="<{$smarty.const._AM_TDMCREATE_CHANGE_DISPLAY}>&nbsp;<{$table.name}>" />                  
                 </td>
     	        <td class='xo-actions txtcenter width6'>
-    		    <a href="tables.php?op=edit&amp;table_id=<{$table.id}>" title="<{$smarty.const._EDIT}>">
+    		    <a href="tables.php?op=edit&amp;table_mid=<{$table.mid}>&amp;table_id=<{$table.id}>" title="<{$smarty.const._EDIT}>">
                        <img src="<{xoModuleIcons16 edit.png}>" alt="<{$smarty.const._EDIT}>" />
                     </a>
                     <a href="fields.php?op=edit&amp;field_tid=<{$table.id}>" title="<{$smarty.const._EDIT}>">

@@ -16,7 +16,7 @@
  * @package         tdmcreate
  * @since           2.5.0
  * @author          Txmod Xoops http://www.txmodxoops.org
- * @version         $Id: form_elements.php 12258 2014-01-02 09:33:29Z timgno $
+ * @version         $Id: formelements.php 12258 2014-01-02 09:33:29Z timgno $
  */
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
 
@@ -30,15 +30,6 @@ class TDMCreateFormElements extends TDMCreateFile
 		parent::__construct();
 		$this->tdmcreate = TDMCreate::getInstance();
 	}
-	/**
-     * @param string $method
-     * @param array  $args
-     */
-    public function __call($method, $args)
-    {
-        $arg = isset($args[0]) ? $args[0] : null;
-        return $this->getVar($method, $arg);
-    }
 	/*
 	*  @static function &getInstance
 	*  @param null
@@ -61,37 +52,37 @@ class TDMCreateFormElements extends TDMCreateFile
 		$this->setTable($table);
 	}
 	/*
-	*  @public function getXoopsFormText
+	*  @private function getXoopsFormText
 	*  @param string $language
 	*  @param string $field_name
 	*  @param string $required
 	*/
-	public function getXoopsFormText($language, $field_name, $required = 'false') {    
+	private function getXoopsFormText($language, $field_name, $required = 'false') {    
 		$ret = <<<EOT
 		\$form->addElement( new XoopsFormText({$language}, '{$field_name}', 50, 255, \$this->getVar('{$field_name}')){$required} );\n
 EOT;
 		return $ret;
 	}
 	/*
-	*  @public function getXoopsFormText
+	*  @private function getXoopsFormText
 	*  @param string $language
 	*  @param string $field_name
 	*  @param string $required
 	*/
-	public function getXoopsFormTextArea($language, $field_name, $required = 'false') {    
+	private function getXoopsFormTextArea($language, $field_name, $required = 'false') {    
 		$ret = <<<EOT
 		\$form->addElement( new XoopsFormTextArea({$language}, '{$field_name}', \$this->getVar('{$field_name}'), 4, 47){$required} );\n
 EOT;
 		return $ret;
 	}
 	/*
-	*  @public function getXoopsFormDhtmlTextArea
+	*  @private function getXoopsFormDhtmlTextArea
 	*  @param string $language
 	*  @param string $module_dirname
 	*  @param string $field_name
 	*  @param string $required
 	*/
-	public function getXoopsFormDhtmlTextArea($language, $module_dirname, $field_name, $required = 'false') {    
+	private function getXoopsFormDhtmlTextArea($language, $module_dirname, $field_name, $required = 'false') {    
 		$ret = <<<EOT
 		\$editor_configs = array();
 		\$editor_configs['name'] = '{$field_name}';
@@ -106,12 +97,12 @@ EOT;
 		return $ret;
 	}
 	/*
-	*  @public function getXoopsFormCheckBox
+	*  @private function getXoopsFormCheckBox
 	*  @param string $language
 	*  @param string $field_name
 	*  @param string $required
 	*/
-	public function getXoopsFormCheckBox($language, $field_name, $required = 'false') {    
+	private function getXoopsFormCheckBox($language, $field_name, $required = 'false') {    
 		$ret = <<<EOT
 		\${$field_name} = \$this->isNew() ? 0 : \$this->getVar('{$field_name}');
 		\$check_{$field_name} = new XoopsFormCheckBox({$language}, '{$field_name}', \${$field_name});
@@ -121,35 +112,35 @@ EOT;
 		return $ret;
 	}
 	/*
-	*  @public function getXoopsFormHidden
+	*  @private function getXoopsFormHidden
 	*  @param string $field_name
 	*/
-	public function getXoopsFormHidden($field_name) {    
+	private function getXoopsFormHidden($field_name) {    
 		$ret = <<<EOT
 		\$form->addElement( new XoopsFormHidden('{$field_name}', \$this->getVar('{$field_name}')) );\n
 EOT;
 		return $ret;
 	}
 	/*
-	*  @public function getXoopsFormUploadFile
+	*  @private function getXoopsFormUploadFile
 	*  @param string $language
 	*  @param string $field_name
 	*  @param string $required
 	*/
-	public function getXoopsFormUploadFile($language, $module_dirname, $field_name, $required = 'false') {    
+	private function getXoopsFormUploadFile($language, $module_dirname, $field_name, $required = 'false') {    
 		$ret = <<<EOT
 		\$form->addElement( new XoopsFormFile({$language}, '{$field_name}', \$this->{$module_dirname}->getConfig('maxsize')){$required} );\n
 EOT;
 		return $ret;
 	}
 	/*
-	*  @public function getXoopsFormUploadImage
+	*  @private function getXoopsFormUploadImage
 	*  @param string $language
 	*  @param string $table_name
 	*  @param string $field_name
 	*  @param string $required
 	*/
-	public function getXoopsFormUploadImage($language, $module_dirname, $table_name, $field_name, $required = 'false') {		
+	private function getXoopsFormUploadImage($language, $module_dirname, $table_name, $field_name, $required = 'false') {		
 		$stu_field_name = strtoupper($field_name);
 		$ret = <<<EOT
 		//\$form->addElement(new XoopsFormImage({$language}, '{$field_name}', \$this->{$module_dirname}->getConfig('maxsize')){$required});
@@ -187,25 +178,25 @@ EOT;
 		return $ret;
 	}
 	/*
-	*  @public function getXoopsFormColorPicker
+	*  @private function getXoopsFormColorPicker
 	*  @param string $language
 	*  @param string $field_name
 	*  @param string $required
 	*/
-	public function getXoopsFormColorPicker($language, $module_dirname, $field_name, $required = 'false') {    
+	private function getXoopsFormColorPicker($language, $module_dirname, $field_name, $required = 'false') {    
 		$ret = <<<EOT
 		\$form->addElement( new XoopsFormColorPicker({$language}, '{$field_name}', \$this->{$module_dirname}->getConfig('maxsize')){$required} );\n
 EOT;
 		return $ret;
 	}
 	/*
-	*  @public function getXoopsFormSelect
+	*  @private function getXoopsFormSelect
 	*  @param string $language
 	*  @param string $table_name
 	*  @param string $field_name
 	*  @param string $required
 	*/
-	public function getXoopsFormSelect($language, $table_name, $field_name, $required = 'false') {    
+	private function getXoopsFormSelect($language, $table_name, $field_name, $required = 'false') {    
 		$ret = <<<EOT
 		\${$field_name}_select = new XoopsFormSelect({$language}, '{$field_name}', \$this->getVar('{$field_name}'));
 		\${$field_name}_select->addOptionArray({$table_name}Handler->getList()); 
@@ -214,24 +205,24 @@ EOT;
 		return $ret;
 	}
 	/*
-	*  @public function getXoopsFormSelectUser
+	*  @private function getXoopsFormSelectUser
 	*  @param string $language
 	*  @param string $field_name
 	*  @param string $required
 	*/
-	public function getXoopsFormSelectUser($language, $field_name, $required = 'false') {    
+	private function getXoopsFormSelectUser($language, $field_name, $required = 'false') {    
 		$ret = <<<EOT
 		\$form->addElement( new XoopsFormSelectUser({$language}, '{$field_name}', false, \$this->getVar('{$field_name}'), 1, false){$required} );\n
 EOT;
 		return $ret;
 	}
 	/*
-	*  @public function getXoopsFormRadioYN
+	*  @private function getXoopsFormRadioYN
 	*  @param string $language
 	*  @param string $field_name
 	*  @param string $required
 	*/
-	public function getXoopsFormRadioYN($language, $field_name, $required = 'false') {    
+	private function getXoopsFormRadioYN($language, $field_name, $required = 'false') {    
 		$ret = <<<EOT
 		${$field_name} = \$this->isNew() ? 0 : \$this->getVar('{$field_name}');
 		\$form->addElement( new XoopsFormRadioYN({$language}, '{$field_name}', ${$field_name}){$required} );\n
@@ -239,26 +230,26 @@ EOT;
 		return $ret;
 	}
 	/*
-	*  @public function getXoopsFormTextDateSelect
+	*  @private function getXoopsFormTextDateSelect
 	*  @param string $language
 	*  @param string $field_name
 	*  @param string $required
 	*/
-	public function getXoopsFormTextDateSelect($language, $module_dirname, $field_name, $required = 'false') {    
+	private function getXoopsFormTextDateSelect($language, $module_dirname, $field_name, $required = 'false') {    
 		$ret = <<<EOT
 		\$form->addElement( new XoopsFormTextDateSelect({$language}, '{$field_name}', '', \$this->getVar('{$field_name}')){$required} );\n
 EOT;
 		return $ret;
 	}
 	/*
-	*  @public function getXoopsFormTable
+	*  @private function getXoopsFormTable
 	*  @param string $language
 	*  @param string $module_dirname
 	*  @param string $table_name
 	*  @param string $fields
 	*  @param string $required
 	*/
-	public function getXoopsFormTable($language, $module_dirname, $table_name, $fields, $required = 'false') 
+	private function getXoopsFormTable($language, $module_dirname, $table_name, $fields, $required = 'false') 
 	{    
 	    $field_name = '';
 		foreach(array_keys($fields) as $f) 
@@ -276,14 +267,14 @@ XFT;
 		return $ret;
 	}
 	/*
-	*  @public function getXoopsFormTopic
+	*  @private function getXoopsFormTopic
 	*  @param string $language
 	*  @param string $module_dirname
 	*  @param string $table_name
 	*  @param string $fields
 	*  @param string $required
 	*/
-	public function getXoopsFormTopic($language, $module_dirname, $table_name, $fields, $required = 'false') 
+	private function getXoopsFormTopic($language, $module_dirname, $table_name, $fields, $required = 'false') 
 	{    
 		foreach(array_keys($fields) as $f) 
 		{	
@@ -327,58 +318,63 @@ XFT;
 		foreach(array_keys($fields) as $f)		
 		{	
 			$field_name = $fields[$f]->getVar('field_name');
-			$field_element = $fields[$f]->getVar('field_element');	
+			$field_element = $fields[$f]->getVar('field_element');
+            $field_inform = $fields[$f]->getVar('field_inform');			
 			$language = $language_funct . strtoupper($field_name);
 			$required = ( $fields[$f]->getVar('field_required') == 1 ) ? ', true' : '';
 			//			
-			//if($f > 0) { // If we want to hide XoopsFormHidden() or field id
-				switch($field_element)
-				{
-					case 1:
-						$ret .= $this->getXoopsFormText($language, $field_name, $required);
-					break;
-					case 2:
-						$ret .= $this->getXoopsFormTextArea($language, $field_name, $required);
-					break;
-					case 3:
-						$ret .= $this->getXoopsFormDhtmlTextArea($language, $module_dirname, $field_name, $required);
-					break;
-					case 4:
-						$ret .= $this->getXoopsFormCheckBox($language, $field_name, $required);
-					break;
-					case 5:
-						$ret .= $this->getXoopsFormRadioYN($language, $field_name, $required);
-					break;
-					case 6:
-						$ret .= $this->getXoopsFormSelect($language, $table_name, $field_name, $required);
-					break;
-					case 7:
-						$ret .= $this->getXoopsFormSelectUser($language, $field_name, $required);
-					break;
-					case 8:
-						$ret .= $this->getXoopsFormColorPicker($language, $module_dirname, $field_name, $required);
-					break;
-					case 9:
-						$ret .= $this->getXoopsFormUploadImage($language_funct, $module_dirname, $table_name, $field_name, $required);
-					break;
-					case 10:
-						$ret .= $this->getXoopsFormUploadFile($language, $module_dirname, $field_name, $required);
-					break;
-					case 11:
-						$ret .= $this->getXoopsFormTextDateSelect($language, $module_dirname, $field_name, $required);
-					break;
-					default:
-						$ret .= $this->getXoopsFormHidden($field_name);					
-					break;
-				}
-				if ($field_element > 11) {
-					if($table->getVar('table_category') == 1) {
-						$ret .= $this->getXoopsFormTopic($language, $module_dirname, $table_name, $fields, $required);
-					} else {
-						$ret .= $this->getXoopsFormTable($language, $module_dirname, $table_name, $fields, $required);
+			if($field_inform == 1) { 
+				// If we want to hide XoopsFormHidden() or field id
+				//if(($f > 0) && ($table->getVar('table_autoincrement') == 1)) { 
+					// Switch elements
+					switch($field_element)
+					{
+						case 1:
+							$ret .= $this->getXoopsFormText($language, $field_name, $required);
+						break;
+						case 2:
+							$ret .= $this->getXoopsFormTextArea($language, $field_name, $required);
+						break;
+						case 3:
+							$ret .= $this->getXoopsFormDhtmlTextArea($language, $module_dirname, $field_name, $required);
+						break;
+						case 4:
+							$ret .= $this->getXoopsFormCheckBox($language, $field_name, $required);
+						break;
+						case 5:
+							$ret .= $this->getXoopsFormRadioYN($language, $field_name, $required);
+						break;
+						case 6:
+							$ret .= $this->getXoopsFormSelect($language, $table_name, $field_name, $required);
+						break;
+						case 7:
+							$ret .= $this->getXoopsFormSelectUser($language, $field_name, $required);
+						break;
+						case 8:
+							$ret .= $this->getXoopsFormColorPicker($language, $module_dirname, $field_name, $required);
+						break;
+						case 9:
+							$ret .= $this->getXoopsFormUploadImage($language_funct, $module_dirname, $table_name, $field_name, $required);
+						break;
+						case 10:
+							$ret .= $this->getXoopsFormUploadFile($language, $module_dirname, $field_name, $required);
+						break;
+						case 11:
+							$ret .= $this->getXoopsFormTextDateSelect($language, $module_dirname, $field_name, $required);
+						break;
+						default:
+							$ret .= $this->getXoopsFormHidden($field_name);					
+						break;
 					}
-				}
-			//}
+					if ($field_element > 11) {
+						if($table->getVar('table_category') == 1) {
+							$ret .= $this->getXoopsFormTopic($language, $module_dirname, $table_name, $fields, $required);
+						} else {
+							$ret .= $this->getXoopsFormTable($language, $module_dirname, $table_name, $fields, $required);
+						}
+					}
+				//}
+			}
 		}
 		return $ret;
 	}

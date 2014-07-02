@@ -118,7 +118,7 @@ class TDMCreateModules extends XoopsObject
             $action = $_SERVER['REQUEST_URI'];
         }
         $isNew = $this->isNew();
-		$title = $isNew ? sprintf(_AM_TDMCREATE_MODULE_ADD) : sprintf(_AM_TDMCREATE_MODULE_EDIT);
+		$title = $isNew ? sprintf(_AM_TDMCREATE_MODULE_NEW) : sprintf(_AM_TDMCREATE_MODULE_EDIT);
 
         include_once(XOOPS_ROOT_PATH."/class/xoopsformloader.php");
 

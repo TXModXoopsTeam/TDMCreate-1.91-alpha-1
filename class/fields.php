@@ -88,29 +88,27 @@ class TDMCreateFields extends XoopsObject
     }
 	
 	/*
-	*  @public function getFormAdd
-	*
-	*  @param integer $field_mid
-	*  @param integer $field_tid
-	*  @param integer $field_numb
-	*  @param string $f_name
+	*  @private function getHeaderForm
 	*  @param mixed $action
 	*/
-	public function getFormAdd($field_mid = null, $field_tid = null, $field_numb = null, $f_name = null, $action = false)
+	private function getHeaderForm($action = false)
 	{
 		if ($action === false) {
 			$action = $_SERVER['REQUEST_URI'];
 		}
 		
+		$isNew = $this->isNew();
+		$title = $isNew ? sprintf(_AM_TDMCREATE_FIELDS_NEW) : sprintf(_AM_TDMCREATE_FIELDS_EDIT);
+		
 		$form = new TDMCreateThemeForm(null, 'form', $action, 'post', true);
 		$form->setExtra('enctype="multipart/form-data"');			
-		        		
+						
 		// New Object HtmlTable           
 		$form->addElement(new TDMCreateFormLabel('<table border="0" cellspacing="1" class="outer width100">'));
-        $form->addElement(new TDMCreateFormLabel('<thead class="center">'));	
-		$form->addElement(new TDMCreateFormLabel('<tr class="head"><th colspan="9">'._AM_TDMCREATE_FIELD_ADD.'</th></tr>'));
+		$form->addElement(new TDMCreateFormLabel('<thead class="center">'));	
+		$form->addElement(new TDMCreateFormLabel('<tr class="head"><th colspan="9">'.$title.'</th></tr>'));
 		$form->addElement(new TDMCreateFormLabel('<tr class="head width5">'));        		
-		$form->addElement(new TDMCreateFormLabel('<td>'._AM_TDMCREATE_FIELD_NUMBER.'</td>'));
+		$form->addElement(new TDMCreateFormLabel('<td>'._AM_TDMCREATE_FIELD_ID.'</td>'));
 		$form->addElement(new TDMCreateFormLabel('<td>'._AM_TDMCREATE_FIELD_NAME.'</td>'));														
 		$form->addElement(new TDMCreateFormLabel('<td>'._AM_TDMCREATE_FIELD_TYPE.'</td>'));
 		$form->addElement(new TDMCreateFormLabel('<td>'._AM_TDMCREATE_FIELD_VALUE.'</th>'));
@@ -120,7 +118,26 @@ class TDMCreateFields extends XoopsObject
 		$form->addElement(new TDMCreateFormLabel('<td>'._AM_TDMCREATE_FIELD_KEY.'</th>'));
 		$form->addElement(new TDMCreateFormLabel('<td>'._AM_TDMCREATE_FIELD_PARAMETERS.'</th>'));	
 		$form->addElement(new TDMCreateFormLabel('</tr></thead>'));	
-		$form->addElement(new TDMCreateFormLabel('<tbody>'));	
+		$form->addElement(new TDMCreateFormLabel('<tbody>'));		
+		//		
+		return $form;
+	}
+	
+	/*
+	*  @public function getFormNew
+	*
+	*  @param integer $field_mid
+	*  @param integer $field_tid
+	*  @param integer $field_numb
+	*  @param string $f_name
+	*  @param mixed $action
+	*/
+	public function getFormNew($field_mid = null, $field_tid = null, $field_numb = null, $f_name = null, $action = false)
+	{
+		// Header function class
+		$fields_form = TDMCreateFields::getInstance();
+		$form = $fields_form->getHeaderForm($action);
+		//
 		$table_autoincrement = $this->tdmcreate->getHandler('tables')->get($field_tid);
 		//
 		$class = 'even';
@@ -228,17 +245,10 @@ class TDMCreateFields extends XoopsObject
 					$check_field_required->addOption(1, _AM_TDMCREATE_FIELD_REQUIRED);
 					$parameters_tray->addElement($check_field_required);
 				$form->addElement(new TDMCreateFormLabel('<td><div class="portlet"><div class="portlet-header">'._AM_TDMCREATE_FIELD_PARAMETERS_LIST.'</div><div class="portlet-content">'.$parameters_tray->render().'</div></div></td></tr>'));
-			}
+			}		
 		}						
-		// Send Form Data
-		$form->addElement(new TDMCreateFormLabel('</tbody>'));
-		$form->addElement(new TDMCreateFormLabel('<tfoot><tr>'));
-		$form_hidden = new XoopsFormHidden('op', 'save');
-		$form_button = new XoopsFormButton('', 'submit', _SUBMIT, 'submit');
-		$form->addElement(new TDMCreateFormLabel('<td colspan="8">'.$form_hidden->render().'</td>'));
-		$form->addElement(new TDMCreateFormLabel('<td>'.$form_button->render().'</td>'));
-		$form->addElement(new TDMCreateFormLabel('</tr></tfoot></table>'));
-		return $form;
+		// Footer form
+		return $fields_form->getFooterForm($form);
 	}
 		
 	/*
@@ -249,34 +259,15 @@ class TDMCreateFields extends XoopsObject
 	*  @param mixed $action
 	*/
 	public function getFormEdit($field_mid = null, $field_tid = null, $action = false)
-	{
-		if ($action === false) {
-			$action = $_SERVER['REQUEST_URI'];
-		}
-		
-		$form = new TDMCreateThemeForm(null, 'form', $action, 'post', true);
-		$form->setExtra('enctype="multipart/form-data"');			
-						
-		// New Object HtmlTable           
-		$form->addElement(new TDMCreateFormLabel('<table border="0" cellspacing="1" class="outer width100">'));
-		$form->addElement(new TDMCreateFormLabel('<thead class="center">'));	
-		$form->addElement(new TDMCreateFormLabel('<tr class="head"><th colspan="9">'._AM_TDMCREATE_FIELD_EDIT.'</th></tr>'));
-		$form->addElement(new TDMCreateFormLabel('<tr class="head width5">'));        		
-		$form->addElement(new TDMCreateFormLabel('<td>'._AM_TDMCREATE_FIELD_NUMBER.'</td>'));
-		$form->addElement(new TDMCreateFormLabel('<td>'._AM_TDMCREATE_FIELD_NAME.'</td>'));														
-		$form->addElement(new TDMCreateFormLabel('<td>'._AM_TDMCREATE_FIELD_TYPE.'</td>'));
-		$form->addElement(new TDMCreateFormLabel('<td>'._AM_TDMCREATE_FIELD_VALUE.'</th>'));
-		$form->addElement(new TDMCreateFormLabel('<td>'._AM_TDMCREATE_FIELD_ATTRIBUTE.'</th>'));
-		$form->addElement(new TDMCreateFormLabel('<td>'._AM_TDMCREATE_FIELD_NULL.'</th>'));
-		$form->addElement(new TDMCreateFormLabel('<td>'._AM_TDMCREATE_FIELD_DEFAULT.'</th>'));
-		$form->addElement(new TDMCreateFormLabel('<td>'._AM_TDMCREATE_FIELD_KEY.'</th>'));
-		$form->addElement(new TDMCreateFormLabel('<td>'._AM_TDMCREATE_FIELD_PARAMETERS.'</th>'));	
-		$form->addElement(new TDMCreateFormLabel('</tr></thead>'));	
-		$form->addElement(new TDMCreateFormLabel('<tbody>'));		
+	{			
+		// Header function class
+		$fields_form = TDMCreateFields::getInstance();
+		$form = $fields_form->getHeaderForm($action);
 		//
 		$class = 'even';	
 		// Get the list of fields
 		$criteria = new CriteriaCompo();
+		$criteria->add(new Criteria('field_mid', $field_mid));
 		$criteria->add(new Criteria('field_tid', $field_tid));
 		$fields = $this->tdmcreate->getHandler('fields')->getObjects($criteria);
 		unset($criteria);
@@ -284,6 +275,7 @@ class TDMCreateFields extends XoopsObject
 		foreach($fields as $field)	{
 			$class = ($class == 'even') ? 'odd' : 'even';
 			$field_id = $field->getVar('field_id');
+			//
 			$form->addElement(new XoopsFormHidden('field_id['.$field_id.']', $field_id));	
 			$form->addElement(new XoopsFormHidden('field_mid', $field_mid));
 			$form->addElement(new XoopsFormHidden('field_tid', $field_tid));
@@ -375,10 +367,19 @@ class TDMCreateFields extends XoopsObject
 				$check_field_required->addOption(1, _AM_TDMCREATE_FIELD_REQUIRED);
 				$parameters_tray->addElement($check_field_required);
 				$form->addElement(new TDMCreateFormLabel('<td><div class="portlet"><div class="portlet-header">'._AM_TDMCREATE_FIELD_PARAMETERS_LIST.'</div><div class="portlet-content">'.$parameters_tray->render().'</div></div></td></tr>'));
-			}
+			}	
 			$id++;		
 		}	
 		unset($id);
+		// Footer form
+		return $fields_form->getFooterForm($form);
+	}	
+	/*
+	*  @private function getFooterForm
+	*  @param null
+	*/
+	private function getFooterForm($form)
+	{
 		// Send Form Data
 		$form->addElement(new TDMCreateFormLabel('</tbody>'));
 		$form->addElement(new TDMCreateFormLabel('<tfoot><tr>'));

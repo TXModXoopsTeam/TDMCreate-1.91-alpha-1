@@ -93,7 +93,7 @@ class UserXoopsVersion extends TDMCreateFile
 	*/
 	private function getXoopsVersionHeader($module, $table, $language) 
 	{ 
-		$date = date('D Y/m/d G:i:s');
+		$date = date('Y/m/d');
 		$ret = <<<EOT
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
 //
@@ -141,7 +141,8 @@ defined('XOOPS_ROOT_PATH') or die('Restricted access');
 	'release' => "{$module->getVar('mod_release')}",
 	'module_status' => "{$module->getVar('mod_status')}",\n	
 EOT;
-		if ( $table->getVar('table_admin') == 1 ) {
+		if (is_object($table)) {
+			if ( $table->getVar('table_admin') == 1 ) {
 			$ret .= <<<EOT
 	// Admin system menu
 	'system_menu' => 1,
@@ -150,6 +151,7 @@ EOT;
 	'adminindex' => "admin/index.php",
 	'adminmenu' => "admin/menu.php",\n
 EOT;
+			}
 		} else {
 			$ret .= <<<EOT
     // Admin system menu
@@ -158,12 +160,13 @@ EOT;
 	'hasAdmin' => 0,\n
 EOT;
 		}
-		if ( $table->getVar('table_user') == 1 ) 
-		{
+		if (is_object($table)) {
+			if ( $table->getVar('table_user') == 1 ) {
 			$ret .= <<<EOT
     // Menu
 	'hasMain' => 1,\n
 EOT;
+			}
 		} else {
 			$ret .= <<<EOT
     // Menu
@@ -636,9 +639,9 @@ EOT;
 		$filename = $this->getFileName();
 		$module_dirname = $module->getVar('mod_dirname');		
 		$language = $this->getLanguage($module_dirname, 'MI');			
-		$content = $this->getHeaderFilesComments($module, $filename);					
-		if (is_object($table)) {	
-			$content .= $this->getXoopsVersionHeader($module, $table, $language);
+		$content = $this->getHeaderFilesComments($module, $filename);
+		$content .= $this->getXoopsVersionHeader($module, $table, $language);					
+		if (is_object($table)) {			
 			$content .= $this->getXoopsVersionMySQL($module_dirname,  $table);        		
 			if ($table->getVar('table_search') == 1) { 	
 				$content .= $this->getXoopsVersionSearch($module_dirname);
