@@ -82,35 +82,35 @@ class IncludeSearch extends TDMCreateFile
 	*  @static function getSearchFunction
 	*  @param string $fpsf
 	*/
-	public function getSearchFunction($module_dirname)
+	public function getSearchFunction($moduleDirname)
 	{
 		$table = $this->getTable(); 
-		$table_name = $table->getVar('table_name');
-		$table_fieldname = $table->getVar('table_fieldname');
+		$tableName = $table->getVar('table_name');
+		$tableFieldname = $table->getVar('table_fieldname');
 		$fpif = ''; $fpsf = null;
 		$fields = $this->getTableFields($table->getVar('table_id'));
 		foreach(array_keys($fields) as $f) 
 		{
-			$field_name = $fields[$f]->getVar('field_name');
+			$fieldName = $fields[$f]->getVar('field_name');
 			if(($f == 0) && ($table->getVar('table_autoincrement') == 1)) {
-				$fpif = $field_name;
+				$fpif = $fieldName;
 			}
 			if($fields[$f]->getVar('field_main') == 1) {
-				$fpmf = $field_name;
+				$fpmf = $fieldName;
 			}
 			if($fields[$f]->getVar('field_search') == 1) {
-				$fpsf = $field_name;
+				$fpsf = $fieldName;
 			}
 		}
 		$img_search = 'blank.gif';
 		$ret = <<<EOT
 \n// search callback functions
-function {$module_dirname}_search(\$queryarray, \$andor, \$limit, \$offset, \$userid)
+function {$moduleDirname}_search(\$queryarray, \$andor, \$limit, \$offset, \$userid)
 {
 	global \$xoopsDB;	
-	\$sql = "SELECT '{$fpif}', '{$fpmf}' FROM ".\$xoopsDB->prefix('mod_{$module_dirname}_{$table_name}')." WHERE {$fpif} != 0";	
+	\$sql = "SELECT '{$fpif}', '{$fpmf}' FROM ".\$xoopsDB->prefix('mod_{$moduleDirname}_{$tableName}')." WHERE {$fpif} != 0";	
 	if ( \$userid != 0 ) {
-		\$sql .= " AND {$table_fieldname}_submitter=".intval(\$userid);
+		\$sql .= " AND {$tableFieldname}_submitter=".intval(\$userid);
 	}	
 	if ( is_array(\$queryarray) && \$count = count(\$queryarray) ) 
 	{
@@ -133,7 +133,7 @@ EOT;
 	while(\$myrow = \$xoopsDB->fetchArray(\$result))
 	{
 		\$ret[\$i]['image'] = 'assets/images/icons/32/{$img_search}';
-		\$ret[\$i]['link'] = '{$table_name}.php?{$fpif}='.\$myrow['{$fpif}'];
+		\$ret[\$i]['link'] = '{$tableName}.php?{$fpif}='.\$myrow['{$fpif}'];
 		\$ret[\$i]['title'] = \$myrow['{$fpmf}'];			
 		\$i++;
 	}
@@ -149,11 +149,11 @@ EOT;
 	public function render() {    
 		$module = $this->getModule();
 		$filename = $this->getFileName();
-		$module_dirname = $module->getVar('mod_dirname');        				
+		$moduleDirname = $module->getVar('mod_dirname');        				
 		$content = $this->getHeaderFilesComments($module, $filename);
-		$content .= $this->getSearchFunction($module_dirname);
+		$content .= $this->getSearchFunction($moduleDirname);
 		//
-		$this->tdmcfile->create($module_dirname, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

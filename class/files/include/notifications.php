@@ -56,35 +56,34 @@ class IncludeNotifications extends TDMCreateFile
 	}
 	/*
 	*  @static function getNotificationsFunction
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*/
-	public function getNotificationsFunction($module_dirname)
+	public function getNotificationsFunction($moduleDirname)
     {
         $table = $this->getTable();
-		$table_name = $table->getVar('table_name');
-		$table_fieldname = $table->getVar('table_fieldname');
-		$fpif = null; $fpmf = null;
+		$tableName = $table->getVar('table_name');
+		$tableFieldname = $table->getVar('table_fieldname');
 		$fields = $this->getTableFields($table->getVar('table_id'));
-		foreach(array_keys($fields) as $i) {
-			$field_name = $fields[$i]->getVar('field_name');
-			if(($i == 1) && ($table->getVar('table_autoincrement') == 1)) {
-				$fpif = $field_name;
+		foreach(array_keys($fields) as $f) {
+			$fieldName = $fields[$f]->getVar('field_name');
+			if(($f == 0) && ($table->getVar('table_autoincrement') == 1)) {
+				$fpif = $fieldName;
 			}
-			if($fields[$i]->getVar('field_main') == 1) {
-				$fpmf = $field_name;
+			if($fields[$f]->getVar('field_main') == 1) {
+				$fpmf = $fieldName;
 			}			
 		}
 
 		$ret = <<<EOT
 \n// comment callback functions
-function {$module_dirname}_notify_iteminfo(\$category, \$item_id)
+function {$moduleDirname}_notify_iteminfo(\$category, \$item_id)
 {
 	global \$xoopsModule, \$xoopsModuleConfig, \$xoopsConfig;
 
-	if (empty(\$xoopsModule) || \$xoopsModule->getVar('dirname') != '{$module_dirname}')
+	if (empty(\$xoopsModule) || \$xoopsModule->getVar('dirname') != '{$moduleDirname}')
 	{
 		\$module_handler =& xoops_gethandler('module');
-		\$module =& \$module_handler->getByDirname('{$module_dirname}');
+		\$module =& \$module_handler->getByDirname('{$moduleDirname}');
 		\$config_handler =& xoops_gethandler('config');
 		\$config =& \$config_handler->getConfigsByCat(0, \$module->getVar('mid'));
 	} else {
@@ -92,7 +91,7 @@ function {$module_dirname}_notify_iteminfo(\$category, \$item_id)
 		\$config =& \$xoopsModuleConfig;
 	}
 
-	xoops_loadLanguage('main', '{$module_dirname}');
+	xoops_loadLanguage('main', '{$moduleDirname}');
 
 	if (\$category=='global')
 	{
@@ -105,22 +104,22 @@ function {$module_dirname}_notify_iteminfo(\$category, \$item_id)
 	if (\$category=='category')
 	{
 		// Assume we have a valid category id
-		\$sql = 'SELECT {$fpmf} FROM ' . \$xoopsDB->prefix('mod_{$module_dirname}_{$table_name}') . ' WHERE {$field_name} = '. \$item_id;
+		\$sql = 'SELECT {$fpmf} FROM ' . \$xoopsDB->prefix('mod_{$moduleDirname}_{$tableName}') . ' WHERE {$fpif} = '. \$item_id;
 		\$result = \$xoopsDB->query(\$sql); // TODO: error check
 		\$result_array = \$xoopsDB->fetchArray(\$result);
 		\$item['name'] = \$result_array['{$fpmf}'];
-		\$item['url'] = XOOPS_URL . '/modules/' . \$module->getVar('dirname') . '/{$table_name}.php?{$field_name}=' . \$item_id;
+		\$item['url'] = XOOPS_URL . '/modules/' . \$module->getVar('dirname') . '/{$tableName}.php?{$fieldName}=' . \$item_id;
 		return \$item;
 	}
 
-	if (\$category=='{$table_fieldname}')
+	if (\$category=='{$tableFieldname}')
 	{
 		// Assume we have a valid link id
-		\$sql = 'SELECT {$field_name}, {$fpmf} FROM '.\$xoopsDB->prefix('mod_{$module_dirname}_{$table_name}') . ' WHERE {$fpif} = ' . \$item_id;
+		\$sql = 'SELECT {$fieldName}, {$fpmf} FROM '.\$xoopsDB->prefix('mod_{$moduleDirname}_{$tableName}') . ' WHERE {$fpif} = ' . \$item_id;
 		\$result = \$xoopsDB->query(\$sql); // TODO: error check
 		\$result_array = \$xoopsDB->fetchArray(\$result);
 		\$item['name'] = \$result_array['title'];
-		\$item['url'] = XOOPS_URL . '/modules/' . \$module->getVar('dirname') . '/{$table_name}.php?{$field_name}=' . \$result_array['{$field_name}'] . '&amp;{$fpif}=' . \$item_id;
+		\$item['url'] = XOOPS_URL . '/modules/' . \$module->getVar('dirname') . '/{$tableName}.php?{$fieldName}=' . \$result_array['{$fieldName}'] . '&amp;{$fpif}=' . \$item_id;
 		return \$item;
 	}
 }
@@ -135,11 +134,11 @@ EOT;
 	public function render() {    
 		$module = $this->getModule();
 		$filename = $this->getFileName();
-		$module_dirname = $module->getVar('mod_dirname');        		
+		$moduleDirname = $module->getVar('mod_dirname');        		
 		$content = $this->getHeaderFilesComments($module, $filename);
-		$content .= $this->getNotificationsFunction($module_dirname);
+		$content .= $this->getNotificationsFunction($moduleDirname);
 		//
-		$this->tdmcfile->create($module_dirname, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

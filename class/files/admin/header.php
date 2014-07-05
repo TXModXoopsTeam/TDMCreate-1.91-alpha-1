@@ -62,8 +62,8 @@ class AdminHeader extends TDMCreateFile
 		$table = $this->getTable();
 		$tables = $this->getTables();
 		$filename = $this->getFileName();
-		$module_dirname = $module->getVar('mod_dirname');		
-		$ucfmod_name = ucfirst($module_dirname);		
+		$moduleDirname = $module->getVar('mod_dirname');		
+		$ucfModuleName = ucfirst($moduleDirname);		
 		$language = $this->getLanguage('AM');
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= <<<EOT
@@ -76,7 +76,7 @@ EOT;
 		if ( $table->getVar('table_name') != '' ) {
 			$content .= <<<EOT
 // Get instance of module
-\${$module_dirname} = {$ucfmod_name}Helper::getInstance();\n
+\${$moduleDirname} = {$ucfModuleName}Helper::getInstance();\n
 EOT;
 		}	
 		$content .= <<<EOT
@@ -91,9 +91,9 @@ EOT;
 EOT;
 		foreach (array_keys($tables) as $i)
 		{
-			$table_name = $tables[$i]->getVar('table_name');
+			$tableName = $tables[$i]->getVar('table_name');
 			$content .= <<<EOT
-\${$table_name}Handler =& \${$module_dirname}->getHandler('{$table_name}');\n
+\${$tableName}Handler =& \${$moduleDirname}->getHandler('{$tableName}');\n
 EOT;
 		}
 		$content .=<<<EOT
@@ -122,7 +122,7 @@ if ( file_exists(\$GLOBALS['xoops']->path(\$pathModuleAdmin.'/moduleadmin.php'))
 xoops_cp_header();
 \$adminMenu = new ModuleAdmin();	
 EOT;
-		$this->tdmcfile->create($module_dirname, 'admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

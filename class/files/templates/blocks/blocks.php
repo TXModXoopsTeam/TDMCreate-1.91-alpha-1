@@ -53,22 +53,22 @@ class TemplatesBlocks extends TDMCreateFile
 	}
 	/*
 	*  @private function getTemplatesBlocksHeader
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*  @param string $table
 	*  @param string $language
 	*/
-	private function getTemplatesBlocksHeader($module_dirname, $table, $language) {    
-		$table_name = $table->getVar('table_name');
+	private function getTemplatesBlocksHeader($moduleDirname, $table, $language) {    
+		$tableName = $table->getVar('table_name');
 		$ret = <<<EOT
-<table class="{$table_name} width100">
+<table class="{$tableName} width100">
 	<thead>
 		<tr class="head">\n
 EOT;
 		$fields = $this->getTableFields($table->getVar('table_id'));
 		foreach(array_keys($fields) as $f) 
 		{
-			$field_name = $fields[$f]->getVar('field_name');			
-			$lang_stu_field_name = $language.strtoupper($field_name);
+			$fieldName = $fields[$f]->getVar('field_name');			
+			$lang_stu_field_name = $language.strtoupper($fieldName);
 			$ret .= <<<EOT
 			<th class="center"><{\$smarty.const.{$lang_stu_field_name}}></th>\n
 EOT;
@@ -81,39 +81,45 @@ EOT;
 	}
 	/*
 	*  @private function getTemplatesBlocksBody
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*  @param string $table
 	*  @param string $language
 	*/
-	private function getTemplatesBlocksBody($module_dirname, $table, $language) 
+	private function getTemplatesBlocksBody($moduleDirname, $table, $language) 
 	{    
-		$table_name = $table->getVar('table_name');
+		$tableName = $table->getVar('table_name');
 		$ret = <<<EOT
 	<tbody>
-		<{foreach item=list from=\${$table_name}}>	
+		<{foreach item=list from=\${$tableName}}>	
 			<tr class="<{cycle values='odd, even'}>">\n
 EOT;
 		$fields = $this->getTableFields($table->getVar('table_id'));
 		foreach(array_keys($fields) as $f) 
 		{
-			$field_name = $fields[$f]->getVar('field_name');
-			$field_element = $fields[$f]->getVar('field_element');
-			$rp_field_name = $field_name;
-			if(strpos($field_name, '_')) {       
-				$str = strpos($field_name, '_'); 
+			$fieldName = $fields[$f]->getVar('field_name');
+			$fieldElement = $fields[$f]->getVar('field_element');
+			$rp_field_name = $fieldName;
+			if(strpos($fieldName, '_')) {       
+				$str = strpos($fieldName, '_'); 
 				if($str !== false){ 
-					$rp_field_name = substr($field_name, $str + 1, strlen($field_name));
+					$rp_field_name = substr($fieldName, $str + 1, strlen($fieldName));
 				} 		
 			}
-			if( $field_element == 9 ) {
-				$ret .= <<<EOT
-				<td class="center">
-					<img src="<{\${$module_dirname}_upload_url}>/images/{$table_name}/<{\$list.{$rp_field_name}}>" alt="{$table_name}">
-				</td>\n
-EOT;
-			} elseif( $field_element == 8 ) {			
+			if( $fieldElement == 8 ) {
 				$ret .= <<<EOT
 				<td class="center"><span style="background-color: <{\$list.{$rp_field_name}}>;">\t\t</span></td>\n
+EOT;
+			} elseif( $fieldElement == 9 ) {			
+				$ret .= <<<EOT
+				<td class="center">
+					<img src="<{xoModuleIcons32}><{\$list.{$rp_field_name}}>" alt="{$tableName}">
+				</td>\n
+EOT;
+			} elseif( $fieldElement == 10 ) {			
+				$ret .= <<<EOT
+				<td class="center">
+					<img src="<{\${$moduleDirname}_upload_url}>/images/{$tableName}/<{\$list.{$rp_field_name}}>" alt="{$tableName}">
+				</td>\n
 EOT;
 			} else {
 				$ret .= <<<EOT
@@ -131,36 +137,42 @@ EOT;
 	}
 	/*
 	*  @private function getTemplatesBlocksBodyFieldnameEmpty
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*  @param string $table
 	*  @param string $language
 	*/
-	private function getTemplatesBlocksBodyFieldnameEmpty($module_dirname, $table, $language) 
+	private function getTemplatesBlocksBodyFieldnameEmpty($moduleDirname, $table, $language) 
 	{ 		
-		$table_name = $table->getVar('table_name');		
+		$tableName = $table->getVar('table_name');		
 		$ret = <<<EOT
 	<tbody>
-		<{foreach item=list from=\${$table_name}}>	
+		<{foreach item=list from=\${$tableName}}>	
 			<tr class="<{cycle values='odd, even'}>">\n
 EOT;
 		$fields = $this->getTableFields($table->getVar('table_id'));
 		foreach(array_keys($fields) as $f) 
 		{
-			$field_name = $fields[$f]->getVar('field_name');
-			$field_element = $fields[$f]->getVar('field_element');			
-			if( $field_element == 9 ) {
+			$fieldName = $fields[$f]->getVar('field_name');
+			$fieldElement = $fields[$f]->getVar('field_element');			
+			if( $fieldElement == 8 ) {
+				$ret .= <<<EOT
+				<td class="center"><span style="background-color: <{\$list.{$fieldName}}>;">\t\t</span></td>\n
+EOT;
+			} elseif( $fieldElement == 9 ) {			
 				$ret .= <<<EOT
 				<td class="center">
-					<img src="<{\${$module_dirname}_upload_url}>/images/{$table_name}/<{\$list.{$field_name}}>" alt="{$table_name}">
+					<img src="<{xoModuleIcons32}><{\$list.{$fieldName}}>" alt="{$tableName}">
 				</td>\n
 EOT;
-			} elseif( $field_element == 8 ) {			
+			} elseif( $fieldElement == 10 ) {			
 				$ret .= <<<EOT
-				<td class="center"><span style="background-color: <{\$list.{$field_name}}>;">\t\t</span></td>\n
+				<td class="center">
+					<img src="<{\${$moduleDirname}_upload_url}>/images/{$tableName}/<{\$list.{$fieldName}}>" alt="{$tableName}">
+				</td>\n
 EOT;
 			} else {
 				$ret .= <<<EOT
-				<td class="center"><{\$list.{$field_name}}></td>\n
+				<td class="center"><{\$list.{$fieldName}}></td>\n
 EOT;
 			}
 		}
@@ -179,20 +191,20 @@ EOT;
 	public function renderFile($filename) {    
 		$module = $this->getModule();		
 		$table = $this->getTable();
-		$module_dirname = $module->getVar('mod_dirname');
-		$table_name = $table->getVar('table_name');
-		$table_fieldname = $table->getVar('table_fieldname');
-        $language = $this->getLanguage($module_dirname, 'MB');		
-		$content = $this->getTemplatesBlocksHeader($module_dirname, $table, $language);
+		$moduleDirname = $module->getVar('mod_dirname');
+		$tableName = $table->getVar('table_name');
+		$tableFieldname = $table->getVar('table_fieldname');
+        $language = $this->getLanguage($moduleDirname, 'MB');		
+		$content = $this->getTemplatesBlocksHeader($moduleDirname, $table, $language);
 		// Verify if table_fieldname is not empty
-		if(!empty($table_fieldname)) {
-			$content .= $this->getTemplatesBlocksBody($module_dirname, $table, $language);
+		if(!empty($tableFieldname)) {
+			$content .= $this->getTemplatesBlocksBody($moduleDirname, $table, $language);
 		} else {
-			$content .= $this->getTemplatesBlocksBodyFieldnameEmpty($module_dirname, $table, $language);
+			$content .= $this->getTemplatesBlocksBodyFieldnameEmpty($moduleDirname, $table, $language);
 		}
-		//$content .= $this->getTemplatesBlocksFooter($module_dirname);
+		//$content .= $this->getTemplatesBlocksFooter($moduleDirname);
 		//
-		$this->tdmcfile->create($module_dirname, 'templates/blocks', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'templates/blocks', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

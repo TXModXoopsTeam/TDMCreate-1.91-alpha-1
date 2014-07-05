@@ -56,8 +56,8 @@ class IncludeCommon extends TDMCreateFile
 	*/
 	private function getCommonCode($module) 
 	{ 		
-		$module_dirname = $module->getVar('mod_dirname');
-		$stu_mn = strtoupper($module_dirname); 
+		$moduleDirname = $module->getVar('mod_dirname');
+		$stu_mn = strtoupper($moduleDirname); 
 		$mod_author = $module->getVar('mod_author');
 		$mod_a_w_name = $module->getVar('mod_author_website_name');
 		$mod_a_w_url = $module->getVar('mod_author_website_url');
@@ -66,7 +66,7 @@ class IncludeCommon extends TDMCreateFile
 		$ret = <<<EOT
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
 if (!defined('{$stu_mn}_MODULE_PATH')) {
-	define('{$stu_mn}_DIRNAME', '{$module_dirname}');
+	define('{$stu_mn}_DIRNAME', '{$moduleDirname}');
 	define('{$stu_mn}_PATH', XOOPS_ROOT_PATH.'/modules/'.{$stu_mn}_DIRNAME);
 	define('{$stu_mn}_URL', XOOPS_URL.'/modules/'.{$stu_mn}_DIRNAME);	
 	define('{$stu_mn}_UPLOAD_PATH', XOOPS_UPLOAD_PATH.'/'.{$stu_mn}_DIRNAME);
@@ -97,11 +97,11 @@ EOT;
 	*/
 	public function render() {    
 		$module = $this->getModule();
-		$module_dirname = $module->getVar('mod_dirname');
+		$moduleDirname = $module->getVar('mod_dirname');
 		$filename = $this->getFileName();		
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= $this->getCommonCode($module);
-		$this->tdmcfile->create($module_dirname, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

@@ -58,20 +58,20 @@ class TemplatesAdminFooter extends TDMCreateFile
 	public function render() { 		
 		$module = $this->getModule();
 		$filename = $this->getFileName();
-		$module_name = $module->getVar('mod_name');
-		$module_dirname = $module->getVar('mod_dirname');
+		$moduleName = $module->getVar('mod_name');
+		$moduleDirname = $module->getVar('mod_dirname');
 		$support_name = $module->getVar('mod_support_name');
 		$support_url = $module->getVar('mod_support_url');
-		$language = $this->getLanguage($module_dirname, 'AM');		
+		$language = $this->getLanguage($moduleDirname, 'AM');		
 		$content = <<<EOT
 <div class='center'>
     <a href='http://www.xoops.org' title='Visit XOOPS' target='_blank'><img src='<{xoModuleIcons32 xoopsmicrobutton.gif}>' alt='XOOPS' /></a>
 </div>
-<div class='center smallsmall italic pad5'><strong>{$module_name}</strong> <{\$smarty.const.{$language}MAINTAINEDBY}>
+<div class='center smallsmall italic pad5'><strong>{$moduleName}</strong> <{\$smarty.const.{$language}MAINTAINEDBY}>
             <a href='{$support_url}' title='Visit {$support_name}' class='tooltip' rel='external'>{$support_name}</a>
 </div>
 EOT;
-		$this->tdmcfile->create($module_dirname, 'templates/admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'templates/admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

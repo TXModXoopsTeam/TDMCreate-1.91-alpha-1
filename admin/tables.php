@@ -188,7 +188,8 @@ switch ($op)
 			} else {
 				$tablesObj->setVar('table_image', $_POST['table_image']);
 			}		
-			$tablesObj->setVars(array('table_blocks' => (($_REQUEST['table_blocks'] == 1) ? '1' : '0'), 
+			$tablesObj->setVars(array('table_autoincrement' => (($_REQUEST['table_autoincrement'] == 1) ? '1' : '0'),
+                                'table_blocks' => (($_REQUEST['table_blocks'] == 1) ? '1' : '0'),			
 								'table_admin' => (($_REQUEST['table_admin'] == 1) ? '1' : '0'), 
 								'table_user' => (($_REQUEST['table_user'] == 1) ? '1' : '0'), 
 								'table_submenu' => (($_REQUEST['table_submenu'] == 1) ? '1' : '0'), 

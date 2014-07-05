@@ -55,7 +55,7 @@ class LanguageMailTpl extends TDMCreateFile
 	*/
 	public function renderFile($filename) { 		
 		$module = $this->getModule();
-		$module_dirname = $module->getVar('mod_dirname');
+		$moduleDirname = $module->getVar('mod_dirname');
 		$content = <<<EOT
 // ---------- Templates Mail Content Dummy ---------- //
 Hello {X_UNAME},
@@ -80,7 +80,7 @@ Please do not reply to this message.
 webmaster
 {X_ADMINMAIL}
 EOT;
-		$this->tdmcfile->create($module_dirname, 'language/'.$GLOBALS['xoopsConfig']['language'].'/mail_template', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'language/'.$GLOBALS['xoopsConfig']['language'].'/mail_template', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

@@ -57,17 +57,17 @@ class AdminAbout extends TDMCreateFile
 	public function render() { 		
 		$module = $this->getModule();
 		$filename = $this->getFileName();
-		$module_dirname = $module->getVar('mod_dirname');
-        $module_donations = $module->getVar('mod_donations');			
+		$moduleDirname = $module->getVar('mod_dirname');
+        $moduleDonations = $module->getVar('mod_donations');			
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= <<<EOT
 include 'header.php';
-\$template_main = '{$module_dirname}_admin_about.tpl'; 
+\$template_main = '{$moduleDirname}_admin_about.tpl'; 
 \$GLOBALS['xoopsTpl']->assign('navigation', \$adminMenu->addNavigation('about.php'));
-\$GLOBALS['xoopsTpl']->assign('about', \$adminMenu->renderAbout('{$module_donations}', false));
+\$GLOBALS['xoopsTpl']->assign('about', \$adminMenu->renderAbout('{$moduleDonations}', false));
 include 'footer.php';  
 EOT;
-		$this->tdmcfile->create($module_dirname, 'admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

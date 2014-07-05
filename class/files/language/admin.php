@@ -67,9 +67,9 @@ define('{$language}STATISTICS', "Statistics");
 EOT;
 		foreach (array_keys($tables) as $t)
 		{
-			$table_name = $tables[$t]->getVar('table_name');
-			$stu_table_name = strtoupper($table_name);
-			$stl_table_name = strtolower($table_name);
+			$tableName = $tables[$t]->getVar('table_name');
+			$stu_table_name = strtoupper($tableName);
+			$stl_table_name = strtolower($tableName);
 			$ret .= <<<EOT
 define('{$language}THEREARE_{$stu_table_name}', "There are <span class='bold'>%s</span> {$stl_table_name} in the database");\n
 EOT;
@@ -89,10 +89,9 @@ EOT;
 EOT;
 		foreach (array_keys($tables) as $t)
 		{
-			$table_name = $tables[$t]->getVar('table_name');
-			
-			$stu_table_name = strtoupper($table_name);
-			$stl_table_name = strtolower($table_name);
+			$tableName = $tables[$t]->getVar('table_name');			
+			$stu_table_name = strtoupper($tableName);
+			$stl_table_name = strtolower($tableName);
 			$ret .= <<<EOT
 define('{$language}THEREARENT_{$stu_table_name}', "There aren't {$stl_table_name}");\n
 EOT;
@@ -109,10 +108,10 @@ EOT;
 EOT;
 		foreach (array_keys($tables) as $t)
 		{
-			$table_name = $tables[$t]->getVar('table_name');
-			$table_fieldname = $tables[$t]->getVar('table_fieldname');
-			$stu_table_fieldname = strtoupper($table_fieldname);
-            $ucf_table_fieldname = ucfirst($table_fieldname);			
+			$tableName = $tables[$t]->getVar('table_name');
+			$tableFieldname = $tables[$t]->getVar('table_fieldname');
+			$stu_table_fieldname = strtoupper($tableFieldname);
+            $ucf_table_fieldname = ucfirst($tableFieldname);			
 			$ret .= <<<EOT
 define('{$language}ADD_{$stu_table_fieldname}', "Add {$ucf_table_fieldname}");\n
 EOT;
@@ -122,10 +121,10 @@ EOT;
 EOT;
 		foreach (array_keys($tables) as $t)
 		{
-			$table_name = $tables[$t]->getVar('table_name');
-			$table_fieldname = $tables[$t]->getVar('table_fieldname');
-			$stu_table_name = strtoupper($table_name);
-            $ucf_table_name = ucfirst($table_name);			
+			$tableName = $tables[$t]->getVar('table_name');
+			$tableFieldname = $tables[$t]->getVar('table_fieldname');
+			$stu_table_name = strtoupper($tableName);
+            $ucf_table_name = ucfirst($tableName);			
 			$ret .= <<<EOT
 define('{$language}{$stu_table_name}_LIST', "List of {$ucf_table_name}");\n
 EOT;
@@ -144,25 +143,44 @@ EOT;
 EOT;
 		foreach (array_keys($tables) as $t)
 		{
-			$table_id = $tables[$t]->getVar('table_id');
-			$table_name = $tables[$t]->getVar('table_name');
-			$stu_table_name = strtoupper($table_name);
-            $ucf_table_name = ucfirst($table_name);			
+			$tableId = $tables[$t]->getVar('table_id');
+			$tableName = $tables[$t]->getVar('table_name');
+			$stu_table_name = strtoupper($tableName);
+            $ucf_table_name = ucfirst($tableName);			
 			$ret .= <<<EOT
 // {$ucf_table_name} add/edit
-define('{$language}{$stu_table_name}_ADD', "Add {$table_name}");
-define('{$language}{$stu_table_name}_EDIT', "Edit {$table_name}");
+define('{$language}{$stu_table_name}_ADD', "Add {$tableName}");
+define('{$language}{$stu_table_name}_EDIT', "Edit {$tableName}");
 // Elements of {$ucf_table_name}\n
 EOT;
-			$fields = $this->getTableFields($table_id);
+			$fields = $this->getTableFields($tableId);
 			foreach(array_keys($fields) as $f) 
 			{	
-				$field_name = $fields[$f]->getVar('field_name');
-				$stu_field_name = strtoupper($field_name);
-				$field_name_desc = ucfirst(str_replace('_', ' ', $field_name));
+				$fieldName = $fields[$f]->getVar('field_name');
+				$fieldElement = $fields[$f]->getVar('field_element');
+				$stu_field_name = strtoupper($fieldName);
+				$fieldNameDesc = ucfirst(str_replace('_', ' ', $fieldName));
 				$ret .= <<<EOT
-define('{$language}{$stu_field_name}', "{$field_name_desc}");\n
+define('{$language}{$stu_field_name}', "{$fieldNameDesc}");\n
 EOT;
+				switch($fieldElement)
+				{
+					case 9:
+						$ret .= <<<EOT
+define('{$language}FORM_UPLOAD_IMAGE_LIST', "{$fieldNameDesc} in list");\n
+EOT;
+					break;
+					case 10:
+						$ret .= <<<EOT
+define('{$language}FORM_UPLOAD_IMAGE', "{$fieldNameDesc} in upload");\n
+EOT;
+					break;
+					case 11:
+						$ret .= <<<EOT
+define('{$language}FORM_UPLOAD_FILE', "{$fieldNameDesc} in upload");\n
+EOT;
+					break;
+				}
 			}
 		}
 		$ret .= <<<EOT
@@ -226,8 +244,8 @@ EOT;
 		$module = $this->getModule();
 		$tables = $this->getTables();        		
 		$filename = $this->getFileName();
-		$module_dirname = $module->getVar('mod_dirname');		
-		$language = $this->getLanguage($module_dirname, 'AM');
+		$moduleDirname = $module->getVar('mod_dirname');		
+		$language = $this->getLanguage($moduleDirname, 'AM');
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= $this->getLanguageAdminIndex($language, $tables);
 		$content .= $this->getLanguageAdminPages($language, $tables);
@@ -235,7 +253,7 @@ EOT;
 		$content .= $this->getLanguageAdminPermissions($language);
 		$content .= $this->getLanguageAdminFoot($language);
 		//
-		$this->tdmcfile->create($module_dirname, 'language/'.$GLOBALS['xoopsConfig']['language'], $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'language/'.$GLOBALS['xoopsConfig']['language'], $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

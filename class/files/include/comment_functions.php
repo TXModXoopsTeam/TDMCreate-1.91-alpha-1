@@ -60,15 +60,15 @@ class IncludeCommentFunctions extends TDMCreateFile
 	{ 			
 		$module = $this->getModule();
 		$table = $this->getTable();
-		$module_dirname = strtolower($module->getVar('mod_dirname'));
-		$table_name = $table->getVar('table_name');
-		$ucf_module_dirname = ucfirst($module_dirname);
-		$ucf_table_name = ucfirst($table_name);
+		$moduleDirname = $module->getVar('mod_dirname');
+		$tableName = $table->getVar('table_name');
+		$ucf_module_dirname = ucfirst($moduleDirname);
+		$ucf_table_name = ucfirst($tableName);
 		$filename = $this->getFileName();
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= <<<EOT
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
-function {$module_dirname}_com_update(\$itemId, \$itemNumb) {
+function {$moduleDirname}_com_update(\$itemId, \$itemNumb) {
 	\$itemId = intval(\$itemId);
 	\$itemNumb = intval(\$itemNumb);
 	\$article = new {$ucf_module_dirname}{$ucf_table_name}(\$itemId);
@@ -78,11 +78,11 @@ function {$module_dirname}_com_update(\$itemId, \$itemNumb) {
 	return true;
 }
 
-function {$module_dirname}_com_approve(&\$comment){
+function {$moduleDirname}_com_approve(&\$comment){
 	// notification mail here
 }
 EOT;
-		$this->tdmcfile->create($module_dirname, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}	
 }

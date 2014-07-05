@@ -56,48 +56,48 @@ class IncludeInstall extends TDMCreateFile
 	}
 	/*
 	*  @private function getInstallModuleFolder
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*/
-	private function getInstallModuleFolder($module_dirname) {    
+	private function getInstallModuleFolder($moduleDirname) {    
 		$ret = <<<EOT
 //
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
 // Copy base file
 \$indexFile = XOOPS_UPLOAD_PATH.'/index.html';
 \$blankFile = XOOPS_UPLOAD_PATH.'/blank.gif';
-// Making of "uploads/{$module_dirname}" folder
-\${$module_dirname} = XOOPS_UPLOAD_PATH.'/{$module_dirname}';
-if(!is_dir(\${$module_dirname}))
-	mkdir(\${$module_dirname}, 0777);
-	chmod(\${$module_dirname}, 0777);
-copy(\$indexFile, \${$module_dirname}.'/index.html');\n
+// Making of "uploads/{$moduleDirname}" folder
+\${$moduleDirname} = XOOPS_UPLOAD_PATH.'/{$moduleDirname}';
+if(!is_dir(\${$moduleDirname}))
+	mkdir(\${$moduleDirname}, 0777);
+	chmod(\${$moduleDirname}, 0777);
+copy(\$indexFile, \${$moduleDirname}.'/index.html');\n
 EOT;
 		return $ret;
 	}
 	/*
 	*  @private function getHeaderTableFolder
-	*  @param string $module_dirname
-	*  @param string $table_name
+	*  @param string $moduleDirname
+	*  @param string $tableName
 	*/
-	private function getInstallTableFolder($module_dirname, $table_name) {    
+	private function getInstallTableFolder($moduleDirname, $tableName) {    
 		$ret = <<<EOT
-// Making of {$table_name} uploads folder
-\${$table_name} = \${$module_dirname}.'/{$table_name}';
-if(!is_dir(\${$table_name}))
-	mkdir(\${$table_name}, 0777);
-	chmod(\${$table_name}, 0777);
-copy(\$indexFile, \${$table_name}.'/index.html');\n
+// Making of {$tableName} uploads folder
+\${$tableName} = \${$moduleDirname}.'/{$tableName}';
+if(!is_dir(\${$tableName}))
+	mkdir(\${$tableName}, 0777);
+	chmod(\${$tableName}, 0777);
+copy(\$indexFile, \${$tableName}.'/index.html');\n
 EOT;
 		return $ret;
 	}
 	/*
 	*  @private function getInstallImagesFolder
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*/
-	private function getInstallImagesFolder($module_dirname) {    
+	private function getInstallImagesFolder($moduleDirname) {    
 		$ret = <<<EOT
 // Making of images folder
-\$images = \${$module_dirname}.'/images';
+\$images = \${$moduleDirname}.'/images';
 if(!is_dir(\$images))
 	mkdir(\$images, 0777);
 	chmod(\$images, 0777);
@@ -108,28 +108,28 @@ EOT;
 	}
 	/*
 	*  @private function getInstallTableImagesFolder
-	*  @param string $table_name
+	*  @param string $tableName
 	*/
-	private function getInstallTableImagesFolder($table_name) {    
+	private function getInstallTableImagesFolder($tableName) {    
 		$ret = <<<EOT
-// Making of "{$table_name}" images folder
-\${$table_name} = \$images.'/{$table_name}';
-if(!is_dir(\${$table_name}))
-	mkdir(\${$table_name}, 0777);
-	chmod(\${$table_name}, 0777);
-copy(\$indexFile, \${$table_name}.'/index.html');
-copy(\$blankFile, \${$table_name}.'/blank.gif');\n
+// Making of "{$tableName}" images folder
+\${$tableName} = \$images.'/{$tableName}';
+if(!is_dir(\${$tableName}))
+	mkdir(\${$tableName}, 0777);
+	chmod(\${$tableName}, 0777);
+copy(\$indexFile, \${$tableName}.'/index.html');
+copy(\$blankFile, \${$tableName}.'/blank.gif');\n
 EOT;
 		return $ret;
 	}
 	/*
 	*  @private function getInstallFilesFolder
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*/
-	private function getInstallFilesFolder($module_dirname) {    
+	private function getInstallFilesFolder($moduleDirname) {    
 		$ret = <<<EOT
 // Making of files folder
-\$files = \${$module_dirname}.'/files';
+\$files = \${$moduleDirname}.'/files';
 if(!is_dir(\$files))
 	mkdir(\$files, 0777);
 	chmod(\$files, 0777);
@@ -139,16 +139,16 @@ EOT;
 	}
 	/*
 	*  @private function getInstallTableFilesFolder
-	*  @param string $table_name
+	*  @param string $tableName
 	*/
-	private function getInstallTableFilesFolder($table_name) {    
+	private function getInstallTableFilesFolder($tableName) {    
 		$ret = <<<EOT
-// Making of "{$table_name}" files folder
-\${$table_name} = \$files.'/{$table_name}';
-if(!is_dir(\${$table_name}))
-	mkdir(\${$table_name}, 0777);
-	chmod(\${$table_name}, 0777);
-copy(\$indexFile, \${$table_name}.'/index.html');\n
+// Making of "{$tableName}" files folder
+\${$tableName} = \$files.'/{$tableName}';
+if(!is_dir(\${$tableName}))
+	mkdir(\${$tableName}, 0777);
+	chmod(\${$tableName}, 0777);
+copy(\$indexFile, \${$tableName}.'/index.html');\n
 EOT;
 		return $ret;
 	}
@@ -169,39 +169,39 @@ EOT;
 	public function render() 
 	{  		
 		$module = $this->getModule();
-		$module_dirname = $module->getVar('mod_dirname');
+		$moduleDirname = $module->getVar('mod_dirname');
 		$table = $this->getTable();
 		$tables = $this->getTables();
 		$filename = $this->getFileName();
 		$content = $this->getHeaderFilesComments($module, $filename);
-		$content .= $this->getInstallModuleFolder($module_dirname);				
+		$content .= $this->getInstallModuleFolder($moduleDirname);				
 		$fields = $this->getTableFields($table->getVar('table_id'));
 		foreach(array_keys($fields) as $f) 
 		{				
-			$field_element = $fields[$f]->getVar('field_element');		
+			$fieldElement = $fields[$f]->getVar('field_element');		
 			// All fields elements selected
-			switch( $field_element ) {
-				case 9:
-					$content .= $this->getInstallImagesFolder($module_dirname);
+			switch( $fieldElement ) {
+				case 10:
+					$content .= $this->getInstallImagesFolder($moduleDirname);
 					foreach(array_keys($tables) as $t) 
 					{	
-						$table_name = $tables[$t]->getVar('table_name');	
-						$content .= $this->getInstallTableImagesFolder($table_name);			
+						$tableName = $tables[$t]->getVar('table_name');	
+						$content .= $this->getInstallTableImagesFolder($tableName);			
 					}
 				break;
-				case 10:
-					$content .= $this->getInstallFilesFolder($module_dirname);
+				case 11:
+					$content .= $this->getInstallFilesFolder($moduleDirname);
 					foreach(array_keys($tables) as $t) 
 					{	
-						$table_name = $tables[$t]->getVar('table_name');	
-						$content .= $this->getInstallTableFilesFolder($table_name);			
+						$tableName = $tables[$t]->getVar('table_name');	
+						$content .= $this->getInstallTableFilesFolder($tableName);			
 					}
 				break;
 			}
 		}					
 		$content .= $this->getInstallFooter();
 		//
-		$this->tdmcfile->create($module_dirname, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

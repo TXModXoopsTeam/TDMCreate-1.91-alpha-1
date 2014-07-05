@@ -36,25 +36,25 @@ class UserObjects
     }
 	/*
 	*  @public function getPhpUserHeader
-	*  @param string $module_dirname
-	*  @param string $table_name
+	*  @param string $moduleDirname
+	*  @param string $tableName
 	*/
-	public function getPhpUserHeader($module_dirname, $table_name) {    
+	public function getPhpUserHeader($moduleDirname, $tableName) {    
 		$ret = <<<EOT
 include_once 'header.php';
-\$GLOBALS['xoopsOption']['template_main'] = '{$module_dirname}_{$table_name}.tpl';
+\$GLOBALS['xoopsOption']['template_main'] = '{$moduleDirname}_{$tableName}.tpl';
 include_once XOOPS_ROOT_PATH.'/header.php';\n	
 EOT;
 		return $ret;
 	}
 	/*
 	*  @public function getPhpUserIndex
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*/
-	public function getPhpUserIndex($module_dirname) {    
+	public function getPhpUserIndex($moduleDirname) {    
 		$ret = <<<EOT
 include_once 'header.php';
-\$GLOBALS['xoopsOption']['template_main'] = '{$module_dirname}_index.tpl';
+\$GLOBALS['xoopsOption']['template_main'] = '{$moduleDirname}_index.tpl';
 include_once XOOPS_ROOT_PATH.'/header.php';\n	
 EOT;
 		return $ret;

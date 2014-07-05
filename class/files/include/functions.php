@@ -53,12 +53,12 @@ class IncludeFunctions extends TDMCreateFile
 	}
 	/*
 	*  @public function getFunctionBlock
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*/
-	public function getFunctionBlock($module_dirname) {		
+	public function getFunctionBlock($moduleDirname) {		
 		$ret = <<<EOT
 \n/***************Blocks***************/
-function {$module_dirname}_block_addCatSelect(\$cats) {
+function {$moduleDirname}_block_addCatSelect(\$cats) {
 	if(is_array(\$cats)) 
 	{
 		\$cat_sql = '('.current(\$cats);
@@ -77,11 +77,11 @@ EOT;
 	
 	/*
 	*  @public function getFunctionCleanVars
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*/
-	public function getFunctionCleanVars($module_dirname) {		
+	public function getFunctionCleanVars($moduleDirname) {		
 		$ret = <<<EOT
-\nfunction {$module_dirname}_CleanVars( &\$global, \$key, \$default = '', \$type = 'int' ) {
+\nfunction {$moduleDirname}_CleanVars( &\$global, \$key, \$default = '', \$type = 'int' ) {
     switch ( \$type ) {
         case 'string':
             \$ret = ( isset( \$global[\$key] ) ) ? filter_var( \$global[\$key], FILTER_SANITIZE_MAGIC_QUOTES ) : \$default;
@@ -101,11 +101,11 @@ EOT;
 	
 	/*
 	*  @public function getFunctionMetaKeywords
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*/
-	public function getFunctionMetaKeywords($module_dirname) {		
+	public function getFunctionMetaKeywords($moduleDirname) {		
 		$ret = <<<EOT
-\nfunction {$module_dirname}_meta_keywords(\$content)
+\nfunction {$moduleDirname}_meta_keywords(\$content)
 {
 	global \$xoopsTpl, \$xoTheme;
 	\$myts =& MyTextSanitizer::getInstance();
@@ -122,11 +122,11 @@ EOT;
 	
 	/*
 	*  @public function getFunctionDescription
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*/
-	public function getFunctionMetaDescription($module_dirname) {		
+	public function getFunctionMetaDescription($moduleDirname) {		
 		$ret = <<<EOT
-\nfunction {$module_dirname}_meta_description(\$content)
+\nfunction {$moduleDirname}_meta_description(\$content)
 {
 	global \$xoopsTpl, \$xoTheme;
 	\$myts =& MyTextSanitizer::getInstance();
@@ -148,14 +148,14 @@ EOT;
 	public function render() {    
 		$module = $this->getModule();
 		$filename = $this->getFileName();
-		$module_dirname = $module->getVar('mod_dirname');
+		$moduleDirname = $module->getVar('mod_dirname');
 		$content = $this->getHeaderFilesComments($module, $filename);
-		$content .= $this->getFunctionBlock($module_dirname);
-		$content .= $this->getFunctionCleanVars($module_dirname);
-		$content .= $this->getFunctionMetaKeywords($module_dirname);
-		$content .= $this->getFunctionMetaDescription($module_dirname);
+		$content .= $this->getFunctionBlock($moduleDirname);
+		$content .= $this->getFunctionCleanVars($moduleDirname);
+		$content .= $this->getFunctionMetaKeywords($moduleDirname);
+		$content .= $this->getFunctionMetaDescription($moduleDirname);
 		//
-		$this->tdmcfile->create($module_dirname, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

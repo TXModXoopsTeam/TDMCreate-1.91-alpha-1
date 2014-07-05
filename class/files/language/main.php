@@ -63,26 +63,25 @@ class LanguageMain extends TDMCreateFile
 		$module = $this->getModule();
 		$tables = $this->getTables();
 		$filename = $this->getFileName();
-		$module_name = $module->getVar('mod_name');
-		$module_dirname = $module->getVar('mod_dirname');
-		$module_description = $module->getVar('mod_description');        
-		$ucf_mod_name = ucfirst($module_name);
-		$language = $this->getLanguage($module_dirname, 'MA');
+		$moduleName = $module->getVar('mod_name');
+		$moduleDirname = $module->getVar('mod_dirname');
+		$moduleDescription = $module->getVar('mod_description');        
+		$ucf_mod_name = ucfirst($moduleName);
+		$language = $this->getLanguage($moduleDirname, 'MA');
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= <<<EOT
 // ---------------- Main ----------------
 define('{$language}INDEX', "Home");
 define('{$language}TITLE', "{$ucf_mod_name}");
-define('{$language}DESC', "{$module_description}");
+define('{$language}DESC', "{$moduleDescription}");
 define('{$language}INDEX_DESC', "Welcome to the homepage of your new module!<br /> 
-As you can see, you've created a page with a list of links at the top to navigate between the pages of your module. This description is only visible on the homepage of this module, the other pages you will see the content you created when you built this module with the module TDMCreate. In order to expand this module with other resources, just add the code you need to extend the functionality of the same. The files are grouped by type, from the header to the footer to see how divided the source code.");\n
+As you can see, you've created a page with a list of links at the top to navigate between the pages of your module. This description is only visible on the homepage of this module, the other pages you will see the content you created when you built this module with the module TDMCreate, and after creating new content in admin of this module. In order to expand this module with other resources, just add the code you need to extend the functionality of the same. The files are grouped by type, from the header to the footer to see how divided the source code.");\n
 EOT;
 		foreach (array_keys($tables) as $i) 
 		{
-			$table_name = $tables[$i]->getVar('table_name');
-			$table_fieldname = $tables[$i]->getVar('table_fieldname');			
-			$lng_stu_table_name = $language.strtoupper($table_name);
-			$ucf_table_name = UcFirstAndToLower($table_name);
+			$tableName = $tables[$i]->getVar('table_name');
+			$lng_stu_table_name = $language.strtoupper($tableName);
+			$ucf_table_name = UcFirstAndToLower($tableName);
 			$content .= <<<EOT
 // {$ucf_table_name}
 define('{$lng_stu_table_name}', "{$ucf_table_name}");
@@ -105,7 +104,7 @@ EOT;
 define('{$language}ADMIN', "Admin");
 // ---------------- ----------------
 EOT;
-		$this->tdmcfile->create($module_dirname, 'language/'.$GLOBALS['xoopsConfig']['language'], $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'language/'.$GLOBALS['xoopsConfig']['language'], $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

@@ -60,34 +60,34 @@ class AdminIndex extends TDMCreateFile
 		$module = $this->getModule();
 		$tables = $this->getTables();
 		$filename = $this->getFileName();        
-		$module_dirname = $module->getVar('mod_dirname');
-		$language = $this->getLanguage($module_dirname, 'AM');
-		$language_thereare = $this->getLanguage($module_dirname, 'AM', 'THEREARE_');
+		$moduleDirname = $module->getVar('mod_dirname');
+		$language = $this->getLanguage($moduleDirname, 'AM');
+		$language_thereare = $this->getLanguage($moduleDirname, 'AM', 'THEREARE_');
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= <<<EOT
-include_once 'header.php';\n
+include_once 'header.php';
+// Count elements\n
 EOT;
 		foreach (array_keys($tables) as $i)
 		{
-			$table_name = $tables[$i]->getVar('table_name');
+			$tableName = $tables[$i]->getVar('table_name');
 			$content .= <<<EOT
-//count "{$table_name}"
-\$count_{$table_name} = \${$table_name}Handler->getCount();\n
+\$count_{$tableName} = \${$tableName}Handler->getCount();\n
 EOT;
 		}
 		$content .= <<<EOT
 // Template Index
-\$template_main = '{$module_dirname}_admin_index.tpl';
+\$template_main = '{$moduleDirname}_admin_index.tpl';
 // InfoBox Statistics
 \$adminMenu->addInfoBox({$language}STATISTICS);
-// InfoBox\n
+// Info elements\n
 EOT;
 		foreach (array_keys($tables) as $i)
 		{
-			$table_name = $tables[$i]->getVar('table_name');
-			$ta_stutable_name = $language_thereare.strtoupper($table_name);
+			$tableName = $tables[$i]->getVar('table_name');
+			$stuTableName = $language_thereare.strtoupper($tableName);
 			$content .= <<<EOT
-\$adminMenu->addInfoBoxLine({$language}STATISTICS, '<label>'.{$ta_stutable_name}.'</label>', \$count_{$table_name});\n
+\$adminMenu->addInfoBoxLine({$language}STATISTICS, '<label>'.{$stuTableName}.'</label>', \$count_{$tableName});\n
 EOT;
 		}
 		$content .= <<<EOT
@@ -96,7 +96,7 @@ echo \$adminMenu->addNavigation('index.php');
 echo \$adminMenu->renderIndex();
 include_once 'footer.php';
 EOT;
-		$this->tdmcfile->create($module_dirname, 'admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

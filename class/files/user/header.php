@@ -56,10 +56,10 @@ class UserHeader extends TDMCreateFile
 	*/
 	public function render() {    
 		$module = $this->getModule();
-		$module_dirname = $module->getVar('mod_dirname');
+		$moduleDirname = $module->getVar('mod_dirname');
 		$filename = $this->getFileName();
-		$stu_mod_name = strtoupper($module_dirname);
-        $ucf_mod_name = ucfirst($module_dirname);			
+		$stu_mod_name = strtoupper($moduleDirname);
+        $ucf_mod_name = ucfirst($moduleDirname);			
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= <<<EOT
 require_once dirname(dirname(dirname(__FILE__))) . '/mainfile.php';
@@ -81,9 +81,9 @@ if(file_exists(\$style)) { return true; }
 xoops_loadLanguage('modinfo', \$dirname);
 xoops_loadLanguage('main', \$dirname);
 //
-\${$module_dirname} = {$ucf_mod_name}Helper::getInstance();
+\${$moduleDirname} = {$ucf_mod_name}Helper::getInstance();
 EOT;
-		$this->tdmcfile->create($module_dirname, '/', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, '/', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

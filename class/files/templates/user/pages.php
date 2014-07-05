@@ -54,23 +54,23 @@ class TemplatesUserPages extends TDMCreateFile
 	}
     /*
 	*  @private function getTemplatesUserPagesHeader
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*  @param string $table
 	*  @param string $language
 	*/
-	private function getTemplatesUserPagesHeader($module_dirname, $table, $language) 
+	private function getTemplatesUserPagesHeader($moduleDirname, $table, $language) 
 	{  
 		$ret = <<<EOT
-<{include file="db:{$module_dirname}_header.tpl"}>
-<table class="{$module_dirname}">
+<{include file="db:{$moduleDirname}_header.tpl"}>
+<table class="{$moduleDirname}">
 	<thead class="outer">
 		<tr class="head">\n
 EOT;
 		$fields = $this->getTableFields($table->getVar('table_id'));
 		foreach(array_keys($fields) as $f) 
 		{
-			$field_name = $fields[$f]->getVar('field_name');			
-			$lang_stu_field_name = $language.strtoupper($field_name);
+			$fieldName = $fields[$f]->getVar('field_name');			
+			$lang_stu_field_name = $language.strtoupper($fieldName);
 			$ret .= <<<EOT
 			<th class="center"><{\$smarty.const.{$lang_stu_field_name}}></th>\n
 EOT;
@@ -83,44 +83,49 @@ EOT;
 	}
 	/*
 	*  @private function getTemplatesUserPagesBody
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*  @param string $table
 	*  @param string $language
 	*/
-	private function getTemplatesUserPagesBody($module_dirname, $table, $language) 
+	private function getTemplatesUserPagesBody($moduleDirname, $table, $language) 
 	{    
-		$table_name = $table->getVar('table_name');
+		$tableName = $table->getVar('table_name');
 		$ret = <<<EOT
 	<tbody>
-		<{foreach item=list from=\${$table_name}}>	
+		<{foreach item=list from=\${$tableName}}>	
 			<tr class="<{cycle values='odd, even'}>">\n
 EOT;
 		$fields = $this->getTableFields($table->getVar('table_id'));
 		foreach(array_keys($fields) as $f) 
 		{
-			$field_name = $fields[$f]->getVar('field_name');
+			$fieldName = $fields[$f]->getVar('field_name');
 			$field_element = $fields[$f]->getVar('field_element');
-			$rp_field_name = $field_name;
-			if(strpos($field_name, '_')) {       
-				$str = strpos($field_name, '_'); 
+			$rp_field_name = $fieldName;
+			if(strpos($fieldName, '_')) {       
+				$str = strpos($fieldName, '_'); 
 				if($str !== false){ 
-					$rp_field_name = substr($field_name, $str + 1, strlen($field_name));
+					$rp_field_name = substr($fieldName, $str + 1, strlen($fieldName));
 				} 		
 			}
 			switch( $field_element ) { 			    
 				case 8:			
 					$ret .= <<<EOT
-			<td class="center"><span style="background-color: <{\$list.{$rp_field_name}}>;">\t\t</span></td>\n
+				<td class="center"><span style="background-color: <{\$list.{$rp_field_name}}>;">\t\t</span></td>\n
 EOT;
 				break;
 				case 9:
 					$ret .= <<<EOT
-			<td class="center"><img src="<{\${$module_dirname}_upload_url}>/images/{$table_name}/<{\$list.{$rp_field_name}}>" alt="{$table_name}"></td>\n
+				<td class="center"><img src="<{xoModuleIcons32}><{\$list.{$rp_field_name}}>" alt="{$tableName}"></td>\n
+EOT;
+				break;
+				case 10:
+					$ret .= <<<EOT
+				<td class="center"><img src="<{\${$moduleDirname}_upload_url}>/images/{$tableName}/<{\$list.{$rp_field_name}}>" alt="{$tableName}"></td>\n
 EOT;
 				break;
 				default:
 					$ret .= <<<EOT
-			<td class="center"><{\$list.{$rp_field_name}}></td>\n
+				<td class="center"><{\$list.{$rp_field_name}}></td>\n
 EOT;
 				break;
 			}			
@@ -135,37 +140,37 @@ EOT;
 	}
 	/*
 	*  @private function getTemplatesUserPagesBodyFieldnameEmpty
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*  @param string $table
 	*  @param string $language
 	*/
-	private function getTemplatesUserPagesBodyFieldnameEmpty($module_dirname, $table, $language) 
+	private function getTemplatesUserPagesBodyFieldnameEmpty($moduleDirname, $table, $language) 
 	{ 		
-		$table_name = $table->getVar('table_name');		
+		$tableName = $table->getVar('table_name');		
 		$ret = <<<EOT
 	<tbody>
-		<{foreach item=list from=\${$table_name}}>	
+		<{foreach item=list from=\${$tableName}}>	
 			<tr class="<{cycle values='odd, even'}>">\n
 EOT;
 		$fields = $this->getTableFields($table->getVar('table_id'));
 		foreach(array_keys($fields) as $f) 
 		{
-			$field_name = $fields[$f]->getVar('field_name');
+			$fieldName = $fields[$f]->getVar('field_name');
 			$field_element = $fields[$f]->getVar('field_element');			
 			switch( $field_element ) { 			    
 				case 8:			
 					$ret .= <<<EOT
-			<td class="center"><span style="background-color: <{\$list.{$field_name}}>;"></span></td>\n
+			<td class="center"><span style="background-color: <{\$list.{$fieldName}}>;"></span></td>\n
 EOT;
 				break;
 				case 9:
 					$ret .= <<<EOT
-			<td class="center"><img src="<{\${$module_dirname}_upload_url}>/images/{$table_name}/<{\$list.{$field_name}}>" alt="{$table_name}"></td>\n
+			<td class="center"><img src="<{\${$moduleDirname}_upload_url}>/images/{$tableName}/<{\$list.{$fieldName}}>" alt="{$tableName}"></td>\n
 EOT;
 				break;
 				default:
 					$ret .= <<<EOT
-			<td class="center"><{\$list.{$field_name}}></td>\n
+			<td class="center"><{\$list.{$fieldName}}></td>\n
 EOT;
 				break;
 			}			
@@ -180,11 +185,11 @@ EOT;
 	}
 	/*
 	*  @private function getTemplatesUserPagesFooter
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*/
-	private function getTemplatesUserPagesFooter($module_dirname) {    
+	private function getTemplatesUserPagesFooter($moduleDirname) {    
 		$ret = <<<EOT
-<{include file="db:{$module_dirname}_footer.tpl"}>
+<{include file="db:{$moduleDirname}_footer.tpl"}>
 EOT;
 		return $ret;
 	}
@@ -195,19 +200,19 @@ EOT;
 	public function renderFile($filename) {    
 		$module = $this->getModule();		
 		$table = $this->getTable();
-		$module_dirname = $module->getVar('mod_dirname');
-		$table_fieldname = $table->getVar('table_fieldname');
-        $language = $this->getLanguage($module_dirname, 'MA');		
-		$content = $this->getTemplatesUserPagesHeader($module_dirname, $table, $language);
+		$moduleDirname = $module->getVar('mod_dirname');
+		$tableFieldname = $table->getVar('table_fieldname');
+        $language = $this->getLanguage($moduleDirname, 'MA');		
+		$content = $this->getTemplatesUserPagesHeader($moduleDirname, $table, $language);
 		// Verify if table_fieldname is not empty
-		if(!empty($table_fieldname)) {
-			$content .= $this->getTemplatesUserPagesBody($module_dirname, $table, $language);
+		if(!empty($tableFieldname)) {
+			$content .= $this->getTemplatesUserPagesBody($moduleDirname, $table, $language);
 		} else {
-			$content .= $this->getTemplatesUserPagesBodyFieldnameEmpty($module_dirname, $table, $language);
+			$content .= $this->getTemplatesUserPagesBodyFieldnameEmpty($moduleDirname, $table, $language);
 		}
-		$content .= $this->getTemplatesUserPagesFooter($module_dirname);
+		$content .= $this->getTemplatesUserPagesFooter($moduleDirname);
 		//
-		$this->tdmcfile->create($module_dirname, 'templates', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'templates', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

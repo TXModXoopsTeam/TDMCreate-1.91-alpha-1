@@ -72,8 +72,8 @@ define('_AM_TDMCREATE_MODULE_NEW', "New module");
 define('_AM_TDMCREATE_MODULE_EDIT', "Edit module");
 //define('_AM_TDMCREATE_MODULE_IMPORTANT', "Required Information");
 
-define('_AM_TDMCREATE_MODULE_IMPORTANT', "Information");
-define('_AM_TDMCREATE_MODULE_NOTIMPORTANT', "Optional Information");
+define('_AM_TDMCREATE_MODULE_IMPORTANT', "<span style='color: #FF0000'>Required - Information</span>");
+define('_AM_TDMCREATE_MODULE_NOTIMPORTANT', "<span style='color: #00FF00'>Optional - Information</span>");
 define('_AM_TDMCREATE_MODULE_ID', "Id");
 define('_AM_TDMCREATE_MODULE_NAME', "Name");
 define('_AM_TDMCREATE_MODULE_NAME_DESC', "The module name can contain spaces and special characters such as accents.<br /> 
@@ -135,13 +135,13 @@ define('_AM_TDMCREATE_TABLE_NEW', "New Table");
 define('_AM_TDMCREATE_TABLE_EDIT', "Edit Table");
 define('_AM_TDMCREATE_TABLE_MODULES', "Choose a module");
 define('_AM_TDMCREATE_TABLE_NAME', "Table Name");
-define('_AM_TDMCREATE_TABLE_NAME_DESC', "Unique Name for this Table, and is automatically added the prefix <span class='bold'>mod_</span>");
+define('_AM_TDMCREATE_TABLE_NAME_DESC', "Unique Name: It's recommended to use plural word (i.e.: <u>categorie</u><span class='white bold'>s</span>)");
 define('_AM_TDMCREATE_TABLE_CATEGORY', "This table is a category or topic?");
 define('_AM_TDMCREATE_TABLE_CATEGORY_DESC', "<b class='red bold'>WARNING</b>: <i>Once you have used this option for this module, and edit this table,<br />will not be displayed following the creation of other tables</i>");
 define('_AM_TDMCREATE_TABLE_NBFIELDS', "Number fields");
 define('_AM_TDMCREATE_TABLE_NBFIELDS_DESC', "Number of fields for this table");
 define('_AM_TDMCREATE_TABLE_FIELDNAME', "Prefix Field Name");
-define('_AM_TDMCREATE_TABLE_FIELDNAME_DESC', "This is the prefix of field name (optional)<br />If you leave the field blank, doesn't appear anything in the fields of the next screen,<br />otherwise you'll see all the fields with a prefix type (e.g: <span class='bold'>cat</span> of table <span class='bold'>categories</span>)");
+define('_AM_TDMCREATE_TABLE_FIELDNAME_DESC', "This is the prefix of field name (optional)<br />If you leave the field blank, doesn't appear anything in the fields of the next screen,<br />otherwise you'll see all the fields with a prefix type (i.e.: <span class='bold'>cat</span> of table <span class='bold'>categories</span>).<br /><b class='red bold'>WARNING</b>: It's recommended to use singolar word");
 define('_AM_TDMCREATE_TABLE_OPTIONS_CHECKS_DESC', "For each table created, a file is created on behalf of this.<br /> 
 Selecting one or more of these options, deciding whether to enter the name of the file to other files or you define a condition in these other files, need to be created or not.");
 define('_AM_TDMCREATE_TABLE_IMAGE', "Table Logo");
@@ -179,7 +179,7 @@ define('_AM_TDMCREATE_FIELD_ATTRIBUTE', "Attribute");
 define('_AM_TDMCREATE_FIELD_NULL', "Null");
 define('_AM_TDMCREATE_FIELD_DEFAULT', "Default");
 define('_AM_TDMCREATE_FIELD_KEY', "Key");
-// Others
+// Fields Parameters
 define('_AM_TDMCREATE_FIELD_PARAMETERS', "Parameters");
 define('_AM_TDMCREATE_FIELD_ELEMENTS', "Options Elements");
 define('_AM_TDMCREATE_FIELD_ELEMENT_NAME', "Form: Element");
@@ -190,7 +190,7 @@ define('_AM_TDMCREATE_FIELD_MAINFIELD', "Table: Main Field");
 define('_AM_TDMCREATE_FIELD_SEARCH', "Search: Index");
 define('_AM_TDMCREATE_FIELD_REQUIRED', "Field: Required");
 define('_AM_TDMCREATE_ADMIN_SUBMIT', "Send");
-
+// List in templates
 define('_AM_TDMCREATE_ID_LIST', "Id");
 define('_AM_TDMCREATE_NAME_LIST', "Name");
 define('_AM_TDMCREATE_IMAGE_LIST', "Image");
@@ -205,81 +205,7 @@ define('_AM_TDMCREATE_MAIN_LIST', "Main");
 define('_AM_TDMCREATE_SEARCH_LIST', "Search");
 define('_AM_TDMCREATE_REQUIRED_LIST', "Required");
 
-//Modules.php
-//Form
-define('_AM_TDMCREATE_MODULES_ADD', "Add a new module");
-define('_AM_TDMCREATE_MODULES_EDIT', "Create a module");
-define('_AM_TDMCREATE_MODULES_IMPORTANT', "Required Information");
-define('_AM_TDMCREATE_MODULES_NOTIMPORTANT', "Optional Information");
-define('_AM_TDMCREATE_MODULES_NAME', "Name");
-define('_AM_TDMCREATE_MODULES_VERSION', "Version");
-define('_AM_TDMCREATE_MODULES_SINCE', "Since");
-define('_AM_TDMCREATE_MODULES_DESCRIPTION', "Description");
-define('_AM_TDMCREATE_MODULES_AUTHOR', "Author");
-define('_AM_TDMCREATE_MODULES_AUTHOR_MAIL', "Author's Email");
-define('_AM_TDMCREATE_MODULES_AUTHOR_WEBSITE_URL', "Author's Website");
-define('_AM_TDMCREATE_MODULES_AUTHOR_WEBSITE_NAME', "Website's Name");
-define('_AM_TDMCREATE_MODULES_CREDITS', "Credits");	
-define('_AM_TDMCREATE_MODULES_LICENSE', "License");
-define('_AM_TDMCREATE_MODULES_RELEASE_INFO', "Release Info");	
-define('_AM_TDMCREATE_MODULES_RELEASE_FILE', "File attached to the release");
-define('_AM_TDMCREATE_MODULES_MANUAL', "Manual");	
-define('_AM_TDMCREATE_MODULES_MANUAL_FILE', "Manual file");
-define('_AM_TDMCREATE_MODULES_IMAGE', "Logo of the module");
-define('_AM_TDMCREATE_MODULES_DEMO_SITE_URL', "URL of the demo site");
-define('_AM_TDMCREATE_MODULES_DEMO_SITE_NAME', "Title of the demo site");	
-define('_AM_TDMCREATE_MODULES_FORUM_SITE_URL', "Forum URL");
-define('_AM_TDMCREATE_MODULES_FORUM_SITE_NAME', "Forum URL Title");
-define('_AM_TDMCREATE_MODULES_WEBSITE_URL', "Module Website");
-define('_AM_TDMCREATE_MODULES_WEBSITE_NAME', "Module Website Title");
-define('_AM_TDMCREATE_MODULES_RELEASE', "Release");
-define('_AM_TDMCREATE_MODULES_STATUS', "Status");
-define('_AM_TDMCREATE_MODULES_DISPLAY_ADMIN', "Visible in Admin");
-define('_AM_TDMCREATE_MODULES_DISPLAY_USER', "Visible in User side");
-define('_AM_TDMCREATE_MODULES_ACTIVE_SEARCH', "Enable search");
-define('_AM_TDMCREATE_MODULES_ACTIVE_COMMENTS', "Enable comments");
-define('_AM_TDMCREATE_MODULES_ACTIVE_NOTIFICATIONS', "Enable notifications");
-define('_AM_TDMCREATE_MODULES_ACTIVE_PERMISSIONS', "Enable Permissions");
-define('_AM_TDMCREATE_MODULE_INROOT_MODULES_COPY', "Copy of this module directly in root/modules?");
-define('_AM_TDMCREATE_MODULES_PAYPAL_BUTTON', "Paypal Button");
-define('_AM_TDMCREATE_MODULES_SUBVERSION', "Subversion");
-
-//Tables.php
-//Form1
-define('_AM_TDMCREATE_TABLES_ADD', "Add tables to the form:");
-define('_AM_TDMCREATE_TABLES_EDIT', "Edit Module Tables");
-define('_AM_TDMCREATE_TABLES_MODULES', "Select a module");
-define('_AM_TDMCREATE_TABLES_NAME', "Name of the table <br> <i>(The name of the module will automatically be added to the prefix)</i> <br> Example: &#39;mod_module-name_table&#39;");
-define('_AM_TDMCREATE_TABLES_FIELDNAME', "Prefix of the fields <br> <i>(The prefix name will automatically be added in the next step)</i><br />Example: &#39;fieldname&#39;<br />WARNING: Don't use underscore first of fieldname - this is what TDMCreate was generating");
-define('_AM_TDMCREATE_TABLES_NUMBER_FIELDS', "Number of fields for this table");
-define('_AM_TDMCREATE_TABLES_IMAGE', "Table Icon");
-define('_AM_TDMCREATE_TABLES_CATEGORY', "This table is a category?");
-define('_AM_TDMCREATE_TABLES_CATEGORY_DESC', "<i>Once you have used this field,<br />will not be displayed following the creation of other tables</i>");
-define('_AM_TDMCREATE_TABLES_BLOCKS', "Create block for this table");
-define('_AM_TDMCREATE_TABLES_ADMIN', "Visible in Admin View");
-define('_AM_TDMCREATE_TABLES_USER', "Visible in User View");
-define('_AM_TDMCREATE_TABLES_SUBMITTER', "Add submitter");
-define('_AM_TDMCREATE_TABLES_CREATED', "Add created");
-define('_AM_TDMCREATE_TABLES_ONLINE', "Add online");
-define('_AM_TDMCREATE_TABLES_SEARCH', "Active research for this table <br> <i>The form for the moment, is able to handle the search on the table <br> If you confirm the search option will be disabled</i>");
-define('_AM_TDMCREATE_TABLES_EXIST', "The name specified for this table is already in use");
-define('_AM_TDMCREATE_TABLES_COMMENTS', "Active comments for this table <br> <i>The module can manage for the moment, the comments on a table <br> Comments option will be disabled if you Confirmed</i>");
-define('_AM_TDMCREATE_TABLES_NOTIFICATIONS', "Active notifications for this table.");
-define('_AM_TDMCREATE_TABLES_PERMISSIONS', "Active permissions for this table <br /> <i><span class='red big'>WARNING</span>: you can use only for this table</i>");
-define('_AM_TDMCREATE_TABLES_CATEGORY_ADD', "Add the table to the category");
-//Form2
-define('_AM_TDMCREATE_TABLES_FIELDS_ADD', "Add the fields");
-define('_AM_TDMCREATE_TABLES_FIELDS_EDIT', "Edit your field");
-define('_AM_TDMCREATE_TABLES_FIELDS_NAME', "Field Name");
-define('_AM_TDMCREATE_TABLES_FIELDS_TYPE', "Type");
-define('_AM_TDMCREATE_TABLES_FIELDS_VALUE', "Value");
-define('_AM_TDMCREATE_TABLES_FIELDS_ATTRIBUTES', "Attributes");
-define('_AM_TDMCREATE_TABLES_FIELDS_NULL', "Null");
-define('_AM_TDMCREATE_TABLES_FIELDS_DEFAULT', "Default");
-define('_AM_TDMCREATE_TABLES_FIELDS_INDEX', "Index");
-define('_AM_TDMCREATE_TABLES_FIELDS_MORE', "Other");
-//define('_AM_TDMCREATE_ADMIN_SUBMIT', "Submit");
-//Const.php
+// building.php
 define('_AM_TDMCREATE_CONST_MODULES', "Select the module you want to build");
 define('_AM_TDMCREATE_CONST_TABLES', "Select the table you want to build");
 

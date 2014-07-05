@@ -58,9 +58,9 @@ class CssStyles extends TDMCreateFile
 	public function render() {    
         $module = $this->getModule();
 		$filename = $this->getFileName();
-		$module_dirname = $module->getVar('mod_dirname');
+		$moduleDirname = $module->getVar('mod_dirname');
 		$content = <<<EOT
-table.{$module_dirname} {
+table.{$moduleDirname} {
    margin: 0;
    padding: 2px;
    border: 1px solid #ccc;
@@ -102,7 +102,7 @@ ul.menu > li {
    padding: 0 5px 0 5px;
 }
 EOT;
-		$this->tdmcfile->create($module_dirname, 'assets/css', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'assets/css', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

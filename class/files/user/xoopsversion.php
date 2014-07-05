@@ -61,8 +61,8 @@ class UserXoopsVersion extends TDMCreateFile
 		$this->setFileName($filename);
 		foreach (array_keys($tables) as $t)
 		{	
-			$table_name = $tables[$t]->getVar('table_name');			
-			$this->setKeywords($table_name);
+			$tableName = $tables[$t]->getVar('table_name');			
+			$this->setKeywords($tableName);
 		}
 	}
 	/*
@@ -98,7 +98,7 @@ class UserXoopsVersion extends TDMCreateFile
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
 //
 \$dirname = basename( dirname( __FILE__ ) ) ;
-//
+// ---------------------- Informations ---------------------- //
 \$modversion = array(
     'name' => {$language}NAME,
 	'version' => {$module->getVar('mod_version')},
@@ -183,17 +183,17 @@ EOT;
 	}
 	/*
 	*  @private function getXoopsVersionMySQL
-	*  @param string $module_dirname 
+	*  @param string $moduleDirname 
 	*  @param string $table 
 	*/
-	private function getXoopsVersionMySQL($module_dirname, $table) 
+	private function getXoopsVersionMySQL($moduleDirname, $table) 
 	{ 	
-		$table_name = $table->getVar('table_name');
+		$tableName = $table->getVar('table_name');
 		$n = 1;
 		$ret = '';
-		if ( !empty($table_name) ) {
+		if ( !empty($tableName) ) {
 			$ret .= <<<EOT
-\n// Mysql file
+// ---------------------- Mysql ---------------------- //
 \$modversion['sqlfile']['mysql'] = "sql/mysql.sql";
 // Tables\n
 EOT;
@@ -201,7 +201,7 @@ EOT;
 			foreach (array_keys($tables) as $t)	
 			{
 				$ret .= <<<EOT
-\$modversion['tables'][{$n}] = "{$module_dirname}_{$tables[$t]->getVar('table_name')}";\n
+\$modversion['tables'][{$n}] = "{$moduleDirname}_{$tables[$t]->getVar('table_name')}";\n
 EOT;
 				$n++;
 			}  
@@ -211,85 +211,86 @@ EOT;
 	}
 	/*
 	*  @private function getXoopsVersionSearch
-	*  @param string $module_dirname 
+	*  @param string $moduleDirname 
 	*/
-	private function getXoopsVersionSearch($module_dirname) 
+	private function getXoopsVersionSearch($moduleDirname) 
 	{ 
 		$ret = <<<EOT
-// Search
+// ---------------------- Search ---------------------- //
 \$modversion['hasSearch'] = 1;
 \$modversion['search']['file'] = "include/search.inc.php";
-\$modversion['search']['func'] = "{$module_dirname}_search";\n
+\$modversion['search']['func'] = "{$moduleDirname}_search";\n
 EOT;
 		return $ret;
 	}
 	/*
 	*  @private function getXoopsVersionComments
-	*  @param string $module_dirname 
+	*  @param string $moduleDirname 
 	*/
-	private function getXoopsVersionComments($module_dirname) 
+	private function getXoopsVersionComments($moduleDirname) 
 	{ 
 		$ret = <<<EOT
-// Comments
+// ---------------------- Comments ---------------------- //
 \$modversion['comments']['pageName'] = "comments.php";
 \$modversion['comments']['itemName'] = "com_id";
 // Comment callback functions
 \$modversion['comments']['callbackFile'] = "include/comment_functions.php";
-\$modversion['comments']['callback']['approve'] = "{$module_dirname}_com_approve";
-\$modversion['comments']['callback']['update'] = "{$module_dirname}_com_update";\n
+\$modversion['comments']['callback']['approve'] = "{$moduleDirname}_com_approve";
+\$modversion['comments']['callback']['update'] = "{$moduleDirname}_com_update";\n
 EOT;
 		return $ret;
 	}
 	/*
 	*  @private function getXoopsVersionTemplatesAdmin
-	*  @param string $module_dirname 
+	*  @param string $moduleDirname 
 	*/
-	private function getXoopsVersionTemplatesAdmin($module_dirname) 
+	private function getXoopsVersionTemplatesAdmin($moduleDirname) 
 	{ 
 		$tables = $this->getTables();
 		$ret = <<<EOT
-// Templates Admin
-\$modversion['templates'][] = array('file' => '{$module_dirname}_admin_about.tpl', 'description' => '', 'type' => 'admin');
-\$modversion['templates'][] = array('file' => '{$module_dirname}_admin_header.tpl', 'description' => '', 'type' => 'admin');
-\$modversion['templates'][] = array('file' => '{$module_dirname}_admin_index.tpl', 'description' => '', 'type' => 'admin');\n
+// ---------------------- Templates ---------------------- // 
+// Admin
+\$modversion['templates'][] = array('file' => '{$moduleDirname}_admin_about.tpl', 'description' => '', 'type' => 'admin');
+\$modversion['templates'][] = array('file' => '{$moduleDirname}_admin_header.tpl', 'description' => '', 'type' => 'admin');
+\$modversion['templates'][] = array('file' => '{$moduleDirname}_admin_index.tpl', 'description' => '', 'type' => 'admin');\n
 EOT;
 		foreach (array_keys($tables) as $t)
 		{	
-			$table_permissions = $tables[$t]->getVar('table_permissions');
+			$tablePermissions = $tables[$t]->getVar('table_permissions');
 			$ret .= <<<EOT
-\$modversion['templates'][] = array('file' => '{$module_dirname}_admin_{$tables[$t]->getVar('table_name')}.tpl', 'description' => '', 'type' => 'admin');\n
+\$modversion['templates'][] = array('file' => '{$moduleDirname}_admin_{$tables[$t]->getVar('table_name')}.tpl', 'description' => '', 'type' => 'admin');\n
 EOT;
 		}
-		if ($table_permissions == 1) {
+		if ($tablePermissions == 1) {
 			$ret .= <<<EOT
-\$modversion['templates'][] = array('file' => '{$module_dirname}_admin_permissions.tpl', 'description' => '', 'type' => 'admin');\n
+\$modversion['templates'][] = array('file' => '{$moduleDirname}_admin_permissions.tpl', 'description' => '', 'type' => 'admin');\n
 EOT;
 		}
 		$ret .= <<<EOT
-\$modversion['templates'][] = array('file' => '{$module_dirname}_admin_footer.tpl', 'description' => '', 'type' => 'admin');\n
+\$modversion['templates'][] = array('file' => '{$moduleDirname}_admin_footer.tpl', 'description' => '', 'type' => 'admin');\n
 EOT;
 		return $ret;
 	}
 	/*
 	*  @private function getXoopsVersionTemplatesUser
-	*  @param string $module_dirname 
+	*  @param string $moduleDirname 
 	*/
-	private function getXoopsVersionTemplatesUser($module_dirname) 
+	private function getXoopsVersionTemplatesUser($moduleDirname) 
 	{ 
 		$tables = $this->getTables();		
 		$ret = <<<EOT
-// Templates User
-\$modversion['templates'][] = array('file' => '{$module_dirname}_header.tpl', 'description' => '');
-\$modversion['templates'][] = array('file' => '{$module_dirname}_index.tpl', 'description' => '');\n
+// User
+\$modversion['templates'][] = array('file' => '{$moduleDirname}_header.tpl', 'description' => '');
+\$modversion['templates'][] = array('file' => '{$moduleDirname}_index.tpl', 'description' => '');\n
 EOT;
 		foreach (array_keys($tables) as $t)
 		{	
 			$ret .= <<<EOT
-\$modversion['templates'][] = array('file' => '{$module_dirname}_{$tables[$t]->getVar('table_name')}.tpl', 'description' => '');\n
+\$modversion['templates'][] = array('file' => '{$moduleDirname}_{$tables[$t]->getVar('table_name')}.tpl', 'description' => '');\n
 EOT;
 		}
 		$ret .= <<<EOT
-\$modversion['templates'][] = array('file' => '{$module_dirname}_footer.tpl', 'description' => '');\n
+\$modversion['templates'][] = array('file' => '{$moduleDirname}_footer.tpl', 'description' => '');\n
 EOT;
 		return $ret;
 	}
@@ -300,18 +301,18 @@ EOT;
 	private function getXoopsVersionSubmenu($language) 
 	{ 	
 		$ret = <<<EOT
-// Submenu list\n
+// ---------------------- Submenu ---------------------- //\n
 EOT;
 		$tables = $this->getTables();
 		$i = 1;
 		foreach (array_keys($tables) as $t)	
 		{
-			$table_name = $tables[$t]->getVar('table_name');
+			$tableName = $tables[$t]->getVar('table_name');
 			if ( $tables[$t]->getVar('table_submenu') == 1 ) {
 				$ret .= <<<EOT
-// Sub {$table_name}
+// Sub {$tableName}
 \$modversion['sub'][{$i}]['name'] = {$language}SMNAME{$i};
-\$modversion['sub'][{$i}]['url'] = "{$table_name}.php";\n
+\$modversion['sub'][{$i}]['url'] = "{$tableName}.php";\n
 EOT;
 			}
 			$i++;
@@ -321,28 +322,28 @@ EOT;
 	}
 	/*
 	*  @private function getXoopsVersionBlocks
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*  @param string $language
 	*/
-	private function getXoopsVersionBlocks($module_dirname, $language) 
+	private function getXoopsVersionBlocks($moduleDirname, $language) 
 	{ 
 		$tables = $this->getTables();
 		$ret = <<<EOT
-//Blocks\n
+// ---------------------- Blocks ---------------------- //\n
 EOT;
 		foreach (array_keys($tables) as $i) {
-			$table_name = $tables[$i]->getVar('table_name');			
+			$tableName = $tables[$i]->getVar('table_name');			
 			if ($tables[$i]->getVar('table_blocks') == 1) {            
-				$language1 = $language . strtoupper($table_name);
+				$language1 = $language . strtoupper($tableName);
 				$ret .= <<<EOT
 \$modversion['blocks'][] = array(
-	'file' => "{$table_name}.php",
+	'file' => "{$tableName}.php",
 	'name' => {$language1}_BLOCK,
 	'description' => "",
-	'show_func' => "b_{$module_dirname}_{$table_name}_show",
-	'edit_func' => "b_{$module_dirname}_{$table_name}_edit",
+	'show_func' => "b_{$moduleDirname}_{$tableName}_show",
+	'edit_func' => "b_{$moduleDirname}_{$tableName}_edit",
 	'options' => "{$tables[$i]->getVar('table_fieldname')}|5|25|0",
-	'template' => "'{$module_dirname}_block_{$table_name}.tpl");\n\n
+	'template' => "'{$moduleDirname}_block_{$tableName}.tpl");\n\n
 EOT;
 			}
 		}
@@ -350,27 +351,27 @@ EOT;
 	}
 	/*
 	*  @private function getXoopsVersionConfig
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*  @param string $language
 	*/
 	private function getXoopsVersionConfig($module, $table, $language) 
 	{ 
-		$module_dirname = $module->getVar('mod_dirname');
+		$moduleDirname = $module->getVar('mod_dirname');
 		$ret = <<<EOT
-// ------------------- Config -------------------\n
+// ------------------- Config ------------------- //\n
 EOT;
         $fields = $this->getTableFields($table->getVar('table_id'));
 		foreach (array_keys($fields) as $f) 
 		{			
-			$field_element = $fields[$f]->getVar('field_element');	
+			$fieldElement = $fields[$f]->getVar('field_element');	
 		}
-		if( $field_element == 3 ) {
+		if( $fieldElement == 3 ) {
 			$ret .= <<<EOT
 // Editor
 xoops_load('xoopseditorhandler');
 \$editor_handler = XoopsEditorHandler::getInstance();
 \$modversion['config'][] = array(
-    'name' => "{$module_dirname}_editor",
+    'name' => "{$moduleDirname}_editor",
     'title' => "{$language}EDITOR",
     'description' => "{$language}EDITOR_DESC",
     'formtype' => "select",
@@ -422,10 +423,10 @@ EOT;
     'description' => "{$language}KEYWORDS_DESC",
     'formtype' => "textbox",
     'valuetype' => "text",
-    'default' => "{$module_dirname}, {$keyword}");\n
+    'default' => "{$moduleDirname}, {$keyword}");\n
 EOT;
 		unset($this->keywords);
-		if( $field_element == 9 )
+		if( $fieldElement == 9 )
 		{
 			$ret .= <<<EOT
 \n//Uploads : maxsize of image
@@ -501,31 +502,31 @@ EOT;
 	}
 	/*
 	*  @private function getXoopsVersionNotifications
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*  @param string $language
 	*/
-	private function getXoopsVersionNotifications($module_dirname, $language, $filename) 
+	private function getXoopsVersionNotifications($moduleDirname, $language, $filename) 
 	{ 
 		$ret = '';		
 		$notify_file = '';
 		$tables = $this->getTables();
 		foreach(array_keys($tables) as $t)
 		{	
-			$table_name = $tables[$t]->getVar('table_name');
-			$count = count($table_name);
+			$tableName = $tables[$t]->getVar('table_name');
+			$count = count($tableName);
 			if($tables[$t]->getVar('table_notifications') == 1) {
 				if($t <= $count) {
-					$notify_file .= "'".$table_name.".php', ";
+					$notify_file .= "'".$tableName.".php', ";
 				} else {
-					$notify_file .= "'".$table_name.".php'";
+					$notify_file .= "'".$tableName.".php'";
 				}
 			}
 		}	
 		$ret .= <<<EOT
-\n// Notifications {$module_dirname}
+// ------------------- Notifications ------------------- //
 \$modversion['hasNotification'] = 1;
 \$modversion['notification']['lookup_file'] = 'include/notification.inc.php';
-\$modversion['notification']['lookup_func'] = '{$module_dirname}_notify_iteminfo';
+\$modversion['notification']['lookup_func'] = '{$moduleDirname}_notify_iteminfo';
 
 \$modversion['notification']['category'][] = array(
 	'name' => "global", 
@@ -637,36 +638,36 @@ EOT;
 		$module = $this->getModule();
         $table = $this->getTable();        		
 		$filename = $this->getFileName();
-		$module_dirname = $module->getVar('mod_dirname');		
-		$language = $this->getLanguage($module_dirname, 'MI');			
+		$moduleDirname = $module->getVar('mod_dirname');		
+		$language = $this->getLanguage($moduleDirname, 'MI');			
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= $this->getXoopsVersionHeader($module, $table, $language);					
 		if (is_object($table)) {			
-			$content .= $this->getXoopsVersionMySQL($module_dirname,  $table);        		
+			$content .= $this->getXoopsVersionMySQL($moduleDirname,  $table);        		
 			if ($table->getVar('table_search') == 1) { 	
-				$content .= $this->getXoopsVersionSearch($module_dirname);
+				$content .= $this->getXoopsVersionSearch($moduleDirname);
 			}
 			if ($table->getVar('table_comments') == 1) { 
-				$content .= $this->getXoopsVersionComments($module_dirname);
+				$content .= $this->getXoopsVersionComments($moduleDirname);
 			}
 			if($table->getVar('table_admin') == 1) {
-				$content .= $this->getXoopsVersionTemplatesAdmin($module_dirname);
+				$content .= $this->getXoopsVersionTemplatesAdmin($moduleDirname);
 			}/**/
 			if($table->getVar('table_user') == 1) {
-				$content .= $this->getXoopsVersionTemplatesUser($module_dirname);
+				$content .= $this->getXoopsVersionTemplatesUser($moduleDirname);
 			}
 			if ($table->getVar('table_submenu') == 1) { 
 				$content .= $this->getXoopsVersionSubmenu($language);
 			}
 			if ($table->getVar('table_blocks') == 1) { 
-				$content .= $this->getXoopsVersionBlocks($module_dirname, $language);
+				$content .= $this->getXoopsVersionBlocks($moduleDirname, $language);
 			}
 			$content .= $this->getXoopsVersionConfig($module, $table, $language);
 			if ($table->getVar('table_notifications') == 1) {	
-				$content .= $this->getXoopsVersionNotifications($module_dirname, $language, $filename);
+				$content .= $this->getXoopsVersionNotifications($moduleDirname, $language, $filename);
 			}
 		}
-		$this->tdmcfile->create($module_dirname, '/', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, '/', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

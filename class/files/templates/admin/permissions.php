@@ -53,11 +53,11 @@ class TemplatesAdminPermissions extends HtmlSmartyCodes
 	}
 	/*
 	*  @private function getTemplatesAdminPagesHeader
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*/
-	private function getTemplatesAdminPermissions($module_dirname) {    
+	private function getTemplatesAdminPermissions($moduleDirname) {    
 		$ret = <<<EOT
-<{include file="db:{$module_dirname}_admin_header.tpl"}>\n
+<{include file="db:{$moduleDirname}_admin_header.tpl"}>\n
 EOT;
 		return $ret;
 	}
@@ -69,11 +69,11 @@ EOT;
 	public function render() {    
 		$module = $this->getModule();
         $filename = $this->getFileName();		
-		$module_dirname = $module->getVar('mod_name');		
-		$language = $this->getLanguage($module_dirname, 'AM');
-		$content = $this->getTemplatesAdminPermissions($module_dirname);
+		$moduleDirname = $module->getVar('mod_dirname');		
+		$language = $this->getLanguage($moduleDirname, 'AM');
+		$content = $this->getTemplatesAdminPermissions($moduleDirname);
 		//
-		$this->tdmcfile->create($module_dirname, 'templates/admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'templates/admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

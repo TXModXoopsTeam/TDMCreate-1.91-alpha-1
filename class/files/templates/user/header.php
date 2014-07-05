@@ -61,13 +61,13 @@ class TemplatesUserHeader extends HtmlSmartyCodes
 		$module = $this->getModule();
 		$tables = $this->getTables();        		
 		$filename = $this->getFileName();
-		$module_dirname = $module->getVar('mod_dirname');		
-        $language = $this->getLanguage($module_dirname, 'MA');		
+		$moduleDirname = $module->getVar('mod_dirname');		
+        $language = $this->getLanguage($moduleDirname, 'MA');		
 		$content = <<<EOT
 <{if \$adv != ''}>
 	<div class="center"><{\$adv}></div>
 <{/if}>
-<table class="{$module_dirname}">
+<table class="{$moduleDirname}">
     <thead>          
 		  <tr class="center">
 			<th><{\$smarty.const.{$language}TITLE}>  -  <{\$smarty.const.{$language}DESC}></th>
@@ -77,15 +77,15 @@ class TemplatesUserHeader extends HtmlSmartyCodes
         <tr class="center">
             <td class="center bold pad5">
                 <ul class="menu">
-					<li><a href="<{\${$module_dirname}_url}>"><{\$smarty.const.{$language}INDEX}></a></li>\n
+					<li><a href="<{\${$moduleDirname}_url}>"><{\$smarty.const.{$language}INDEX}></a></li>\n
 EOT;
 		foreach (array_keys($tables) as $i)
 		{	
-			$table_name = $tables[$i]->getVar('table_name');
-			$stu_table_name = strtoupper($table_name);
+			$tableName = $tables[$i]->getVar('table_name');
+			$stu_table_name = strtoupper($tableName);
 			$content .= <<<EOT
 					<li> | </li>
-					<li><a href="<{\${$module_dirname}_url}>/{$table_name}.php"><{\$smarty.const.{$language}{$stu_table_name}}></a></li>\n
+					<li><a href="<{\${$moduleDirname}_url}>/{$tableName}.php"><{\$smarty.const.{$language}{$stu_table_name}}></a></li>\n
 EOT;
 		}					 
 		$content .= <<<EOT
@@ -102,7 +102,7 @@ EOT;
 	</tfoot>
 </table>
 EOT;
-		$this->tdmcfile->create($module_dirname, 'templates', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'templates', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

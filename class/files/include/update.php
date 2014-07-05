@@ -60,13 +60,13 @@ class IncludeUpdate extends TDMCreateFile
 	public function renderFile() {    
 		$module = $this->getModule();
 		$filename = $this->getFileName();
-		$module_dirname = strtolower($module->getVar('mod_dirname'));        				
+		$moduleDirname = $module->getVar('mod_dirname');        				
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= <<<EOT
 \n// ---------- Here your update code ---------- //
 EOT;
 		//
-		$this->tdmcfile->create($module_dirname, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'include', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

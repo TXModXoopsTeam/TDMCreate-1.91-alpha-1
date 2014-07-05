@@ -83,8 +83,7 @@ EOT;
 		foreach (array_keys($tables) as $i) 
 		{   
 			$menu++;
-			$ucf_table_name = ucfirst(str_replace('_', ' ', $tables[$i]->getVar('table_name')));
-			$table_permissions = $tables[$i]->getVar('table_permissions');
+			$ucf_table_name = ucfirst(str_replace('_', ' ', $tables[$i]->getVar('table_name')));			
 			$ret .= <<<EOT
 define('{$language}ADMENU{$menu}', "{$ucf_table_name}");\n
 EOT;
@@ -126,10 +125,10 @@ EOT;
 		$i = 1;
 		foreach (array_keys($tables) as $t) 
 		{	
-			$table_name = $tables[$t]->getVar('table_name');			
+			$tableName = $tables[$t]->getVar('table_name');			
 			if ( $tables[$t]->getVar('table_submenu') == 1 ) {
 			$ret .= <<<EOT
-define('{$language}SMNAME{$i}', "{$table_name}");\n
+define('{$language}SMNAME{$i}', "{$tableName}");\n
 EOT;
 			}
 			$i++;
@@ -148,12 +147,12 @@ EOT;
 EOT;
 		foreach (array_keys($tables) as $i) 
 		{	
-			$table_name = $tables[$i]->getVar('table_name');
-			$language1 = $language.strtoupper($table_name);
-			$table_name = str_replace("_", " ", ucfirst($table_name));
+			$tableName = $tables[$i]->getVar('table_name');
+			$language1 = $language.strtoupper($tableName);
+			$ucfTableName = str_replace("_", " ", ucfirst($tableName));
 			if ( $tables[$i]->getVar('table_blocks') == 1 ) {
 			$ret .= <<<EOT
-define('{$language1}_BLOCK', "{$table_name} block");\n
+define('{$language1}_BLOCK', "{$ucfTableName} block");\n
 EOT;
 			}
 		}
@@ -277,8 +276,8 @@ EOT;
 		$table = $this->getTable();        		
 		$tables = $this->getTables();
 		$filename = $this->getFileName();
-        $module_dirname = $module->getVar('mod_dirname');		
-		$language = $this->getLanguage($module_dirname, 'MI');
+        $moduleDirname = $module->getVar('mod_dirname');		
+		$language = $this->getLanguage($moduleDirname, 'MI');
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= $this->getMain($language, $module);			
 		if (is_object($table)) {
@@ -303,7 +302,7 @@ EOT;
 			}
 		}
 		//
-		$this->tdmcfile->create($module_dirname, 'language/'.$GLOBALS['xoopsConfig']['language'], $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'language/'.$GLOBALS['xoopsConfig']['language'], $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

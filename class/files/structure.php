@@ -25,19 +25,19 @@ class TDMCreateStructure
 	/*
 	* @var mixed
 	*/
-	private $xoopsfile = null;
+	private $xoopsFile = null;
 	/*
 	* @var string
 	*/
-	private $module_name = null;
+	private $moduleName = null;
 	/*
 	* @var string
 	*/  
-	protected $folder_name = null;
+	protected $folderName = null;
 	/*
 	* @var string
 	*/
-	private $file_name = null;
+	private $fileName = null;
 	/*
 	* @var string
 	*/ 
@@ -45,17 +45,17 @@ class TDMCreateStructure
 	/*
 	* @var string
 	*/
-	private $from_file = null;
+	private $fromFile = null;
 	/*
 	* @var string
 	*/
-	private $to_file = null;
+	private $toFile = null;
 	/*
 	*  @public function constructor class
 	*  @param string $path
 	*/
 	public function __construct() {    
-		$this->xoopsfile = XoopsFile::getInstance();
+		$this->xoopsFile = XoopsFile::getInstance();
 	} 	
 	/*
 	*  @static function &getInstance
@@ -99,53 +99,53 @@ class TDMCreateStructure
 	}
 	/* 
 	*  @public function folderPath
-	*  @param string $folder_name  
-    *  @param string $file_name	
+	*  @param string $folderName  
+    *  @param string $fileName	
 	*/
-	public function folderPath($folder_name, $file_name = null)
+	public function folderPath($folderName, $fileName = null)
 	{		
-		$this->folder_name = $folder_name;
-		if( $file_name != null ) {
-			$this->file_name = $file_name; 
-			$ret = $this->path . DIRECTORY_SEPARATOR . $this->module_name . DIRECTORY_SEPARATOR . $this->folder_name . DIRECTORY_SEPARATOR . $this->file_name;
+		$this->folderName = $folderName;
+		if( $fileName != null ) {
+			$this->fileName = $fileName; 
+			$ret = $this->path . DIRECTORY_SEPARATOR . $this->moduleName . DIRECTORY_SEPARATOR . $this->folderName . DIRECTORY_SEPARATOR . $this->fileName;
 		} else {
-			$ret = $this->path . DIRECTORY_SEPARATOR . $this->module_name . DIRECTORY_SEPARATOR . $this->folder_name;
+			$ret = $this->path . DIRECTORY_SEPARATOR . $this->moduleName . DIRECTORY_SEPARATOR . $this->folderName;
 		}
 		return $ret; 	   
 	}
 	/* 
 	*  @public function makeDirInModule
-	*  @param string $folder_name                                 
+	*  @param string $folderName                                 
 	*/
-	public function makeDirInModule($folder_name)
+	public function makeDirInModule($folderName)
 	{ 		   
-		$fname = $this->folderPath($folder_name); 	   
+		$fname = $this->folderPath($folderName); 	   
 		$this->makeDir($fname);
 	}
 	/* 
 	*  @public function makeDir & copy file
-	*  @param string $folder_name                                 
-	*  @param string $to_file            
+	*  @param string $folderName                                 
+	*  @param string $toFile            
 	*  @param string $file                           
 	*/
-	public function makeDirAndCopyFile($folder_name, $from_file, $to_file)
+	public function makeDirAndCopyFile($folderName, $fromFile, $toFile)
 	{
-		$dname = $this->folderPath($folder_name); 	 
+		$dname = $this->folderPath($folderName); 	 
 		$this->makeDir($dname);
-		$this->copyFile($folder_name, $from_file, $to_file);
+		$this->copyFile($folderName, $fromFile, $toFile);
 	}
 	/* 
 	*  @public function copy file
 	*  @param string $foldername                                 
-	*  @param string $from_file
-	*  @param string $to_file
+	*  @param string $fromFile
+	*  @param string $toFile
 	*/
-	public function copyFile($folder_name, $from_file, $to_file)
+	public function copyFile($folderName, $fromFile, $toFile)
 	{	   
-	    $this->from_file = $from_file;
-	    $this->to_file = $to_file;
-		$dname = $this->folderPath($folder_name);
-		$fname = $this->folderPath($folder_name) . DIRECTORY_SEPARATOR . $this->to_file;
+	    $this->fromFile = $fromFile;
+	    $this->toFile = $toFile;
+		$dname = $this->folderPath($folderName);
+		$fname = $this->folderPath($folderName) . DIRECTORY_SEPARATOR . $this->toFile;
 	    $this->setCopy($dname, $fname);
 	}
 	/* 
@@ -157,10 +157,10 @@ class TDMCreateStructure
 	{	   
 	    if(is_dir($dname)) {		   
 		    chmod($dname, 0777);
-	        copy($this->from_file, $fname);
+	        copy($this->fromFile, $fname);
 	    } else {
 			$this->makeDir($dname);
-	        copy($this->from_file, $fname);
+	        copy($this->fromFile, $fname);
 	    }
 	}	
 }

@@ -58,14 +58,14 @@ class TemplatesAdminHeader extends TDMCreateFile
 	public function render() { 		
 		$module = $this->getModule();
 		$filename = $this->getFileName();
-		$module_dirname = $module->getVar('mod_dirname');				
+		$moduleDirname = $module->getVar('mod_dirname');				
 		$content = <<<EOT
 <div class="top">
 <span class="left"><{\$navigation}></span>
 <{if \$buttons}><span class="right"><{\$buttons}>&nbsp;</span><{/if}>
 </div>
 EOT;
-		$this->tdmcfile->create($module_dirname, 'templates/admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'templates/admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

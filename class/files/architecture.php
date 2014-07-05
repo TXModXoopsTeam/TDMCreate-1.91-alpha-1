@@ -21,7 +21,7 @@
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
 require_once 'structure.php';
 /*include_once TDMC_PATH . '/include/functions.php';
-spl_autoload_register('TDMCreate_autoload');*/
+spl_autoload_register('tdmcreateAutoload');*/
 
 class TDMCreateArchitecture extends TDMCreateStructure
 {	
@@ -40,7 +40,7 @@ class TDMCreateArchitecture extends TDMCreateStructure
 	/*
 	* @var mixed
 	*/
-	private $upload_path = null;
+	private $uploadPath = null;
 	/*
 	*  @public function constructor class
 	*  @param null
@@ -73,7 +73,7 @@ class TDMCreateArchitecture extends TDMCreateStructure
 	*  @param string $path
 	*/
 	public function getUploadPath($path) {		
-		$this->upload_path = $path;
+		$this->uploadPath = $path;
 	} 
 	/* 
 	*  @public function createBaseFoldersFiles
@@ -82,32 +82,32 @@ class TDMCreateArchitecture extends TDMCreateStructure
 	public function createBaseFoldersFiles( $module )
 	{	
 		// Module
-		$mod_id = $module->getVar('mod_id');       
+		$modId = $module->getVar('mod_id');       
 		// Id of tables
-		$criteria_tables = new CriteriaCompo();
-		$criteria_tables->add(new Criteria('table_mid', $mod_id));		
-		$tables = $this->tdmcreate->getHandler('tables')->getObjects($criteria_tables);
-		unset($criteria_tables);
+		$criteriaTables = new CriteriaCompo();
+		$criteriaTables->add(new Criteria('table_mid', $modId));		
+		$tables = $this->tdmcreate->getHandler('tables')->getObjects($criteriaTables);
+		unset($criteriaTables);
 		//
 		$table = null;
 		foreach (array_keys($tables) as $t)
 		{			
-			$table_id = $tables[$t]->getVar('table_id');
-			$table_name = $tables[$t]->getVar('table_name');
-			$table_admin = $tables[$t]->getVar('table_admin');
-			$table_user = $tables[$t]->getVar('table_user');
-			$table_blocks = $tables[$t]->getVar('table_blocks');
-			$table = $this->tdmcreate->getHandler('tables')->get($table_id);
+			$tableId = $tables[$t]->getVar('table_id');
+			$tableName = $tables[$t]->getVar('table_name');
+			$tableAdmin = $tables[$t]->getVar('table_admin');
+			$tableUser = $tables[$t]->getVar('table_user');
+			$tableBlocks = $tables[$t]->getVar('table_blocks');
+			$table = $this->tdmcreate->getHandler('tables')->get($tableId);
 		}
 		//
 		$indexFile = $this->path.'/index.html';	
-		$docs_folder = $this->path.'/docs';
-		$logos_folder = $this->path.'/assets/images/logos';
-		$stl_module_name = $module->getVar('mod_dirname');
-		$stl_module_author = str_replace(' ', '', strtolower($module->getVar('mod_author')));
+		$docsFolder = $this->path.'/docs';
+		$logosFolder = $this->path.'/assets/images/logos';
+		$stlModuleDirname = $module->getVar('mod_dirname');
+		$stlModuleAuthor = str_replace(' ', '', strtolower($module->getVar('mod_author')));
 		// Creation of the Directory in repository
-		$targetDirectory = $this->upload_path.'/repository/'. $stl_module_name;			
-		$upload_images_folder = $this->upload_path.'/images/repository';			
+		$targetDirectory = $this->uploadPath.'/repository/'. $stlModuleDirname;			
+		$uploadImagesFolder = $this->uploadPath.'/images/repository';			
 		
 		// Creation of "module" folder
 		$this->structure->getPath($targetDirectory);
@@ -134,8 +134,8 @@ class TDMCreateArchitecture extends TDMCreateStructure
 		// Creation of "images" folder and index.html file
 		$this->structure->makeDirAndCopyFile('assets/images', $indexFile, 'index.html');	
 		//Copy the logo of the module
-		$mod_image = str_replace(' ', '', strtolower($module->getVar('mod_image')));
-		$this->structure->copyFile('assets/images', $upload_images_folder.'/'.$mod_image, $mod_image);				
+		$modImage = str_replace(' ', '', strtolower($module->getVar('mod_image')));
+		$this->structure->copyFile('assets/images', $uploadImagesFolder.'/'.$modImage, $modImage);				
 		// Creation of 'images/icons' folder and index.html file - Added in Version 1.15
 		$this->structure->makeDirAndCopyFile('assets/images/icons', $indexFile, 'index.html');	
 		// Creation of "images/icons/16" folder and index.html file
@@ -143,26 +143,26 @@ class TDMCreateArchitecture extends TDMCreateStructure
 		// Creation of "images/icons/32" folder and index.html file
 		$this->structure->makeDirAndCopyFile('assets/images/icons/32', $indexFile, 'index.html');		
 		// Copy of 'module_author_logo.gif' file in uploads dir
-		$logo_gif_from = $upload_images_folder.'/'.$stl_module_author.'_logo.gif';
-		if (!file_exists($logo_gif_from)) {
-			copy($logos_folder.'/'.$stl_module_author.'_logo.gif', $logo_gif_from);
+		$logoGifFrom = $uploadImagesFolder.'/'.$stlModuleAuthor.'_logo.gif';
+		if (!file_exists($logoGifFrom)) {
+			copy($logosFolder.'/'.$stlModuleAuthor.'_logo.gif', $logoGifFrom);
 		} 
 		// Creation of 'module_author_logo.gif' file
-		$this->structure->copyFile('assets/images', $logo_gif_from, $stl_module_author.'_logo.gif');	
+		$this->structure->copyFile('assets/images', $logoGifFrom, $stlModuleAuthor.'_logo.gif');	
 		// Creation of "images" folder and index.html file
 		$this->structure->makeDirAndCopyFile('assets/js', $indexFile, 'index.html');
 		// Creation of 'docs' folder and index.html file
 		$this->structure->makeDirAndCopyFile('docs', $indexFile, 'index.html');    
 		// Creation of 'credits.txt' file
-		$this->structure->copyFile('docs', $docs_folder.'/credits.txt', 'credits.txt');	
+		$this->structure->copyFile('docs', $docsFolder.'/credits.txt', 'credits.txt');	
 		// Creation of 'install.txt' file
-		$this->structure->copyFile('docs', $docs_folder.'/install.txt', 'install.txt');
+		$this->structure->copyFile('docs', $docsFolder.'/install.txt', 'install.txt');
 		// Creation of 'lang_diff.txt' file
-		$this->structure->copyFile('docs', $docs_folder.'/lang_diff.txt', 'lang_diff.txt');
+		$this->structure->copyFile('docs', $docsFolder.'/lang_diff.txt', 'lang_diff.txt');
 		// Creation of 'license.txt' file
-		$this->structure->copyFile('docs', $docs_folder.'/license.txt', 'license.txt');
+		$this->structure->copyFile('docs', $docsFolder.'/license.txt', 'license.txt');
 		// Creation of 'readme.txt' file
-		$this->structure->copyFile('docs', $docs_folder.'/readme.txt', 'readme.txt');		
+		$this->structure->copyFile('docs', $docsFolder.'/readme.txt', 'readme.txt');		
 		// Creation of "include" folder and index.html file	
 		$this->structure->makeDirAndCopyFile('include', $indexFile, 'index.html');
 		// Creation of "language" folder and index.html file	
@@ -196,87 +196,82 @@ class TDMCreateArchitecture extends TDMCreateStructure
 	}	
 	
 	/* 
-	*  @public function createBuildingFiles
+	*  @public function createFilesToBuilding
 	*  @param string $module
 	*/
 	public function createFilesToBuilding( $module )
 	{	
 		// Module
-		$mod_id = $module->getVar('mod_id');
-        $mod_dirname = $module->getVar('mod_dirname');
-		$uploadTablesIcons32 = $this->upload_path.'/images/tables';
+		$modId = $module->getVar('mod_id');
+        $moduleDirname = $module->getVar('mod_dirname');
+		$uploadTablesIcons32 = $this->uploadPath.'/images/tables';
 		// Id of tables
-		$criteria_tables = new CriteriaCompo();
-		$criteria_tables->add(new Criteria('table_mid', $mod_id));		
-		$tables = $this->tdmcreate->getHandler('tables')->getObjects($criteria_tables);
-		unset($criteria_tables);		
+		$criteriaTables = new CriteriaCompo();
+		$criteriaTables->add(new Criteria('table_mid', $modId));		
+		$tables = $this->tdmcreate->getHandler('tables')->getObjects($criteriaTables);
+		unset($criteriaTables);		
 		$ret = array();
 		//
 		$table = null;
 		foreach (array_keys($tables) as $t)
 		{
-			$table_mid = $tables[$t]->getVar('table_mid');
-			$table_id = $tables[$t]->getVar('table_id');
-			$table_name = $tables[$t]->getVar('table_name');
-			$table_image = $tables[$t]->getVar('table_image');
-			$table_admin = $tables[$t]->getVar('table_admin');
-			$table_user = $tables[$t]->getVar('table_user');
-			$table_blocks = $tables[$t]->getVar('table_blocks');
-			$table_search = $tables[$t]->getVar('table_search');
-			$table_comments = $tables[$t]->getVar('table_comments');
-			$table_notifications = $tables[$t]->getVar('table_notifications');
-			$table_permissions = $tables[$t]->getVar('table_permissions');
+			$tableMid = $tables[$t]->getVar('table_mid');
+			$tableId = $tables[$t]->getVar('table_id');
+			$tableName = $tables[$t]->getVar('table_name');
+			$tableImage = $tables[$t]->getVar('table_image');
+			$tableAdmin = $tables[$t]->getVar('table_admin');
+			$tableUser = $tables[$t]->getVar('table_user');
+			$tableBlocks = $tables[$t]->getVar('table_blocks');
+			$tableSearch = $tables[$t]->getVar('table_search');
+			$tableComments = $tables[$t]->getVar('table_comments');
+			$tableNotifications = $tables[$t]->getVar('table_notifications');
+			$tablePermissions = $tables[$t]->getVar('table_permissions');
 			// Get Table Object		
-			$table = $this->tdmcreate->getHandler('tables')->get($table_id);
+			$table = $this->tdmcreate->getHandler('tables')->get($tableId);
 			// Copy of tables images file
-			if( file_exists($upload_table_image = $uploadTablesIcons32.'/'.$table_image)) {
-				$this->structure->copyFile('assets/images/32', $upload_table_image, $table_image);
+			if( file_exists($uploadTableImage = $uploadTablesIcons32.'/'.$tableImage)) {
+				$this->structure->copyFile('assets/images/icons/32', $uploadTableImage, $tableImage);
 			}										
 			// Creation of admin files
-			if ( $table_admin == 1) {	
+			if ( $tableAdmin == 1) {	
 				// Admin Pages File
 				$adminPages = AdminPages::getInstance();
 				$adminPages->write($module, $table);				
-				$ret[] = $adminPages->renderFile($table_name.'.php');				
+				$ret[] = $adminPages->renderFile($tableName.'.php');				
 				// Admin Templates File
 				$adminTemplatesPages = TemplatesAdminPages::getInstance();
 				$adminTemplatesPages->write($module, $table);
-				$ret[] = $adminTemplatesPages->renderFile($mod_dirname.'_admin_'.$table_name.'.tpl');
+				$ret[] = $adminTemplatesPages->renderFile($moduleDirname.'_admin_'.$tableName.'.tpl');
 			}
 			// Creation of blocks
-			if ( $table_blocks == 1) {				
+			if ( $tableBlocks == 1) {				
 				// Blocks Files
 				$blocksFiles = BlocksFiles::getInstance();
 				$blocksFiles->write($module, $table);
-				$ret[] = $blocksFiles->renderFile($table_name.'.php');
+				$ret[] = $blocksFiles->renderFile($tableName.'.php');
 				// Templates Blocks Files
-				$templatesFiles = TemplatesBlocks::getInstance();
-				$templatesFiles->write($module, $table);
-				$ret[] = $templatesFiles->renderFile($mod_dirname.'_block_'.$table_name.'.tpl');
-			}
-			// Blocks Templates File
-			/*$blocksTemplates = BlocksTemplates::getInstance();
-			$blocksTemplates->write($module, $table);
-			$ret[] = $blocksTemplates->renderFile($table_name.'.tpl');*/
+				$templatesBlocks = TemplatesBlocks::getInstance();
+				$templatesBlocks->write($module, $table);
+				$ret[] = $templatesBlocks->renderFile($moduleDirname.'_block_'.$tableName.'.tpl');
+			}			
 			// Creation of classes
-			if ( $table_admin == 1 || $table_user == 1) {
+			if ( $tableAdmin == 1 || $tableUser == 1) {
 				// Class Files
 				$classFiles = ClassFiles::getInstance();
 				$classFiles->write($module, $table, $tables);
-				$ret[] = $classFiles->renderFile($table_name.'.php');
+				$ret[] = $classFiles->renderFile($tableName.'.php');
 			}
 			// Creation of user files
-			if ( $table_user == 1) {
+			if ( $tableUser == 1) {
 				// User Pages File
 				$userPages = UserPages::getInstance();
 				$userPages->write($module, $table);
-				$ret[] = $userPages->renderFile($table_name.'.php');
+				$ret[] = $userPages->renderFile($tableName.'.php');
 				// User Templates File
 				$userTemplatesPages = TemplatesUserPages::getInstance();
 				$userTemplatesPages->write($module, $table);
-				$ret[] = $userTemplatesPages->renderFile($mod_dirname.'_'.$table_name.'.tpl');
-			}					
-			/*var_dump($table_name); */           						
+				$ret[] = $userTemplatesPages->renderFile($moduleDirname.'_'.$tableName.'.tpl');
+			}				   						
 		}	
 		// Language Modinfo File 
 		$languageModinfo = LanguageModinfo::getInstance();	
@@ -313,7 +308,7 @@ class TDMCreateArchitecture extends TDMCreateStructure
 					$ret[] = $adminPermissions->render();
 					// Templates Admin Permissions File
 					$adminTemplatesPermissions = TemplatesAdminPermissions::getInstance();
-					$adminTemplatesPermissions->write($module, $mod_dirname.'_admin_permissions.tpl');
+					$adminTemplatesPermissions->write($module, $moduleDirname.'_admin_permissions.tpl');
 					$ret[] = $adminTemplatesPermissions->render();
 				}
 				// Admin Aboutr File 
@@ -330,19 +325,19 @@ class TDMCreateArchitecture extends TDMCreateStructure
 				$ret[] = $languageAdmin->render();
 				// Templates Admin About File
 				$adminTemplatesAbout = TemplatesAdminAbout::getInstance();
-				$adminTemplatesAbout->write($module, $mod_dirname.'_admin_about.tpl');
+				$adminTemplatesAbout->write($module, $moduleDirname.'_admin_about.tpl');
 				$ret[] = $adminTemplatesAbout->render();
 				// Templates Admin Index File
 				$adminTemplatesIndex = TemplatesAdminIndex::getInstance();
-				$adminTemplatesIndex->write($module, $mod_dirname.'_admin_index.tpl');
+				$adminTemplatesIndex->write($module, $moduleDirname.'_admin_index.tpl');
 				$ret[] = $adminTemplatesIndex->render();
 				// Templates Admin Footer File 
 				$adminTemplatesFooter = TemplatesAdminFooter::getInstance();
-				$adminTemplatesFooter->write($module, $mod_dirname.'_admin_footer.tpl');				
+				$adminTemplatesFooter->write($module, $moduleDirname.'_admin_footer.tpl');				
 				$ret[] = $adminTemplatesFooter->render();	
 				// Templates Admin Header File 
 				$adminTemplatesHeader = TemplatesAdminHeader::getInstance();
-				$adminTemplatesHeader->write($module, $mod_dirname.'_admin_header.tpl');
+				$adminTemplatesHeader->write($module, $moduleDirname.'_admin_header.tpl');
 				$ret[] = $adminTemplatesHeader->render();
 			}		
 			// Creation of notifications files
@@ -405,15 +400,15 @@ class TDMCreateArchitecture extends TDMCreateStructure
 			if ( ($table->getVar('table_user') == 1)) {							
 				// Templates Index File
 				$userTemplatesIndex = TemplatesUserIndex::getInstance();
-				$userTemplatesIndex->write($module, $mod_dirname.'_index.tpl');
+				$userTemplatesIndex->write($module, $moduleDirname.'_index.tpl');
 				$ret[] = $userTemplatesIndex->render();
 				// Templates Footer File 
 				$userTemplatesFooter = TemplatesUserFooter::getInstance();
-				$userTemplatesFooter->write($module, $table, $mod_dirname.'_footer.tpl');				
+				$userTemplatesFooter->write($module, $table, $moduleDirname.'_footer.tpl');				
 				$ret[] = $userTemplatesFooter->render();	
 				// Templates Header File 
 				$userTemplatesHeader = TemplatesUserHeader::getInstance();
-				$userTemplatesHeader->write($module, $tables, $mod_dirname.'_header.tpl');
+				$userTemplatesHeader->write($module, $tables, $moduleDirname.'_header.tpl');
 				$ret[] = $userTemplatesHeader->render();	
 				// User Footer File 
 				$userFooter = UserFooter::getInstance();

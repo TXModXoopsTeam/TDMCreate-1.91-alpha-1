@@ -44,7 +44,7 @@
                 <td class='center'><img src="<{$modPathIcon16}>/nb_fields.png" /></td>
                 <td class='center'><img src="<{$modPathIcon16}>/nb_fields.png" /></td>
     	        <td class='xo-actions txtcenter width6'>
-		    <a href="tables.php?op=edit&amp;table_id=<{$table.id}>" title="<{$smarty.const._AM_TDMCREATE_EDIT_TABLE}>">
+		    <a href="tables.php?op=edit&amp;table_mid=<{$table.mid}>&amp;table_id=<{$table.id}>" title="<{$smarty.const._AM_TDMCREATE_EDIT_TABLE}>">
                        <img src="<{xoModuleIcons16 edit.png}>" alt="<{$smarty.const._AM_TDMCREATE_EDIT_TABLE}>" />
                     </a>  
                     <a href="fields.php?op=edit&amp;field_mid=<{$table.mid}>&amp;field_tid=<{$table.id}>" title="<{$smarty.const._AM_TDMCREATE_EDIT_FIELDS}>">
@@ -56,6 +56,7 @@
     	        </td>
              </tr>
              <{foreach item=field from=$table.fields}>
+              <{if $field.id > 0}>
                <tr class="<{cycle values='even,odd'}> sortable toggleChild">
     	        <td class='center'>&#91;<{$field.lid}>&#93;&nbsp;<img class="move" src="<{$modPathIcon16}>/drag.png" alt="<{$field.name}>" /></td>
                 <td class='center'><{$field.name}></td>
@@ -81,6 +82,7 @@
                 </td>
                 <td class='center'><img src="<{$modPathIcon16}>/left_right.png" alt="Empty" /></td>
                </tr>
+             <{/if}>
             <{/foreach}>
          <{/foreach}>
       </tbody>

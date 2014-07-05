@@ -52,17 +52,17 @@ class DocsFiles extends TDMCreateFile
 	}	
 	/*
 	*  @public function getChangeLogFile
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*  @param string $mod_version
 	*  @param string $mod_author
 	*/
-	public function getChangeLogFile($module_dirname, $mod_version, $mod_author) {    
+	public function getChangeLogFile($moduleDirname, $mod_version, $mod_author) {    
 		$date = date('Y/m/d G:i:s');		
 		$ret = <<<EOT
 ====================================
  {$date} Version {$mod_version}
 ====================================
- - Original release {$module_dirname} ({$mod_author})
+ - Original release {$moduleDirname} ({$mod_author})
 EOT;
 		return $ret;
 	}
@@ -132,14 +132,14 @@ EOT;
 	*/
 	public function render() {    
         $module = $this->getModule();
-		$module_dirname = $module->getVar('mod_dirname');
+		$moduleDirname = $module->getVar('mod_dirname');
 		$mod_author = $module->getVar('mod_author');
 		$mod_credits = $module->getVar('mod_credits');
 		$mod_author_website_url = $module->getVar('mod_author_website_url');
 		$mod_description = $module->getVar('mod_description');
 		switch($filename = $this->getFileName()) {
 			case 'changelog':
-				$content = $this->getChangeLogFile($module_dirname, $mod_version, $mod_author);
+				$content = $this->getChangeLogFile($moduleDirname, $mod_version, $mod_author);
 			break;
 			case 'credits':
 				$content = $this->getCreditsFile($mod_author, $mod_credits, $mod_author_website_url, $mod_description);
@@ -154,7 +154,7 @@ EOT;
 				$content = $this->getLangDiffFile($mod_version);
 			break;
 		}
-		$this->tdmcfile->create($module_dirname, 'docs', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'docs', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

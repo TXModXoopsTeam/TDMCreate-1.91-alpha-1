@@ -55,10 +55,10 @@ class AdminPermissions extends TDMCreateFile
 	}
 	/*
 	*  @private function getPermissionsCodeHeader
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*  @param string $language
 	*/
-	private function getPermissionsCodeHeader($module_dirname, $language) 
+	private function getPermissionsCodeHeader($moduleDirname, $language) 
 	{        
 		$ret = <<<PRM
 \ninclude_once 'header.php';
@@ -73,10 +73,10 @@ if( !empty(\$_POST['submit']) )
 if (count ( array_intersect ( \$group, \$groups ) ) <= 0) {
 	redirect_header ( 'index.php', 3, _NOPERM );
 }*/
-\$template_main = '{$module_dirname}_admin_permissions.tpl';
+\$template_main = '{$moduleDirname}_admin_permissions.tpl';
 echo \$adminMenu->addNavigation('permissions.php');
 
-\$permission = {$module_dirname}_CleanVars(\$_REQUEST, 'permission', 1, 'int');
+\$permission = {$moduleDirname}_CleanVars(\$_REQUEST, 'permission', 1, 'int');
 \$selected = array('', '', '', '');
 \$selected[\$permission-1] = ' selected';
 xoops_load('XoopsFormLoader');
@@ -95,10 +95,10 @@ PRM;
 	
 	/*
 	*  @private function getPermissionsCodeSwitch
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*  @param string $language
 	*/
-	private function getPermissionsCodeSwitch($module_dirname, $language) 
+	private function getPermissionsCodeSwitch($moduleDirname, $language) 
 	{        
 		$ret = <<<PRM
 \$module_id = \$xoopsModule->getVar('mid');
@@ -106,7 +106,7 @@ switch(\$permission)
 {
 	case 1:
         \$formTitle = {$language}GLOBAL;
-        \$permName = '{$module_dirname}_ac';
+        \$permName = '{$moduleDirname}_ac';
         \$permDesc = {$language}GLOBAL_DESC;
         \$globalPerms = array(	'4' => {$language}GLOBAL_4,
 								'8' => {$language}GLOBAL_8,
@@ -114,17 +114,17 @@ switch(\$permission)
 		break;
 	case 2:
 		\$formTitle = {$language}APPROVE;
-		\$permName = '{$module_dirname}_access';
+		\$permName = '{$moduleDirname}_access';
 		\$permDesc = {$language}APPROVE_DESC;
 		break;
 	case 3:
 		\$formTitle = {$language}SUBMIT;
-		\$permName = '{$module_dirname}_submit';
+		\$permName = '{$moduleDirname}_submit';
 		\$permDesc = {$language}SUBMIT_DESC;
 		break;
 	case 4:
 		\$formTitle = {$language}VIEW;
-		\$permName = '{$module_dirname}_view';
+		\$permName = '{$moduleDirname}_view';
 		\$permDesc = {$language}VIEW_DESC;
 		break;
 }\n
@@ -134,21 +134,21 @@ PRM;
 	
 	/*
 	*  @private function getPermissionsCodeBody
-	*  @param string $module_dirname
-	*  @param string $table_name
+	*  @param string $moduleDirname
+	*  @param string $tableName
 	*  @param string $language
 	*/
-	private function getPermissionsCodeBody($module_dirname, $language) 
+	private function getPermissionsCodeBody($moduleDirname, $language) 
 	{    
 		$tables = $this->getTables();
 		foreach(array_keys($tables) as $t) 
 		{
-			$table_id = $tables[$t]->getVar('table_id');
+			$tableId = $tables[$t]->getVar('table_id');
 			if($tables[$t]->getVar('table_permissions') == 1) {
-				$table_name = $tables[$t]->getVar('table_name');
+				$tableName = $tables[$t]->getVar('table_name');
 			}			
 		}
-		$fields = $this->getTableFields($table_id);		
+		$fields = $this->getTableFields($tableId);		
 		foreach(array_keys($fields) as $f)
 		{
 			if($f == 0) {
@@ -170,18 +170,18 @@ if (\$permission == 1) {
     \$criteria = new CriteriaCompo();
 	\$criteria->setSort('{$fpmf}');
 	\$criteria->setOrder('ASC');
-	\${$table_name}_count = \${$table_name}Handler->getCount(\$criteria);
-	\${$table_name}_arr = \${$table_name}Handler->getObjects(\$criteria);
+	\${$tableName}_count = \${$tableName}Handler->getCount(\$criteria);
+	\${$tableName}_arr = \${$tableName}Handler->getObjects(\$criteria);
 	unset(\$criteria);
-    foreach (array_keys(\${$table_name}_arr) as \$i) {		
-		\$permform->addItem(\${$table_name}_arr[\$i]->getVar('{$fpif}'), \${$table_name}_arr[\$i]->getVar('{$fpmf}'));		
+    foreach (array_keys(\${$tableName}_arr) as \$i) {		
+		\$permform->addItem(\${$tableName}_arr[\$i]->getVar('{$fpif}'), \${$tableName}_arr[\$i]->getVar('{$fpmf}'));		
 	} 
-	// Check if {$table_name} exist before rendering the form and redirect, if there aren't {$table_name}   
-	if (\${$table_name}_count > 0) {		
+	// Check if {$tableName} exist before rendering the form and redirect, if there aren't {$tableName}   
+	if (\${$tableName}_count > 0) {		
 		echo \$permform->render();
 		echo '<br /><br />';
 	} else {
-		redirect_header ( '{$table_name}.php?op=new', 3, {$language}NOPERMSSET );
+		redirect_header ( '{$tableName}.php?op=new', 3, {$language}NOPERMSSET );
 		exit ();
 	}\n     
 PRM;
@@ -208,15 +208,15 @@ PRM;
 	public function render() {    
         $module = $this->getModule();
 		$filename = $this->getFileName();
-		$module_dirname = strtolower($module->getVar('mod_dirname'));	
-		$language = $this->getLanguage($module_dirname, 'AM');
+		$moduleDirname = $module->getVar('mod_dirname');	
+		$language = $this->getLanguage($moduleDirname, 'AM');
 		$content = $this->getHeaderFilesComments($module, $filename);
-		$content .= $this->getPermissionsCodeHeader($module_dirname, $language);
-		$content .= $this->getPermissionsCodeSwitch($module_dirname, $language);
-		$content .= $this->getPermissionsCodeBody($module_dirname, $language);
+		$content .= $this->getPermissionsCodeHeader($moduleDirname, $language);
+		$content .= $this->getPermissionsCodeSwitch($moduleDirname, $language);
+		$content .= $this->getPermissionsCodeBody($moduleDirname, $language);
 		$content .= $this->getPermissionsCodeFooter();
 		//
-		$this->tdmcfile->create($module_dirname, 'admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'admin', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

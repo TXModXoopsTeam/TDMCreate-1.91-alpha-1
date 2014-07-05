@@ -234,6 +234,7 @@ INSERT INTO `tdmcreate_fieldelements` (`fieldelement_id`, `fieldelement_mid`, `f
   (6, 0, 0, 'SelectBox', 'XoopsFormSelect'),
   (7, 0, 0, 'SelectUser', 'XoopsFormSelectUser'),
   (8, 0, 0, 'ColorPicker', 'XoopsFormColorPicker'),
-  (9, 0, 0, 'UploadImage', 'XoopsFormUploadImage'),
-  (10, 0, 0, 'UploadFile', 'XoopsFormUploadFile'),
-  (11, 0, 0, 'TextDateSelect', 'XoopsFormTextDateSelect');
+  (9, 0, 0, 'ImageList', 'XoopsFormImageList'),
+  (10, 0, 0, 'UploadImage', 'XoopsFormUploadImage'),
+  (11, 0, 0, 'UploadFile', 'XoopsFormUploadFile'),
+  (12, 0, 0, 'TextDateSelect', 'XoopsFormTextDateSelect');

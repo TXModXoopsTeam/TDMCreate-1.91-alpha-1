@@ -27,14 +27,14 @@ class TDMCreateFile extends TDMCreateTableFields
 	/*
 	* @var string
 	*/
-	private $xoopsfile = null;
+	private $xoopsFile = null;
     
     /**
      * "filename" attribute of the files
      *
      * @var mixed
      */
-    private $filename = null;
+    private $fileName = null;
 
     /**
      * "path" attribute of the files
@@ -44,18 +44,18 @@ class TDMCreateFile extends TDMCreateTableFields
     private $path = null;
 	
 	/**
-     * "upload_path" attribute of the files
+     * "uploadPath" attribute of the files
      *
      * @var string
      */
-    private $upload_path = null;
+    private $uploadPath = null;
 
     /**
      * "folder_name" attribute of the files
      *
      * @var string
      */
-    private $folder_name = null;		
+    private $folderName = null;		
 		
 	/*
 	* @var string
@@ -70,7 +70,7 @@ class TDMCreateFile extends TDMCreateTableFields
 	/*
 	* @var mixed
 	*/
-	private $notcreated = false;
+	private $notCreated = false;
 	
 	/*
 	* @var string
@@ -87,7 +87,7 @@ class TDMCreateFile extends TDMCreateTableFields
 	*  @param null
 	*/
 	public function __construct() {    
-		$this->xoopsfile = XoopsFile::getHandler();
+		$this->xoopsFile = XoopsFile::getHandler();
 		$this->tdmcreate = TDMCreate::getInstance();
 	}
 	
@@ -105,21 +105,21 @@ class TDMCreateFile extends TDMCreateTableFields
 	
 	/*
 	*  @public function create
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*  @param string $subdir
-	*  @param string $filename
+	*  @param string $fileName
 	*  @param string $content
 	*  @param mixed $created
-	*  @param mixed $notcreated
+	*  @param mixed $notCreated
 	*  @param string $mode
 	*/
-	public function create($module_dirname, $subdir = null, $filename, $content = '', $created = false, $notcreated = false, $mode = 'w+') 
+	public function create($moduleDirname, $subdir = null, $fileName, $content = '', $created = false, $notCreated = false, $mode = 'w+') 
 	{  		
-		$this->setFileName($filename);
+		$this->setFileName($fileName);
 		$this->created = $created;
-		$this->notcreated = $notcreated;		
+		$this->notCreated = $notCreated;		
 		$this->setMode($mode);
-		$this->setModulePath($module_dirname);
+		$this->setModulePath($moduleDirname);
 		if(!empty($content) && is_string($content)) {
 			$this->setContent($content);
 		}	
@@ -130,10 +130,10 @@ class TDMCreateFile extends TDMCreateTableFields
 	
 	/*
 	*  @private function setPath
-	*  @param string $folder_name
+	*  @param string $folderName
 	*/
-	private function setPath($folder_name) {
-        $this->path = TDMC_PATH . DIRECTORY_SEPARATOR . $folder_name;
+	private function setPath($folderName) {
+        $this->path = TDMC_PATH . DIRECTORY_SEPARATOR . $folderName;
     }
 	
 	/*
@@ -146,10 +146,10 @@ class TDMCreateFile extends TDMCreateTableFields
 		
 	/*
 	*  @private function setModulePath
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*/
-	private function setModulePath($module_dirname) {
-        $this->upload_path = TDMC_UPLOAD_REPOSITORY_PATH . DIRECTORY_SEPARATOR . $module_dirname;
+	private function setModulePath($moduleDirname) {
+        $this->upload_path = TDMC_UPLOAD_REPOSITORY_PATH . DIRECTORY_SEPARATOR . $moduleDirname;
     }
 	
 	/*
@@ -180,8 +180,8 @@ class TDMCreateFile extends TDMCreateTableFields
      * public function setFileName
      * @param mixed $file_name
      */
-    public function setFileName($filename) {
-        $this->filename = $filename;
+    public function setFileName($fileName) {
+        $this->filename = $fileName;
     }
 	
 	/*
@@ -252,7 +252,7 @@ class TDMCreateFile extends TDMCreateTableFields
 	*  @param null
 	*/
 	private function getNotCreated() {
-        return $this->notcreated;
+        return $this->notCreated;
     }
 	
 	/*
@@ -273,15 +273,15 @@ class TDMCreateFile extends TDMCreateTableFields
 	
 	/*
 	*  @public function getLanguage
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*  @param string $prefix
-	*  @param string $postfix
+	*  @param string $suffix
 	*/
-	public function getLanguage($module_dirname, $prefix = '', $postfix = '') {  
-        $lang = '_' . $prefix . '_' . strtoupper($module_dirname);
-		if(!empty($postfix) || $postfix != '_') {	
-			$ret = $lang . '_' . $postfix;
-		} elseif($postfix == '_') {
+	public function getLanguage($moduleDirname, $prefix = '', $suffix = '') {  
+        $lang = '_' . $prefix . '_' . strtoupper($moduleDirname);
+		if(!empty($suffix) || $suffix != '_') {	
+			$ret = $lang . '_' . $suffix;
+		} elseif($suffix == '_') {
 			$ret = $lang . '_';
 		} else {
 			$ret = $lang;
@@ -292,9 +292,9 @@ class TDMCreateFile extends TDMCreateTableFields
 	/*
 	*  @public function getHeaderFilesComments
 	*  @param string $module
-	*  @param string $filename
+	*  @param string $fileName
 	*/
-	public function getHeaderFilesComments($module, $filename) 
+	public function getHeaderFilesComments($module, $fileName) 
 	{				
 		$name = $module->getVar('mod_name');
 		$dirname = $module->getVar('mod_dirname');
@@ -328,7 +328,7 @@ class TDMCreateFile extends TDMCreateTableFields
  * @since           {$since}
  * @min_xoops       {$min_xoops}
  * @author          {$author} - Email:<{$author_mail}> - Website:<{$author_website_url}>
- * @version         \$Id: {$version} {$filename} {$subversion} {$date}Z {$credits} \$
+ * @version         \$Id: {$version} {$fileName} {$subversion} {$date}Z {$credits} \$
  */\n
 EOT;
 		return $ret;
@@ -339,33 +339,33 @@ EOT;
 	*  @param null
 	*/	
 	public function renderFile() {		
-		$filename = $this->getFileName();
-		$path = $this->getUploadPath() . DIRECTORY_SEPARATOR . $filename;		
+		$fileName = $this->getFileName();
+		$path = $this->getUploadPath() . DIRECTORY_SEPARATOR . $fileName;		
 		$created = $this->getCreated();
-		$notcreated = $this->getNotCreated();
-		$folder_name = $this->getFolderName();
+		$notCreated = $this->getNotCreated();
+		$folderName = $this->getFolderName();
 		$mode = $this->getMode();
 		$ret = '';		
-		if(!$this->xoopsfile->__construct($path, true)) {
+		if(!$this->xoopsFile->__construct($path, true)) {
 			// Force to create file if not exist
-			if($this->xoopsfile->open($mode, true)) {				
-				if($this->xoopsfile->writable($path)) {				
+			if($this->xoopsFile->open($mode, true)) {				
+				if($this->xoopsFile->writable($path)) {				
 					// Integration of the content in the file
-					if (!$this->xoopsfile->write($this->getContent(), $mode, true)) {
-						$ret .= sprintf($notcreated, $filename, $folder_name);
+					if (!$this->xoopsFile->write($this->getContent(), $mode, true)) {
+						$ret .= sprintf($notCreated, $fileName, $folderName);
 						$GLOBALS['xoopsTpl']->assign('created', false);
 						exit();					
 					}					
 					// Created
-					$ret .= sprintf($created, $filename, $folder_name);
+					$ret .= sprintf($created, $fileName, $folderName);
 					$GLOBALS['xoopsTpl']->assign('created', true);
-					$this->xoopsfile->close();								
+					$this->xoopsFile->close();								
 				} else {
-					$ret .= sprintf($notcreated, $filename, $folder_name);
+					$ret .= sprintf($notCreated, $fileName, $folderName);
 					$GLOBALS['xoopsTpl']->assign('created', false);
 				}				
 			} else {
-				$ret .= sprintf($notcreated, $filename, $folder_name);
+				$ret .= sprintf($notCreated, $fileName, $folderName);
 				$GLOBALS['xoopsTpl']->assign('created', false);
 			}						
 		} 

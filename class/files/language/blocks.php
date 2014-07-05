@@ -61,8 +61,8 @@ class LanguageBlocks extends TDMCreateFile
 		$module = $this->getModule();
 		$tables = $this->getTables();
 		$filename = $this->getFileName();
-		$module_dirname = $module->getVar('mod_dirname');        
-		$language = $this->getLanguage($module_dirname, 'MB');
+		$moduleDirname = $module->getVar('mod_dirname');        
+		$language = $this->getLanguage($moduleDirname, 'MB');
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= <<<EOT
 // Main
@@ -73,25 +73,23 @@ define('{$language}ALLCAT', "All Categories");\n
 EOT;
 		foreach (array_keys($tables) as $t) 
 		{
-			$table_name = $tables[$t]->getVar('table_name');
-			//$table_fieldname = $tables[$t]->getVar('table_fieldname');			
-			//$language1 = $language.strtoupper($table_fieldname);	
-			$ucf_table_name = ucfirst($table_name);
+			$tableName = $tables[$t]->getVar('table_name');			
+			$ucf_table_name = ucfirst($tableName);
 			$content .= <<<EOT
 // {$ucf_table_name}\n
 EOT;
 			$fields = $this->getTableFields($tables[$t]->getVar('table_id'));
 			foreach (array_keys($fields) as $f) 
 			{	
-				$field_name = $fields[$f]->getVar('field_name');               				
-				$lng_fields = $language.strtoupper($field_name);
-				$ucf_table_field = ucfirst($table_name.' '.str_replace('_', ' ', $field_name));
+				$fieldName = $fields[$f]->getVar('field_name');               				
+				$lng_fields = $language.strtoupper($fieldName);
+				$ucf_table_field = ucfirst($tableName.' '.str_replace('_', ' ', $fieldName));
 				$content .= <<<EOT
 define('{$lng_fields}', "{$ucf_table_field}");\n
 EOT;
 			}	
 		}
-		$this->tdmcfile->create($module_dirname, 'language/'.$GLOBALS['xoopsConfig']['language'], $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'language/'.$GLOBALS['xoopsConfig']['language'], $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

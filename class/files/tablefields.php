@@ -39,10 +39,10 @@ class TDMCreateTableFields extends TDMCreateAbstract
 	*  @param integer $table_id
 	*/
 	public function getTableFields($table_id) { 
-		$criteria_fields = new CriteriaCompo();
-		$criteria_fields->add(new Criteria('field_tid', $table_id));
-		$fields = $this->tdmcreate->getHandler('fields')->getObjects($criteria_fields);
-		unset($criteria_fields);
+		$criteriaFields = new CriteriaCompo();
+		$criteriaFields->add(new Criteria('field_tid', $table_id));
+		$fields = $this->tdmcreate->getHandler('fields')->getObjects($criteriaFields);
+		unset($criteriaFields);
 		return $fields;
 	}	
 }

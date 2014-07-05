@@ -23,13 +23,13 @@ include 'header.php';
 $op = XoopsRequest::getString('op', 'list');
 // Get fields Variables
 $field_mid = TDMCreate_CleanVars($_REQUEST, 'field_mid');
-$field_tid = TDMCreate_CleanVars($_REQUEST, 'field_tid');
-$field_numb = TDMCreate_CleanVars($_REQUEST, 'field_numb');  
-$field_name = TDMCreate_CleanVars($_REQUEST, 'field_name', '', 'string');/**/   
+$fieldTid = TDMCreate_CleanVars($_REQUEST, 'field_tid');
+$fieldNumb = TDMCreate_CleanVars($_REQUEST, 'field_numb');  
+$fieldName = TDMCreate_CleanVars($_REQUEST, 'field_name', '', 'string');/**/   
 /*$field_mid = XoopsRequest::getInt('field_mid');
-$field_tid = XoopsRequest::getInt('field_tid');
-$field_numb = XoopsRequest::getInt('field_numb');
-$field_name = XoopsRequest::getString('field_name', ''); */
+$fieldTid = XoopsRequest::getInt('field_tid');
+$fieldNumb = XoopsRequest::getInt('field_numb');
+$fieldName = XoopsRequest::getString('field_name', ''); */
 //
 switch ($op) 
 {   
@@ -80,11 +80,12 @@ switch ($op)
 				$table['mid'] = $tables_arr[$tid]->getVar('table_mid');
                 $table['name'] = ucfirst($tables_arr[$tid]->getVar('table_name'));				
 				$table['image'] = $tables_arr[$tid]->getVar('table_image');	
-				$table['nbfields'] = $tables_arr[$tid]->getVar('table_nbfields');	
+				$table['nbfields'] = $tables_arr[$tid]->getVar('table_nbfields');
+				$table['autoincrement'] = $tables_arr[$tid]->getVar('table_autoincrement');	
 				$table['blocks'] = $tables_arr[$tid]->getVar('table_blocks');						
 				$table['admin'] = $tables_arr[$tid]->getVar('table_admin');	
 				$table['user'] = $tables_arr[$tid]->getVar('table_user');					
-				$table['search'] = $tables_arr[$tid]->getVar('table_search');									
+				$table['search'] = $tables_arr[$tid]->getVar('table_search');				
                 // Get the list of fields
 				$criteria = new CriteriaCompo();
 				$criteria->add(new Criteria('field_tid', $tid));
@@ -97,9 +98,9 @@ switch ($op)
 				$fields = array();
 				$lid = 1;
 				if ( $nb_fields > 0 ) 
-				{ 	
+				{					
 					foreach (array_keys($fields_arr) as $fid) 
-					{	
+					{						
 						$field['id'] = $fid;
 						$field['lid'] = $lid;
 						$field['name'] = str_replace('_', ' ', ucfirst($fields_arr[$fid]->getVar('field_name')));
@@ -114,7 +115,7 @@ switch ($op)
 						$field['required'] = $fields_arr[$fid]->getVar('field_required');
 						$fields[] = $field;
 						unset($field);	
-                        $lid++;						
+                        $lid++;							
 					}									
 				} 
 				unset($lid);
@@ -143,13 +144,13 @@ switch ($op)
 		$GLOBALS['xoopsTpl']->assign('buttons', $adminMenu->renderButton());
 		// Form Add
         $fieldsObj =& $tdmcreate->getHandler('fields')->create();        	
-		$form = $fieldsObj->getFormNew($field_mid, $field_tid, $field_numb, $field_name);
+		$form = $fieldsObj->getFormNew($field_mid, $fieldTid, $fieldNumb, $fieldName);
 		$GLOBALS['xoopsTpl']->assign('form', $form->render());
 		// Test -> Will be removed
 		var_dump($field_mid);
-		var_dump($field_tid);
-		var_dump($field_numb);
-		var_dump($field_name);		
+		var_dump($fieldTid);
+		var_dump($fieldNumb);
+		var_dump($fieldName);		
     break;	
 	
 	case 'save':
@@ -171,11 +172,11 @@ switch ($op)
 					$fieldsObj =& $fields->get($value);									
 				break;					
 			}            			
-			if (isset($field_mid) && isset($field_tid) && !empty($_POST['field_name'][$key])) {
+			if (isset($field_mid) && isset($fieldTid) && !empty($_POST['field_name'][$key])) {
 				// Set Data		
 				$fieldsObj->setVar( 'field_mid', $field_mid );
-				$fieldsObj->setVar( 'field_tid', $field_tid );								
-				$fieldsObj->setVar( 'field_numb', $field_numb );
+				$fieldsObj->setVar( 'field_tid', $fieldTid );								
+				$fieldsObj->setVar( 'field_numb', $fieldNumb );
 				$fieldsObj->setVar( 'field_name', (isset($_POST['field_name'][$key]) ? $_POST['field_name'][$key] : '') );
 				$fieldsObj->setVar( 'field_type', (isset($_POST['field_type'][$key]) ? $_POST['field_type'][$key] : '') ); 
 				$fieldsObj->setVar( 'field_value', (isset($_POST['field_value'][$key]) ? $_POST['field_value'][$key] : '') );
@@ -198,14 +199,14 @@ switch ($op)
 			}
 		}
 		// Get table name from field table id
-		$tables =& $tdmcreate->getHandler('tables')->get($field_tid);
+		$tables =& $tdmcreate->getHandler('tables')->get($fieldTid);
 		$table_name = $tables->getVar('table_name');
 		// Set field elements
 		if ($fieldsObj->isNew()) {		    
 			// Fields Elements Handler
 			$fieldelementObj =& $tdmcreate->getHandler('fieldelements')->create();
 			$fieldelementObj->setVar( 'fieldelement_mid', $field_mid );
-			$fieldelementObj->setVar( 'fieldelement_tid', $field_tid );
+			$fieldelementObj->setVar( 'fieldelement_tid', $fieldTid );
 			$fieldelementObj->setVar( 'fieldelement_name', 'Table : '.ucfirst($table_name) );
 			$fieldelementObj->setVar( 'fieldelement_value', 'XoopsFormTables-'.ucfirst($table_name) );
 			// Insert new field element id for table name
@@ -218,7 +219,7 @@ switch ($op)
 		}
         //
 		$GLOBALS['xoopsTpl']->assign('error', $fieldsObj->getHtmlErrors()); 		      
-		$form = $fieldsObj->getForm(null, $field_tid);
+		$form = $fieldsObj->getForm(null, $fieldTid);
 		$GLOBALS['xoopsTpl']->assign('form', $form->render());		
 	break;
 	
@@ -233,10 +234,10 @@ switch ($op)
 		// Form Edit
 		$field_id = XoopsRequest::getInt('field_id');
 		$fieldsObj = $tdmcreate->getHandler('fields')->get( $field_id );        		
-		$form = $fieldsObj->getFormEdit($field_mid, $field_tid);
+		$form = $fieldsObj->getFormEdit($field_mid, $fieldTid);
 		$GLOBALS['xoopsTpl']->assign('form', $form->render());
 		// Test -> Will be removed
-		var_dump($field_tid);
+		var_dump($fieldTid);
 	break;
 
     case 'drag':        
@@ -272,7 +273,7 @@ switch ($op)
 	case 'display':
 		// Get the list of fields
 		$criteria = new CriteriaCompo();
-		$criteria->add(new Criteria('field_tid', $field_tid));
+		$criteria->add(new Criteria('field_tid', $fieldTid));
 	    $fields = $tdmcreate->getHandler('fields')->getObjects($criteria);
         $fieldsObj =& $tdmcreate->getHandler('fields')->get($field_id);
 		if (isset($_GET['field_tid'])) {

@@ -36,86 +36,116 @@ class AdminObjects
     }
 	/*
 	*  @public function getSimpleSetVar
-	*  @param string $table_name
-	*  @param string $field_name
+	*  @param string $tableName
+	*  @param string $fieldName
 	*/
-	public function getSimpleSetVar($table_name, $field_name) {    
+	public function getSimpleSetVar($tableName, $fieldName) {    
 		$ret = <<<EOT
-		\${$table_name}Obj->setVar('{$field_name}', \$_POST['{$field_name}']);\n
+		\${$tableName}Obj->setVar('{$fieldName}', \$_POST['{$fieldName}']);\n
 EOT;
 		return $ret;
 	}
 	/*
 	*  @public function getTextDateSelect
-	*  @param string $table_name
-	*  @param string $field_name
+	*  @param string $tableName
+	*  @param string $fieldName
 	*/
-	public function getTextDateSelect($table_name, $field_name) {    
+	public function getTextDateSelect($tableName, $fieldName) {    
 		$ret = <<<EOT
-		\${$table_name}Obj->setVar('{$field_name}', strtotime(\$_POST['{$field_name}']));\n
+		\${$tableName}Obj->setVar('{$fieldName}', strtotime(\$_POST['{$fieldName}']));\n
 EOT;
 		return $ret;
 	}
 	/*
 	*  @public function getCheckBoxOrRadioYN
-	*  @param string $table_name
-	*  @param string $field_name
+	*  @param string $tableName
+	*  @param string $fieldName
 	*/
-	public function getCheckBoxOrRadioYN($table_name, $field_name) {    
+	public function getCheckBoxOrRadioYN($tableName, $fieldName) {    
 		$ret = <<<EOT
-		\${$table_name}Obj->setVar('{$field_name}', ((\$_REQUEST['{$field_name}'] == 1) ? '1' : '0'));\n
+		\${$tableName}Obj->setVar('{$fieldName}', ((\$_REQUEST['{$fieldName}'] == 1) ? '1' : '0'));\n
+EOT;
+		return $ret;
+	}
+	/*
+	*  @public function getImageList
+	*  @param string $moduleDirname
+	*  @param string $tableName
+	*  @param string $fieldName
+	*/
+	public function getImageList($moduleDirname, $tableName, $fieldName) {    
+		$ret = <<<EOT
+		// Set Var Image
+		include_once XOOPS_ROOT_PATH.'/class/uploader.php';
+		\$uploaddir = XOOPS_ROOT_PATH . '/Frameworks/moduleclasses/icons/32';
+		\$uploader = new XoopsMediaUploader(\$uploaddir, \${$moduleDirname}->getConfig('mimetypes'),
+														 \${$moduleDirname}->getConfig('maxsize'), null, null);
+		if (\$uploader->fetchMedia(\$_POST['xoops_upload_file'][0])) {
+			//\$uploader->setPrefix('{$fieldName}_');
+			//\$uploader->fetchMedia(\$_POST['xoops_upload_file'][0]);
+			if (!\$uploader->upload()) {
+				\$errors = \$uploader->getErrors();
+				redirect_header('javascript:history.go(-1)', 3, \$errors);
+			} else {
+				\${$tableName}Obj->setVar('{$fieldName}', \$uploader->getSavedFileName());
+			}
+		} else {
+			\${$tableName}Obj->setVar('{$fieldName}', \$_POST['{$fieldName}']);
+		}\n
 EOT;
 		return $ret;
 	}
 	/*
 	*  @public function getUploadImage
-	*  @param string $module_dirname
-	*  @param string $table_name
-	*  @param string $field_name
+	*  @param string $moduleDirname
+	*  @param string $tableName
+	*  @param string $fieldName
 	*/
-	public function getUploadImage($module_dirname, $table_name, $field_name) {    
+	public function getUploadImage($moduleDirname, $tableName, $fieldName) {    
+		$stuModuleDirname = strtolower($moduleDirname);
 		$ret = <<<EOT
 		// Set Var Image
 		include_once XOOPS_ROOT_PATH.'/class/uploader.php';
-		\$uploaddir = XOOPS_UPLOAD_PATH.'/{$module_dirname}/images/{$table_name}/';
-		\$uploader = new XoopsMediaUploader(\$uploaddir, \${$module_dirname}->getConfig('mimetypes'),
-														 \${$module_dirname}->getConfig('maxsize'), null, null);
+		\$uploaddir = {$stuModuleDirname}_UPLOAD_PATH.'/images/{$tableName}';
+		\$uploader = new XoopsMediaUploader(\$uploaddir, \${$moduleDirname}->getConfig('mimetypes'),
+														 \${$moduleDirname}->getConfig('maxsize'), null, null);
 		if (\$uploader->fetchMedia(\$_POST['xoops_upload_file'][0])) {
-			\$uploader->setPrefix('{$field_name}_');
-			\$uploader->fetchMedia(\$_POST['xoops_upload_file'][0]);
+			//\$uploader->setPrefix('{$fieldName}_');
+			//\$uploader->fetchMedia(\$_POST['xoops_upload_file'][0]);
 			if (!\$uploader->upload()) {
 				\$errors = \$uploader->getErrors();
 				redirect_header('javascript:history.go(-1)', 3, \$errors);
 			} else {
-				\${$table_name}Obj->setVar('{$field_name}', \$uploader->getSavedFileName());
+				\${$tableName}Obj->setVar('{$fieldName}', \$uploader->getSavedFileName());
 			}
 		} else {
-			\${$table_name}Obj->setVar('{$field_name}', \$_POST['{$field_name}']);
+			\${$tableName}Obj->setVar('{$fieldName}', \$_POST['{$fieldName}']);
 		}\n
 EOT;
 		return $ret;
 	}
 	/*
 	*  @public function getUploadFile
-	*  @param string $module_dirname
-	*  @param string $table_name
-	*  @param string $field_name
+	*  @param string $moduleDirname
+	*  @param string $tableName
+	*  @param string $fieldName
 	*/
-	public function getUploadFile($module_dirname, $table_name, $field_name) {    
+	public function getUploadFile($moduleDirname, $tableName, $fieldName) {    
+		$stuModuleDirname = strtolower($moduleDirname);
 		$ret = <<<EOT
 		// Set Var File
 		include_once XOOPS_ROOT_PATH.'/class/uploader.php';
-		\$uploaddir = XOOPS_UPLOAD_PATH.'/{$module_dirname}/files/{$table_name}/';
-		\$uploader = new XoopsMediaUploader(\$uploaddir, \${$module_dirname}->getConfig('mimetypes'),
-														 \${$module_dirname}->getConfig('maxsize'), null, null);
+		\$uploaddir = {$stuModuleDirname}_UPLOAD_PATH.'/files/{$tableName}';
+		\$uploader = new XoopsMediaUploader(\$uploaddir, \${$moduleDirname}->getConfig('mimetypes'),
+														 \${$moduleDirname}->getConfig('maxsize'), null, null);
 		if (\$uploader->fetchMedia(\$_POST['xoops_upload_file'][0])) {
-			\$uploader->setPrefix('{$field_name}_') ;
-			\$uploader->fetchMedia(\$_POST['xoops_upload_file'][0]);
+			//\$uploader->setPrefix('{$fieldName}_') ;
+			//\$uploader->fetchMedia(\$_POST['xoops_upload_file'][0]);
 			if (!\$uploader->upload()) {
 				\$errors = \$uploader->getErrors();
 				redirect_header('javascript:history.go(-1)', 3, \$errors);
 			} else {
-				\${$table_name}Obj->setVar('{$field_name}', \$uploader->getSavedFileName());
+				\${$tableName}Obj->setVar('{$fieldName}', \$uploader->getSavedFileName());
 			}
 		}\n
 EOT;

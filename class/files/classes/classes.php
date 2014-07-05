@@ -61,12 +61,12 @@ class ClassFiles extends TDMCreateFormElements
 	}
 	/*
 	*  @private function getInitVar
-	*  @param string $field_name
+	*  @param string $fieldName
 	*  @param string $type
 	*/
-	private function getInitVar($field_name, $type = 'INT') {    
+	private function getInitVar($fieldName, $type = 'INT') {    
 		$ret = <<<EOT
-		\$this->initVar('{$field_name}', XOBJ_DTYPE_{$type});\n
+		\$this->initVar('{$fieldName}', XOBJ_DTYPE_{$type});\n
 EOT;
 		return $ret;
 	}
@@ -79,47 +79,47 @@ EOT;
 		// Creation of the initVar functions list
 		foreach (array_keys($fields) as $f) 
 		{
-			$field_name = $fields[$f]->getVar('field_name');
-			$field_type = $fields[$f]->getVar('field_type');
-			switch($field_type) {
+			$fieldName = $fields[$f]->getVar('field_name');
+			$fieldType = $fields[$f]->getVar('field_type');
+			switch($fieldType) {
 				case 'INT': 
 				case 'TINYINT': 
 				case 'MEDIUMINT': 
 				case 'SMALLINT':
-					$ret .= $this->getInitVar($field_name, 'INT');
+					$ret .= $this->getInitVar($fieldName, 'INT');
 				break;
 				case 'CHAR': 
 				case 'VARCHAR': 				
-					$ret .= $this->getInitVar($field_name, 'TXTBOX');
+					$ret .= $this->getInitVar($fieldName, 'TXTBOX');
 				break;
 				case 'TEXT': 
 				case 'TINYTEXT': 
 				case 'MEDIUMTEXT': 
 				case 'LONGTEXT':
-					$ret .= $this->getInitVar($field_name, 'TXTAREA');
+					$ret .= $this->getInitVar($fieldName, 'TXTAREA');
 				break;				
 				case 'FLOAT': 				
-					$ret .= $this->getInitVar($field_name, 'FLOAT');
+					$ret .= $this->getInitVar($fieldName, 'FLOAT');
 				break;
 				case 'DECIMAL': 
 				case 'DOUBLE': 				
-					$ret .= $this->getInitVar($field_name, 'DECIMAL');
+					$ret .= $this->getInitVar($fieldName, 'DECIMAL');
 				break;
 				case 'ENUM': 				
-					$ret .= $this->getInitVar($field_name, 'ENUM');
+					$ret .= $this->getInitVar($fieldName, 'ENUM');
 				break;
 				case 'EMAIL': 				
-					$ret .= $this->getInitVar($field_name, 'EMAIL');
+					$ret .= $this->getInitVar($fieldName, 'EMAIL');
 				break;
 				case 'URL': 				
-					$ret .= $this->getInitVar($field_name, 'URL');
+					$ret .= $this->getInitVar($fieldName, 'URL');
 				break;  
 				case 'DATE': 
 				case 'DATETIME': 
 				case 'TIMESTAMP': 
 				case 'TIME':
 				case 'YEAR':
-					$ret .= $this->getInitVar($field_name, 'LTIME');
+					$ret .= $this->getInitVar($fieldName, 'LTIME');
 				break;
 			}
 		}
@@ -127,13 +127,13 @@ EOT;
 	}
 	/*
 	*  @private function getHeadClass
-	*  @param string $module_dirname
-	*  @param string $table_name
+	*  @param string $moduleDirname
+	*  @param string $tableName
 	*  @param array $fields
 	*/
-	private function getHeadClass($module_dirname, $table_name, $fields) {    
-		$ucf_module_dirname = ucfirst($module_dirname);
-		$ucf_table_name = ucfirst($table_name);	
+	private function getHeadClass($moduleDirname, $tableName, $fields) {    
+		$ucf_module_dirname = ucfirst($moduleDirname);
+		$ucf_table_name = ucfirst($tableName);	
 		$ret = <<<EOT
 defined('XOOPS_ROOT_PATH') or die("Restricted access");
 /*
@@ -142,13 +142,17 @@ defined('XOOPS_ROOT_PATH') or die("Restricted access");
 class {$ucf_module_dirname}{$ucf_table_name} extends XoopsObject
 { 
 	/*
+	* @var mixed
+	*/
+	private \${$moduleDirname} = null;
+	/*
 	 * Constructor
 	 *
 	 * @param null
 	 */
 	public function __construct()
 	{
-		\$this->{$module_dirname} = {$ucf_module_dirname}Helper::getInstance();
+		\$this->{$moduleDirname} = {$ucf_module_dirname}Helper::getInstance();
 {$this->getInitVars($fields)}\t}
 	/*
 	*  @static function &getInstance
@@ -173,8 +177,8 @@ EOT;
 	*/
 	private function getHeadFunctionForm($module, $table) 
 	{    
-		$module_dirname = $module->getVar('mod_dirname');
-		$language = $this->getLanguage($module_dirname, 'AM');		
+		$moduleDirname = $module->getVar('mod_dirname');
+		$language = $this->getLanguage($moduleDirname, 'AM');		
 		$stu_table_name = strtoupper($table->getVar('table_name'));
 		$this->formelements->initForm($module, $table);
 		$ret = <<<EOT
@@ -188,25 +192,25 @@ EOT;
 		if (\$action === false) {
 			\$action = \$_SERVER['REQUEST_URI'];
 		}
-	
+		// Title
 		\$title = \$this->isNew() ? sprintf({$language}{$stu_table_name}_ADD) : sprintf({$language}{$stu_table_name}_EDIT);
-
+		// Get Theme Form
 		xoops_load('XoopsFormLoader');
 		\$form = new XoopsThemeForm(\$title, 'form', \$action, 'post', true);
-		\$form->setExtra('enctype="multipart/form-data"');\n		
-{$this->formelements->renderElements()}\n
+		\$form->setExtra('enctype="multipart/form-data"');		
+{$this->formelements->renderElements()}
 EOT;
 		return $ret;
 	}
 	/*
 	*  @private function getPermissionsInFunctionForm
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*  @param string $fpif
 	*/
-	private function getPermissionsInFunctionForm($module_dirname, $fpif) {    
-		$perm_approve = $this->getLanguage($module_dirname, 'AM', 'PERMISSIONS_APPROVE');
-		$perm_submit = $this->getLanguage($module_dirname, 'AM', 'PERMISSIONS_SUBMIT');
-		$perm_view = $this->getLanguage($module_dirname, 'AM', 'PERMISSIONS_VIEW');
+	private function getPermissionsInFunctionForm($moduleDirname, $fpif) {    
+		$perm_approve = $this->getLanguage($moduleDirname, 'AM', 'PERMISSIONS_APPROVE');
+		$perm_submit = $this->getLanguage($moduleDirname, 'AM', 'PERMISSIONS_SUBMIT');
+		$perm_view = $this->getLanguage($moduleDirname, 'AM', 'PERMISSIONS_VIEW');
 		$ret = <<<EOT
 		// Permissions
 		\$member_handler = & xoops_gethandler ( 'member' );
@@ -215,9 +219,9 @@ EOT;
 		\$full_list = array_keys ( \$group_list );
 		global \$xoopsModule;
 		if ( !\$this->isNew() ) {
-			\$groups_ids_approve = \$gperm_handler->getGroupIds ( '{$module_dirname}_approve', \$this->getVar ( '{$fpif}' ), \$xoopsModule->getVar ( 'mid' ) );
-			\$groups_ids_submit = \$gperm_handler->getGroupIds ( '{$module_dirname}_submit', \$this->getVar ( '{$fpif}' ), \$xoopsModule->getVar ( 'mid' ) );
-			\$groups_ids_view = \$gperm_handler->getGroupIds ( '{$module_dirname}_view', \$this->getVar ( '{$fpif}' ), \$xoopsModule->getVar ( 'mid' ) );
+			\$groups_ids_approve = \$gperm_handler->getGroupIds ( '{$moduleDirname}_approve', \$this->getVar ( '{$fpif}' ), \$xoopsModule->getVar ( 'mid' ) );
+			\$groups_ids_submit = \$gperm_handler->getGroupIds ( '{$moduleDirname}_submit', \$this->getVar ( '{$fpif}' ), \$xoopsModule->getVar ( 'mid' ) );
+			\$groups_ids_view = \$gperm_handler->getGroupIds ( '{$moduleDirname}_view', \$this->getVar ( '{$fpif}' ), \$xoopsModule->getVar ( 'mid' ) );
 			\$groups_ids_approve = array_values ( \$groups_ids_approve );
 			\$groups_can_approve_checkbox = new XoopsFormCheckBox ( {$perm_approve}, 'groups_approve[]', \$groups_ids_approve );
 			\$groups_ids_submit = array_values ( \$groups_ids_submit );
@@ -228,8 +232,7 @@ EOT;
 			\$groups_can_approve_checkbox = new XoopsFormCheckBox ( {$perm_approve}, 'groups_approve[]', \$full_list );
 			\$groups_can_submit_checkbox = new XoopsFormCheckBox ( {$perm_submit}, 'groups_submit[]', \$full_list );		
 			\$groups_can_view_checkbox = new XoopsFormCheckBox ( {$perm_view}, 'groups_view[]', \$full_list );
-		}
-		
+		}		
 		// For approve
 		\$groups_can_approve_checkbox->addOptionArray ( \$group_list );
 		\$form->addElement ( \$groups_can_approve_checkbox );
@@ -238,7 +241,7 @@ EOT;
 		\$form->addElement ( \$groups_can_submit_checkbox );		
 		// For view
 		\$groups_can_view_checkbox->addOptionArray ( \$group_list );
-		\$form->addElement ( \$groups_can_view_checkbox );\n\n
+		\$form->addElement ( \$groups_can_view_checkbox );\n
 EOT;
 		return $ret;
 	}
@@ -248,6 +251,7 @@ EOT;
 	*/
 	private function getFootFunctionForm() {    
 		$ret = <<<EOT
+		// Send
 		\$form->addElement(new XoopsFormHidden('op', 'save'));
 		\$form->addElement(new XoopsFormButton('', 'submit', _SUBMIT, 'submit'));
 		return \$form;
@@ -258,14 +262,14 @@ EOT;
 	}
 	/*
 	*  @public function getClassHandler
-	*  @param string $module_dirname
-	*  @param string $table_name
+	*  @param string $moduleDirname
+	*  @param string $tableName
 	*  @param string $fpif
 	*  @param string $fpmf
 	*/
-	private function getClassHandler($module_dirname, $table_name, $fpif, $fpmf) {		
-		$ucf_module_dirname = ucfirst($module_dirname);
-        $ucf_table_name = ucfirst($table_name);
+	private function getClassHandler($moduleDirname, $tableName, $fpif, $fpmf) {		
+		$ucf_module_dirname = ucfirst($moduleDirname);
+        $ucf_table_name = ucfirst($tableName);
         $ucf_mod_table_handler = $ucf_module_dirname . $ucf_table_name;		
 		$ret = <<<EOT
 /*
@@ -280,7 +284,7 @@ class {$ucf_mod_table_handler}Handler extends XoopsPersistableObjectHandler
 	 */
 	public function __construct(&\$db) 
 	{
-		parent::__construct(\$db, '{$module_dirname}_{$table_name}', '{$module_dirname}{$table_name}', '{$fpif}', '{$fpmf}');
+		parent::__construct(\$db, '{$moduleDirname}_{$tableName}', '{$moduleDirname}{$tableName}', '{$fpif}', '{$fpmf}');
 	}
 }
 EOT;
@@ -293,30 +297,29 @@ EOT;
 	public function renderFile($filename) {    
 		$module = $this->getModule();
 		$table = $this->getTable();
-		$table_nbfields = $table->getVar('table_nbfields');
-		$table_name = $table->getVar('table_name');
-		$module_dirname = $module->getVar('mod_dirname');		
+		$tableName = $table->getVar('table_name');
+		$moduleDirname = $module->getVar('mod_dirname');		
 		$fields = $this->getTableFields($table->getVar('table_id'));
 		foreach(array_keys($fields) as $f) 
 		{	
-			$field_name = $fields[$f]->getVar('field_name');
+			$fieldName = $fields[$f]->getVar('field_name');
 			if(($f == 0) && ($table->getVar('table_autoincrement') == 1)) {
-				$fpif = $field_name;
+				$fpif = $fieldName;
 			}
 			if($fields[$f]->getVar('field_main') == 1) {
-				$fpmf = $field_name;
+				$fpmf = $fieldName;
 			}			
 		}				
 		$content = $this->getHeaderFilesComments($module, $filename);
-		$content .= $this->getHeadClass($module_dirname, $table_name, $fields);
+		$content .= $this->getHeadClass($moduleDirname, $tableName, $fields);
 		$content .= $this->getHeadFunctionForm($module, $table);
 		if ($table->getVar('table_permissions') == 1) {
-			$content .= $this->getPermissionsInFunctionForm($module_dirname, $fpif);
+			$content .= $this->getPermissionsInFunctionForm($moduleDirname, $fpif);
 		}
 		$content .= $this->getFootFunctionForm();
-		$content .= $this->getClassHandler($module_dirname, $table_name, $fpif, $fpmf);
+		$content .= $this->getClassHandler($moduleDirname, $tableName, $fpif, $fpmf);
 		
-		$this->tdmcfile->create($module_dirname, 'class', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'class', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

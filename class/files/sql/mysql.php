@@ -59,9 +59,9 @@ class SqlFile extends TDMCreateFile
 	
 	/*
 	*  @public function getHeaderSqlComments
-	*  @param string $module_name
+	*  @param string $moduleName
 	*/
-	public function getHeaderSqlComments($module_name) 
+	public function getHeaderSqlComments($moduleName) 
 	{   
 		$date = date('D M d, Y');
 		$time = date('G:i');
@@ -70,7 +70,7 @@ class SqlFile extends TDMCreateFile
 		$php_version = phpversion();
 		// Header Sql Comments
 		$ret = <<<SQL
-# SQL Dump for {$module_name} module
+# SQL Dump for {$moduleName} module
 # PhpMyAdmin Version: 4.0.4
 # http://www.phpmyadmin.net
 #
@@ -84,59 +84,59 @@ SQL;
 	
 	/*
 	*  @public function getHeadDatabaseTable
-	*  @param string $module_dirname
-	*  @param string $table_name
+	*  @param string $moduleDirname
+	*  @param string $tableName
 	*  @param integer $nb_fields
 	*
 	*  Unused IF NOT EXISTS
 	*/
-	public function getHeadDatabaseTable($module_dirname, $table_name, $nb_fields) 
+	public function getHeadDatabaseTable($moduleDirname, $tableName, $nb_fields) 
 	{    
 		$ret = <<<SQL
 
 #
-# Structure table for `{$module_dirname}_{$table_name}` {$nb_fields}
+# Structure table for `{$moduleDirname}_{$tableName}` {$nb_fields}
 #
 		
-CREATE TABLE `{$module_dirname}_{$table_name}` (\n
+CREATE TABLE `{$moduleDirname}_{$tableName}` (\n
 SQL;
 		return $ret;
 	}
 	
 	/*
 	*  @public function getDatabaseTables
-	*  @param string $module_dirname
+	*  @param string $moduleDirname
 	*/
-	public function getDatabaseTables($module_dirname) 
+	public function getDatabaseTables($moduleDirname) 
 	{    
 		$ret = null;
 		$tables = $this->getTables();
 		foreach(array_keys($tables) as $t) 
 		{
 			$table_id = $tables[$t]->getVar('table_id');
-			$table_name = $tables[$t]->getVar('table_name');
+			$tableName = $tables[$t]->getVar('table_name');
 			$table_autoincrement = $tables[$t]->getVar('table_autoincrement');
 			$nb_fields = $tables[$t]->getVar('table_nbfields');					
-			$ret .= $this->getDatabaseFields($module_dirname, $table_id, $table_name, $table_autoincrement, $nb_fields);
+			$ret .= $this->getDatabaseFields($moduleDirname, $table_id, $tableName, $table_autoincrement, $nb_fields);
 		}		
 		return $ret;
 	}
 	
 	/*
 	*  @public function getDatabaseFields
-	*  @param string $module_dirname
-	*  @param string $table_name
+	*  @param string $moduleDirname
+	*  @param string $tableName
 	*  @param boolean $table_autoincrement
 	*  @param integer $nb_fields
 	*/
-	public function getDatabaseFields($module_dirname, $table_id, $table_name, $table_autoincrement, $nb_fields) 
+	public function getDatabaseFields($moduleDirname, $table_id, $tableName, $table_autoincrement, $nb_fields) 
 	{    		
 		$ret = null; $j = 0; $comma = array(); $row = array();
         $fields = $this->getTableFields($table_id);		
 		foreach(array_keys($fields) as $f) 
 		{
 			// Creation of database table  
-			$ret = $this->getHeadDatabaseTable($module_dirname, $table_name, $nb_fields);
+			$ret = $this->getHeadDatabaseTable($moduleDirname, $tableName, $nb_fields);
 			$field_name = $fields[$f]->getVar('field_name');
 			$field_type = $fields[$f]->getVar('field_type');
 			$field_value = $fields[$f]->getVar('field_value');
@@ -317,11 +317,11 @@ SQL;
 	public function render() {    
 		$module = $this->getModule();		
 		$filename = $this->getFileName();
-		$module_name = strtolower($module->getVar('mod_name'));
-        $module_dirname = strtolower($module->getVar('mod_name'));		
-		$content = $this->getHeaderSqlComments($module_name);
-		$content .= $this->getDatabaseTables($module_dirname);
-		$this->tdmcfile->create($module_dirname, 'sql', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$moduleName = strtolower($module->getVar('mod_name'));
+        $moduleDirname = strtolower($module->getVar('mod_dirname'));		
+		$content = $this->getHeaderSqlComments($moduleName);
+		$content .= $this->getDatabaseTables($moduleDirname);
+		$this->tdmcfile->create($moduleDirname, 'sql', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

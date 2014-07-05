@@ -57,24 +57,23 @@ class LanguageHelp extends TDMCreateFile
 	public function render() { 		
 		$module = $this->getModule();
 		$filename = $this->getFileName();
-		$module_name = $module->getVar('mod_name');
-		$module_dirname = $module->getVar('mod_dirname');
-        $module_donations = $module->getVar('mod_donations');			
+		$moduleName = $module->getVar('mod_name');
+		$moduleDirname = $module->getVar('mod_dirname');
 		$content = <<<EOT
 <div id="help-template" class="outer">
     <h1 class="head">Help:
-        <a class="ui-corner-all tooltip" href="<{\$xoops_url}>/modules/{$module_dirname}/admin/index.php"
-           title="Back to the administration of {$module_name}"> {$module_name} <img src="<{xoAdminIcons home.png}>"
-                                                                       alt="Back to the Administration of {$module_name}"/>
+        <a class="ui-corner-all tooltip" href="<{\$xoops_url}>/modules/{$moduleDirname}/admin/index.php"
+           title="Back to the administration of {$moduleName}"> {$moduleName} <img src="<{xoAdminIcons home.png}>"
+                                                                       alt="Back to the Administration of {$moduleName}"/>
         </a></h1>
     <!-- -----Help Content ---------- -->
     <h4 class="odd">Description</h4>
     <p class="even">
-        The {$module_name} module can be used to modules in XOOPS<br /><br />
+        The {$moduleName} module can be used to modules in XOOPS<br /><br />
     </p> 
     <h4 class="odd">Install/uninstall</h4>
     <p class="even">
-No special measures necessary, follow the standard installation process and extract the {$module_dirname} folder into the ../modules directory. Install the module through Admin -> System Module -> Modules. <br /><br />
+No special measures necessary, follow the standard installation process and extract the {$moduleDirname} folder into the ../modules directory. Install the module through Admin -> System Module -> Modules. <br /><br />
 Detailed instructions on installing modules are available in the <a href="http://goo.gl/adT2i">XOOPS Operations Manual</a> 
     </p>
 	<h4 class="odd">Features</h4>
@@ -89,7 +88,7 @@ Detailed instructions on installing modules are available in the <a href="http:/
     <!-- -----Help Content ---------- -->
 </div>
 EOT;
-		$this->tdmcfile->create($module_dirname, 'language/'.$GLOBALS['xoopsConfig']['language'].'/help', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'language/'.$GLOBALS['xoopsConfig']['language'].'/help', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }
