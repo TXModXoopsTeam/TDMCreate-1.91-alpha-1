@@ -140,20 +140,10 @@ class TDMCreateTables extends XoopsObject
 		$get_table_image = $this->getVar('table_image');
 		$table_image = $get_table_image ? $get_table_image : 'blank.gif';
 		$iconsdir = '/Frameworks/moduleclasses/icons/32';
-		$uploads_dir = '/uploads/tdmcreate/images/tables';
-        if(is_dir(XOOPS_ROOT_PATH . $iconsdir)){
-		    $iconsdirectory = $iconsdir;
-		}else{
-		    $iconsdirectory = $uploads_dir;
-		}
-		/*$iconsdirectory = $isNew ? $iconsdir : $uploads_dir;*/
+		$uploads_dir = '/uploads/tdmcreate/images/tables';        	
+		$iconsdirectory = is_dir(XOOPS_ROOT_PATH . $iconsdir) ? $iconsdir : $uploads_dir;
         //		
-		$imgtray1 = new XoopsFormElementTray(_AM_TDMCREATE_TABLE_IMAGE,'<br />');
-		if(is_dir(XOOPS_ROOT_PATH . $iconsdir)) {
-		    $imgpath = sprintf(_AM_TDMCREATE_FORMIMAGE_PATH, ".{$iconsdir}/");
-		}else{
-		    $imgpath = sprintf(_AM_TDMCREATE_FORMIMAGE_PATH, $uploads_dir);
-		}
+		$imgtray1 = new XoopsFormElementTray(_AM_TDMCREATE_TABLE_IMAGE,'<br />');				
 		$imgpath1 = sprintf(_AM_TDMCREATE_FORMIMAGE_PATH, ".{$iconsdirectory}/");
 		$imageselect1 = new XoopsFormSelect($imgpath1, 'table_image', $table_image, 10);
 		$image_array1 = XoopsLists::getImgListAsArray( XOOPS_ROOT_PATH . $iconsdirectory );
@@ -176,57 +166,73 @@ class TDMCreateTables extends XoopsObject
 		$form->addElement($check_table_autoincrement);
 		//
 		$options_tray = new XoopsFormElementTray(_OPTIONS, '<br />');
-			$table_blocks = $isNew ? 0 : $this->getVar('table_blocks');
-			$check_table_blocks = new XoopsFormCheckBox(' ', 'table_blocks', $table_blocks);
-			$check_table_blocks->addOption(1, _AM_TDMCREATE_TABLE_BLOCKS);
-			$options_tray->addElement($check_table_blocks);
-			//
-			$table_admin = $isNew ? 0 : $this->getVar('table_admin');
-			$check_table_admin = new XoopsFormCheckBox(' ', 'table_admin', $table_admin);
-			$check_table_admin->addOption(1, _AM_TDMCREATE_TABLE_ADMIN);
-			$options_tray->addElement($check_table_admin);
-			//
-			$table_user = $isNew ? 0 : $this->getVar('table_user');
-			$check_table_user = new XoopsFormCheckBox(' ', 'table_user', $table_user);
-			$check_table_user->addOption(1, _AM_TDMCREATE_TABLE_USER);
-			$options_tray->addElement($check_table_user);
-			//
-			$table_submenu = $isNew ? 0 : $this->getVar('table_submenu');
-			$check_table_submenu = new XoopsFormCheckBox(' ', 'table_submenu', $table_submenu);
-			$check_table_submenu->addOption(1, _AM_TDMCREATE_TABLE_SUBMENU);
-			$options_tray->addElement($check_table_submenu);
-			//
+		//
+		$table_blocks = $isNew ? 0 : $this->getVar('table_blocks');
+		$check_table_blocks = new XoopsFormCheckBox(' ', 'table_blocks', $table_blocks);
+		$check_table_blocks->addOption(1, _AM_TDMCREATE_TABLE_BLOCKS);
+		$options_tray->addElement($check_table_blocks);
+		//
+		$table_admin = $isNew ? 0 : $this->getVar('table_admin');
+		$check_table_admin = new XoopsFormCheckBox(' ', 'table_admin', $table_admin);
+		$check_table_admin->addOption(1, _AM_TDMCREATE_TABLE_ADMIN);
+		$options_tray->addElement($check_table_admin);
+		//
+		$table_user = $isNew ? 0 : $this->getVar('table_user');
+		$check_table_user = new XoopsFormCheckBox(' ', 'table_user', $table_user);
+		$check_table_user->addOption(1, _AM_TDMCREATE_TABLE_USER);
+		$options_tray->addElement($check_table_user);
+		//
+		$table_submenu = $isNew ? 0 : $this->getVar('table_submenu');
+		$check_table_submenu = new XoopsFormCheckBox(' ', 'table_submenu', $table_submenu);
+		$check_table_submenu->addOption(1, _AM_TDMCREATE_TABLE_SUBMENU);
+		$options_tray->addElement($check_table_submenu);
+		//
+		$criteria = new CriteriaCompo(new Criteria('table_search', ($isNew ? 0 : 1)), 'AND');
+		$criteria->add(new Criteria('table_mid', $table_mid), 'AND');
+        $criteria->add(new Criteria('table_name', $table_name));
+		$table_comments = $tablesHandler->getCount($criteria);
+		unset($criteria);
+		if( ($table_comments == 0) || $isNew ) {
 			$table_search = $isNew ? 0 : $this->getVar('table_search');
 			$check_table_search = new XoopsFormCheckBox(' ', 'table_search', $table_search);
 			$check_table_search->addOption(1, _AM_TDMCREATE_TABLE_SEARCH);
 			$options_tray->addElement($check_table_search);
-			//
+		}
+		//
+		$criteria = new CriteriaCompo(new Criteria('table_comments', ($isNew ? 0 : 1)), 'AND');
+		$criteria->add(new Criteria('table_mid', $table_mid), 'AND');
+        $criteria->add(new Criteria('table_name', $table_name));
+		$table_comments = $tablesHandler->getCount($criteria);
+		unset($criteria);
+		if ( ($table_comments == 0) || $isNew ) {
 			$table_comments = $isNew ? 0 : $this->getVar('table_comments');
 			$check_table_comments = new XoopsFormCheckBox(' ', 'table_comments', $table_comments);
 			$check_table_comments->addOption(1, _AM_TDMCREATE_TABLE_COMMENTS);
 			$options_tray->addElement($check_table_comments);
-			//
-			$table_notifications = $isNew ? 0 : $this->getVar('table_notifications');
-			$check_table_notifications = new XoopsFormCheckBox(' ', 'table_notifications', $table_notifications);
-			$check_table_notifications->addOption(1, _AM_TDMCREATE_TABLE_NOTIFICATIONS);
-			$options_tray->addElement($check_table_notifications);
-			//
-			$criteria = new CriteriaCompo(new Criteria('table_permissions', 0), 'AND');
-			$criteria->add(new Criteria('table_mid', $table_mid), 'AND');
-			$criteria->add(new Criteria('table_name', $table_name));			
-			$table_permissions = $tablesHandler->getCount($criteria);
-			unset($criteria);		
-			if ( ($table_permissions == 0) && ($table_category == 0) || $isNew ) {
-				$table_permissions = $isNew ? 0 : $this->getVar('table_permissions');
-				$check_table_permissions = new XoopsFormCheckBox(' ', 'table_permissions', $table_permissions);
-				$check_table_permissions->addOption(1, _AM_TDMCREATE_TABLE_PERMISSIONS);
-				$options_tray->addElement($check_table_permissions);
-			}
+		}
+		//
+		$table_notifications = $isNew ? 0 : $this->getVar('table_notifications');
+		$check_table_notifications = new XoopsFormCheckBox(' ', 'table_notifications', $table_notifications);
+		$check_table_notifications->addOption(1, _AM_TDMCREATE_TABLE_NOTIFICATIONS);
+		$options_tray->addElement($check_table_notifications);
+		//
+		$criteria = new CriteriaCompo(new Criteria('table_permissions', ($isNew ? 0 : 1)), 'AND');
+		$criteria->add(new Criteria('table_mid', $table_mid), 'AND');
+		$criteria->add(new Criteria('table_name', $table_name));			
+		$table_permissions = $tablesHandler->getCount($criteria);
+		unset($criteria);		
+		if ( ($table_permissions == 0) && ($table_category == 0) || $isNew ) {
+			$table_permissions = $isNew ? 0 : $this->getVar('table_permissions');
+			$check_table_permissions = new XoopsFormCheckBox(' ', 'table_permissions', $table_permissions);
+			$check_table_permissions->addOption(1, _AM_TDMCREATE_TABLE_PERMISSIONS);
+			$options_tray->addElement($check_table_permissions);
+		}
 		$options_tray->setDescription(_AM_TDMCREATE_TABLE_OPTIONS_CHECKS_DESC);
+		//
 		$form->addElement($options_tray);		
         //
 		$form->addElement(new XoopsFormHidden('op', 'save'));			
-		$form->addElement(new XoopsFormHidden('table_id', $this->getVar('table_id')));		
+		$form->addElement(new XoopsFormHidden('table_id', ($isNew ? 0 : $this->getVar('table_id'))));		
 		$form->addElement(new XoopsFormButton(_REQUIRED.' <sup class="red bold">*</sup>', 'submit', _SUBMIT, 'submit'));
 		return $form;
 	}

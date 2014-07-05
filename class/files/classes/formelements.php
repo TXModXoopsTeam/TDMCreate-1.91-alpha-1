@@ -126,20 +126,7 @@ EOT;
 		\$form->addElement( new XoopsFormHidden('{$fieldName}', \$this->getVar('{$fieldName}')) );\n
 EOT;
 		return $ret;
-	}
-	/*
-	*  @private function getXoopsFormUploadFile
-	*  @param string $language
-	*  @param string $fieldName
-	*  @param string $required
-	*/
-	private function getXoopsFormUploadFile($language, $moduleDirname, $fieldName, $required = 'false') {    
-		$ret = <<<EOT
-		// Form file
-		\$form->addElement( new XoopsFormFile({$language}FORM_UPLOAD_FILE, '{$fieldName}', \$this->{$moduleDirname}->getConfig('maxsize')){$required} );\n
-EOT;
-		return $ret;
-	}
+	}	
 	/*
 	*  @private function getXoopsFormImageList
 	*  @param string $language
@@ -149,7 +136,8 @@ EOT;
 	*  @param string $required
 	*/
 	private function getXoopsFormImageList($language, $moduleDirname, $tableName, $fieldName, $required = 'false') {		
-		$stu_field_name = strtoupper($fieldName);
+		$stuTableName = strtoupper($tableName);
+		$stuFieldName = strtoupper($fieldName);
 		$ret = <<<EOT
 		// Form image file
 		\$get_{$fieldName} = \$this->getVar('{$fieldName}');
@@ -158,7 +146,7 @@ EOT;
 		\$uploads_dir = '/uploads/'.\$GLOBALS['xoopsModule']->dirname().'/images/{$tableName}';
         \$iconsdirectory = is_dir(XOOPS_ROOT_PATH . \$iconsdir) ? \$iconsdir : \$uploads_dir;		
         //		
-		\$imgtray1 = new XoopsFormElementTray({$language}{$stu_field_name},'<br />');		
+		\$imgtray1 = new XoopsFormElementTray({$language}{$stuFieldName},'<br />');		
 		\$imgpath = is_dir(XOOPS_ROOT_PATH . \$iconsdir) ? sprintf({$language}FORMIMAGE_PATH, ".{\$iconsdir}/") : sprintf({$language}FORMIMAGE_PATH, \$uploads_dir);
 		//\$imgpath1 = sprintf({$language}FORMIMAGE_PATH, ".{\$iconsdirectory}/");
 		\$imageselect1 = new XoopsFormSelect(\$imgpath, '{$fieldName}', \${$fieldName}, 10);
@@ -171,7 +159,7 @@ EOT;
 		\$imgtray1->addElement( new XoopsFormLabel( '', "<br /><img src='".XOOPS_URL."/".\$iconsdirectory."/".\${$fieldName}."' name='image1' id='image1' alt='' />" ) );		
 		// Form File
 		\$fileseltray = new XoopsFormElementTray('','<br />');
-		\$fileseltray->addElement(new XoopsFormFile({$language}FORM_UPLOAD_IMAGE_LIST , 'attachedfile', \$this->{$moduleDirname}->getConfig('maxsize')));
+		\$fileseltray->addElement(new XoopsFormFile({$language}FORM_UPLOAD_IMAGE_LIST_{$stuTableName} , 'attachedfile', \$this->{$moduleDirname}->getConfig('maxsize')));
 		\$fileseltray->addElement(new XoopsFormLabel(''));
 		\$imgtray1->addElement(\$fileseltray);
 		\$form->addElement( \$imgtray1{$required} );\n
@@ -182,13 +170,31 @@ EOT;
 	*  @private function getXoopsFormUploadImage
 	*  @param string $language
 	*  @param string $moduleDirname
+	*  @param string $tableName
 	*  @param string $required
 	*/
-	private function getXoopsFormUploadImage($language, $moduleDirname, $required = 'false') {		
+	private function getXoopsFormUploadImage($language, $moduleDirname, $tableName, $required = 'false') {		
+		$stuTableName = strtoupper($tableName);
 		$ret = <<<EOT
 		// Form Upload Image
-		\$formImage = new XoopsFormFile({$language}FORM_UPLOAD_IMAGE , 'attachedfile', \$this->{$moduleDirname}->getConfig('maxsize'));
+		\$formImage = new XoopsFormFile({$language}FORM_UPLOAD_IMAGE_{$stuTableName} , 'attachedfile', \$this->{$moduleDirname}->getConfig('maxsize'));
 		\$form->addElement( \$formImage{$required} );\n
+EOT;
+		return $ret;
+	}
+	/*
+	*  @private function getXoopsFormUploadFile
+	*  @param string $language
+	*  @param string $moduleDirname
+	*  @param string $tableName
+	*  @param string $fieldName
+	*  @param string $required
+	*/
+	private function getXoopsFormUploadFile($language, $moduleDirname, $tableName, $fieldName, $required = 'false') {    
+		$stuTableName = strtoupper($tableName);
+		$ret = <<<EOT
+		// Form file
+		\$form->addElement( new XoopsFormFile({$language}FORM_UPLOAD_FILE_{$stuTableName}, '{$fieldName}', \$this->{$moduleDirname}->getConfig('maxsize')){$required} );\n
 EOT;
 		return $ret;
 	}
@@ -380,10 +386,10 @@ EOT;
 						$ret .= $this->getXoopsFormImageList($language_funct, $moduleDirname, $tableName, $fieldName, $required);
 					break;
 					case 10:
-						$ret .= $this->getXoopsFormUploadImage($language_funct, $moduleDirname, $required);
+						$ret .= $this->getXoopsFormUploadImage($language_funct, $moduleDirname, $tableName, $required);
 					break;
 					case 11:
-						$ret .= $this->getXoopsFormUploadFile($language, $moduleDirname, $fieldName, $required);
+						$ret .= $this->getXoopsFormUploadFile($language, $moduleDirname, $tableName, $fieldName, $required);
 					break;
 					case 12:
 						$ret .= $this->getXoopsFormTextDateSelect($language, $moduleDirname, $fieldName, $required);

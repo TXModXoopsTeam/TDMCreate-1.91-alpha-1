@@ -10,10 +10,10 @@
      <thead>
        <tr>
 	 <th class='center'><{$smarty.const._AM_TDMCREATE_MODULE_ID}></th>
-	 <th class='center'><{$smarty.const._AM_TDMCREATE_MODULE_NAME}></th>
-	 <th class='center'><{$smarty.const._AM_TDMCREATE_MODULE_IMAGE}></th>
-	 <th class='center'><{$smarty.const._AM_TDMCREATE_MODULE_NBFIELDS}></th>
-	 <th class='center'><{$smarty.const._AM_TDMCREATE_MODULE_BLOCKS}></th>
+	 <th class='center'><{$smarty.const._AM_TDMCREATE_MODULE_NAME_LIST}></th>
+	 <th class='center'><{$smarty.const._AM_TDMCREATE_MODULE_IMAGE_LIST}></th>
+	 <th class='center'><{$smarty.const._AM_TDMCREATE_MODULE_NBFIELDS_LIST}></th>
+	 <th class='center'><{$smarty.const._AM_TDMCREATE_MODULE_BLOCKS_LIST}></th>
 	 <th class='center'><{$smarty.const._AM_TDMCREATE_MODULE_ADMIN_LIST}></th>
 	 <th class='center'><{$smarty.const._AM_TDMCREATE_MODULE_USER_LIST}></th>
 	 <th class='center'><{$smarty.const._AM_TDMCREATE_MODULE_SUBMENU_LIST}></th>

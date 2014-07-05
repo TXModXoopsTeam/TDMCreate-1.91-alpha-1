@@ -61,6 +61,9 @@ define('_MI_TDMCREATE_RELEASE_DATE', "Release Date");
 define('_MI_TDMCREATE_STATUS', "Module status");
 define('_MI_TDMCREATE_DISPLAY_ADMIN_SIDE', "Visible in Admin Panel");
 define('_MI_TDMCREATE_DISPLAY_USER_SIDE', "Visible in User side");
+// Added in version 1.91
+define('_MI_TDMCREATE_ACTIVE_BLOCKS', "Allow Blocks");
+// ---------------------
 define('_MI_TDMCREATE_ACTIVE_SEARCH', "Allow Search");
 define('_MI_TDMCREATE_ACTIVE_COMMENTS', "Allow Comments");
 define('_MI_TDMCREATE_ACTIVE_NOTIFICATIONS', "Allow notifications");

@@ -68,10 +68,10 @@ EOT;
 		foreach (array_keys($tables) as $t)
 		{
 			$tableName = $tables[$t]->getVar('table_name');
-			$stu_table_name = strtoupper($tableName);
-			$stl_table_name = strtolower($tableName);
+			$stuTableName = strtoupper($tableName);
+			$stlTableName = strtolower($tableName);
 			$ret .= <<<EOT
-define('{$language}THEREARE_{$stu_table_name}', "There are <span class='bold'>%s</span> {$stl_table_name} in the database");\n
+define('{$language}THEREARE_{$stuTableName}', "There are <span class='bold'>%s</span> {$stlTableName} in the database");\n
 EOT;
 		}		
 		return $ret;
@@ -90,10 +90,10 @@ EOT;
 		foreach (array_keys($tables) as $t)
 		{
 			$tableName = $tables[$t]->getVar('table_name');			
-			$stu_table_name = strtoupper($tableName);
-			$stl_table_name = strtolower($tableName);
+			$stuTableName = strtoupper($tableName);
+			$stlTableName = strtolower($tableName);
 			$ret .= <<<EOT
-define('{$language}THEREARENT_{$stu_table_name}', "There aren't {$stl_table_name}");\n
+define('{$language}THEREARENT_{$stuTableName}', "There aren't {$stlTableName}");\n
 EOT;
 		}
 		$ret .= <<<EOT
@@ -110,10 +110,10 @@ EOT;
 		{
 			$tableName = $tables[$t]->getVar('table_name');
 			$tableFieldname = $tables[$t]->getVar('table_fieldname');
-			$stu_table_fieldname = strtoupper($tableFieldname);
-            $ucf_table_fieldname = ucfirst($tableFieldname);			
+			$stuTableFieldname = strtoupper($tableFieldname);
+            $ucfTableFieldname = ucfirst($tableFieldname);			
 			$ret .= <<<EOT
-define('{$language}ADD_{$stu_table_fieldname}', "Add {$ucf_table_fieldname}");\n
+define('{$language}ADD_{$stuTableFieldname}', "Add {$ucfTableFieldname}");\n
 EOT;
 		}
 		$ret .= <<<EOT
@@ -123,10 +123,10 @@ EOT;
 		{
 			$tableName = $tables[$t]->getVar('table_name');
 			$tableFieldname = $tables[$t]->getVar('table_fieldname');
-			$stu_table_name = strtoupper($tableName);
-            $ucf_table_name = ucfirst($tableName);			
+			$stuTableName = strtoupper($tableName);
+            $ucfTableName = ucfirst($tableName);			
 			$ret .= <<<EOT
-define('{$language}{$stu_table_name}_LIST', "List of {$ucf_table_name}");\n
+define('{$language}{$stuTableName}_LIST', "List of {$ucfTableName}");\n
 EOT;
 		}
 		return $ret;
@@ -145,39 +145,39 @@ EOT;
 		{
 			$tableId = $tables[$t]->getVar('table_id');
 			$tableName = $tables[$t]->getVar('table_name');
-			$stu_table_name = strtoupper($tableName);
-            $ucf_table_name = ucfirst($tableName);			
+			$stuTableName = strtoupper($tableName);
+            $ucfTableName = ucfirst($tableName);			
 			$ret .= <<<EOT
-// {$ucf_table_name} add/edit
-define('{$language}{$stu_table_name}_ADD', "Add {$tableName}");
-define('{$language}{$stu_table_name}_EDIT', "Edit {$tableName}");
-// Elements of {$ucf_table_name}\n
+// {$ucfTableName} add/edit
+define('{$language}{$stuTableName}_ADD', "Add {$tableName}");
+define('{$language}{$stuTableName}_EDIT', "Edit {$tableName}");
+// Elements of {$ucfTableName}\n
 EOT;
 			$fields = $this->getTableFields($tableId);
 			foreach(array_keys($fields) as $f) 
 			{	
 				$fieldName = $fields[$f]->getVar('field_name');
 				$fieldElement = $fields[$f]->getVar('field_element');
-				$stu_field_name = strtoupper($fieldName);
+				$stuFieldName = strtoupper($fieldName);
 				$fieldNameDesc = ucfirst(str_replace('_', ' ', $fieldName));
 				$ret .= <<<EOT
-define('{$language}{$stu_field_name}', "{$fieldNameDesc}");\n
+define('{$language}{$stuFieldName}', "{$fieldNameDesc}");\n
 EOT;
 				switch($fieldElement)
 				{
 					case 9:
 						$ret .= <<<EOT
-define('{$language}FORM_UPLOAD_IMAGE_LIST', "{$fieldNameDesc} in list");\n
+define('{$language}FORM_UPLOAD_IMAGE_LIST_{$stuTableName}', "{$fieldNameDesc} in frameworks images");\n
 EOT;
 					break;
 					case 10:
 						$ret .= <<<EOT
-define('{$language}FORM_UPLOAD_IMAGE', "{$fieldNameDesc} in upload");\n
+define('{$language}FORM_UPLOAD_IMAGE_{$stuTableName}', "{$fieldNameDesc} in uploads images");\n
 EOT;
 					break;
 					case 11:
 						$ret .= <<<EOT
-define('{$language}FORM_UPLOAD_FILE', "{$fieldNameDesc} in upload");\n
+define('{$language}FORM_UPLOAD_FILE_{$stuTableName}', "{$fieldNameDesc} in uploads files");\n
 EOT;
 					break;
 				}

@@ -78,7 +78,9 @@ define('_AM_TDMCREATE_MODULE_ID', "Id");
 define('_AM_TDMCREATE_MODULE_NAME', "Name");
 define('_AM_TDMCREATE_MODULE_NAME_DESC', "The module name can contain spaces and special characters such as accents.<br /> 
 An example would be: <b class='white'>My Simple Module</b>");
+// Added in version 1.91
 define('_AM_TDMCREATE_MODULE_DIRNAME', "Directory Name");
+// ---------------------
 define('_AM_TDMCREATE_MODULE_DIRNAME_DESC', "The module directory can not contain spaces or special characters such as accents.<br /> 
 An example would be: <b class='white'>mysimplemodule</b>.<br />In case you write the module directory with uppercase characters, they are replaced automatically with lowercase, and if there are spaces they will also be automatically deleted.");
 define('_AM_TDMCREATE_MODULE_VERSION', "Version");
@@ -107,14 +109,19 @@ define('_AM_TDMCREATE_MODULE_PAYPAL_BUTTON', "Button for Donations");
 define('_AM_TDMCREATE_MODULE_SUBVERSION', "Subversion module");
 define('_AM_TDMCREATE_MODULE_ADMIN', "Visible Admin");
 define('_AM_TDMCREATE_MODULE_USER', "Visible User");
-define('_AM_TDMCREATE_MODULE_SEARCH', "Enable Search");
-define('_AM_TDMCREATE_MODULE_COMMENTS', "Enable Comments");
-define('_AM_TDMCREATE_MODULE_NOTIFICATIONS', "Enable Notifications");
-define('_AM_TDMCREATE_MODULE_PERMISSIONS', "Enable Permissions");
-define('_AM_TDMCREATE_MODULE_INROOT_COPY', "Copy this module also in root/modules?");
+// Added in version 1.91
+define('_AM_TDMCREATE_MODULE_BLOCKS', "Activate Blocks");
+// ---------------------
+define('_AM_TDMCREATE_MODULE_SEARCH', "Activate Search");
+define('_AM_TDMCREATE_MODULE_COMMENTS', "Activate Comments");
+define('_AM_TDMCREATE_MODULE_NOTIFICATIONS', "Activate Notifications");
+define('_AM_TDMCREATE_MODULE_PERMISSIONS', "Activate Permissions");
+define('_AM_TDMCREATE_MODULE_INROOT_MODULES_COPY', "Copy of this module directly in root/modules?");
 // Added in version 1.39
-define('_AM_TDMCREATE_MODULE_NBFIELDS', "Fields");
-define('_AM_TDMCREATE_MODULE_BLOCKS', "Blocks");
+define('_AM_TDMCREATE_MODULE_NAME_LIST', "Name");
+define('_AM_TDMCREATE_MODULE_IMAGE_LIST', "Image");
+define('_AM_TDMCREATE_MODULE_NBFIELDS_LIST', "Fields");
+define('_AM_TDMCREATE_MODULE_BLOCKS_LIST', "Blocks");
 define('_AM_TDMCREATE_MODULE_ADMIN_LIST', "Admin");
 define('_AM_TDMCREATE_MODULE_USER_LIST', "User");
 define('_AM_TDMCREATE_MODULE_SUBMENU_LIST', "Submenu");

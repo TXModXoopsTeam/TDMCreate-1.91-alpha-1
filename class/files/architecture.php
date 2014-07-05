@@ -108,7 +108,6 @@ class TDMCreateArchitecture extends TDMCreateStructure
 		// Creation of the Directory in repository
 		$targetDirectory = $this->uploadPath.'/repository/'. $stlModuleDirname;			
 		$uploadImagesFolder = $this->uploadPath.'/images/repository';			
-		
 		// Creation of "module" folder
 		$this->structure->getPath($targetDirectory);
 		// Creation of "module" folder

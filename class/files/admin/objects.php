@@ -41,6 +41,7 @@ class AdminObjects
 	*/
 	public function getSimpleSetVar($tableName, $fieldName) {    
 		$ret = <<<EOT
+		// Set Var {$fieldName}
 		\${$tableName}Obj->setVar('{$fieldName}', \$_POST['{$fieldName}']);\n
 EOT;
 		return $ret;
@@ -52,6 +53,7 @@ EOT;
 	*/
 	public function getTextDateSelect($tableName, $fieldName) {    
 		$ret = <<<EOT
+		// Set Var {$fieldName}
 		\${$tableName}Obj->setVar('{$fieldName}', strtotime(\$_POST['{$fieldName}']));\n
 EOT;
 		return $ret;
@@ -63,6 +65,7 @@ EOT;
 	*/
 	public function getCheckBoxOrRadioYN($tableName, $fieldName) {    
 		$ret = <<<EOT
+		// Set Var {$fieldName}
 		\${$tableName}Obj->setVar('{$fieldName}', ((\$_REQUEST['{$fieldName}'] == 1) ? '1' : '0'));\n
 EOT;
 		return $ret;
@@ -75,7 +78,7 @@ EOT;
 	*/
 	public function getImageList($moduleDirname, $tableName, $fieldName) {    
 		$ret = <<<EOT
-		// Set Var Image
+		// Set Var {$fieldName}
 		include_once XOOPS_ROOT_PATH.'/class/uploader.php';
 		\$uploaddir = XOOPS_ROOT_PATH . '/Frameworks/moduleclasses/icons/32';
 		\$uploader = new XoopsMediaUploader(\$uploaddir, \${$moduleDirname}->getConfig('mimetypes'),
@@ -102,9 +105,9 @@ EOT;
 	*  @param string $fieldName
 	*/
 	public function getUploadImage($moduleDirname, $tableName, $fieldName) {    
-		$stuModuleDirname = strtolower($moduleDirname);
+		$stuModuleDirname = strtoupper($moduleDirname);
 		$ret = <<<EOT
-		// Set Var Image
+		// Set Var {$fieldName}
 		include_once XOOPS_ROOT_PATH.'/class/uploader.php';
 		\$uploaddir = {$stuModuleDirname}_UPLOAD_PATH.'/images/{$tableName}';
 		\$uploader = new XoopsMediaUploader(\$uploaddir, \${$moduleDirname}->getConfig('mimetypes'),
@@ -131,9 +134,9 @@ EOT;
 	*  @param string $fieldName
 	*/
 	public function getUploadFile($moduleDirname, $tableName, $fieldName) {    
-		$stuModuleDirname = strtolower($moduleDirname);
+		$stuModuleDirname = strtoupper($moduleDirname);
 		$ret = <<<EOT
-		// Set Var File
+		// Set Var {$fieldName}
 		include_once XOOPS_ROOT_PATH.'/class/uploader.php';
 		\$uploaddir = {$stuModuleDirname}_UPLOAD_PATH.'/files/{$tableName}';
 		\$uploader = new XoopsMediaUploader(\$uploaddir, \${$moduleDirname}->getConfig('mimetypes'),
