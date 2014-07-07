@@ -20,7 +20,6 @@
 */
 include_once dirname(dirname(dirname(dirname(__FILE__)))) . '/include/cp_header.php';
 include_once dirname(dirname(__FILE__)) . '/include/common.php';
-include_once dirname(dirname(__FILE__)) . '/include/functions.php';
 //
 $thisDirname = $GLOBALS['xoopsModule']->getVar('dirname');
 // Link System Icons

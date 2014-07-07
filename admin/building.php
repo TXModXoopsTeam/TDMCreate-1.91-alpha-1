@@ -22,24 +22,24 @@ include 'header.php';
 $op = XoopsRequest::getString('op', 'default');
 $mid = XoopsRequest::getInt('mod_id');
 $moduleObj = $tdmcreate->getHandler('modules')->get( $mid );
-//
+// Switch option
 switch ($op) {
 	case 'build':		 
 		$template_main = 'tdmcreate_building.tpl';	
 		$GLOBALS['xoopsTpl']->assign('navigation', $adminMenu->addNavigation('building.php'));
 		// Get var module dirname
-		$mod_dirname = $moduleObj->getVar('mod_dirname');
+		$moduleDirname = $moduleObj->getVar('mod_dirname');
 		// Directories for copy from to
-		$from_dir = TDMC_UPLOAD_REPOSITORY_PATH.'/'.strtolower($mod_dirname);
-		$to_dir = XOOPS_ROOT_PATH.'/modules/'.strtolower($mod_dirname);
-		if(isset($mod_dirname)) {
+		$fromDir = TDMC_UPLOAD_REPOSITORY_PATH.'/'.strtolower($moduleDirname);
+		$toDir = XOOPS_ROOT_PATH.'/modules/'.strtolower($moduleDirname);
+		if(isset($moduleDirname)) {
 			// Clear this module if it's in repository
-			if(is_dir($from_dir)) {
-				TDMCreate_clearDir($from_dir);
+			if(is_dir($fromDir)) {
+				TDMCreate_clearDir($fromDir);
 			}
 			// Clear this module if it's in root/modules
-			if(is_dir($to_dir)) {
-				TDMCreate_clearDir($to_dir);
+			if(is_dir($toDir)) {
+				TDMCreate_clearDir($toDir);
 			}
         }			
 		// Structure			
@@ -65,10 +65,10 @@ switch ($op) {
 		}
 		unset($build);
 		// Directory to saved all files        
-		$GLOBALS['xoopsTpl']->assign('building_directory', sprintf(_AM_TDMCREATE_BUILDING_DIRECTORY, $mod_dirname));
+		$GLOBALS['xoopsTpl']->assign('building_directory', sprintf(_AM_TDMCREATE_BUILDING_DIRECTORY, $moduleDirname));
 		// Copy this module in root modules
-		if ( $moduleObj->getVar('mod_inroot_copy') == 1 ) {	
-			TDMCreate_copyr($from_dir, $to_dir);
+		if( $moduleObj->getVar('mod_inroot_copy') == 1 ) {	
+			TDMCreate_copyr($fromDir, $toDir);
         }
 	break;
 	
@@ -77,17 +77,17 @@ switch ($op) {
 		$template_main = 'tdmcreate_building.tpl';	
 		$GLOBALS['xoopsTpl']->assign('navigation', $adminMenu->addNavigation('building.php'));	
 		// Redirect if there aren't modules
-		$nb_modules = $tdmcreate->getHandler('modules')->getCount();
-		if ( $nb_modules == 0 ) {
+		$nbModules = $tdmcreate->getHandler('modules')->getCount();
+		if( $nbModules == 0 ) {
 			redirect_header('modules.php?op=new', 2, _AM_TDMCREATE_NOTMODULES );
 		} 
-		unset($nb_modules);	
+		unset($nbModules);	
 		// Redirect if there aren't tables
-		$nb_tables = $tdmcreate->getHandler('tables')->getCount();
-		if ($nb_tables == 0)  {
+		$nbTables = $tdmcreate->getHandler('tables')->getCount();
+		if($nbTables == 0)  {
 			redirect_header('tables.php?op=new', 2, _AM_TDMCREATE_NOTTABLES );
 		}  
-		unset($nb_tables);	
+		unset($nbTables);	
 		include_once TDMC_PATH . '/class/building.php';
 		$handler = TDMCreateBuilding::getInstance();
 		$form = $handler->getForm();

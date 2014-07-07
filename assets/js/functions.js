@@ -1,31 +1,3 @@
-function addClick(id) {
-    var xhr = getXMLHttpRequest(); // Pour récupérer un objet XMLHTTPRequest
-    // -- bordel habituel (readyState == 4, etc, etc.)
-    xhr.open('GET', 'click.php?id=' + id, true);
-    xhr.send(null);
-}
-
-function getXMLHttpRequest() {
-    var xhr = null;
-
-    if (window.XMLHttpRequest || window.ActiveXObject) {
-        if (window.ActiveXObject) {
-            try {
-                xhr = new ActiveXObject("Msxml2.XMLHTTP");
-            } catch (e) {
-                xhr = new ActiveXObject("Microsoft.XMLHTTP");
-            }
-        } else {
-            xhr = new XMLHttpRequest();
-        }
-    } else {
-        alert("Votre navigateur ne supporte pas l'objet XMLHTTPRequest...");
-        return null;
-    }
-
-    return xhr;
-}
-
 function swapImg(swap) {
     obj = document.getElementById(swap);
     obj.src = !(obj.src == img_minus) ? img_minus : img_plus;

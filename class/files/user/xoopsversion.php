@@ -112,11 +112,11 @@ defined('XOOPS_ROOT_PATH') or die('Restricted access');
 	'help' => "page=help",
 	'license' => "GNU GPL 2.0",
 	'license_url' => "www.gnu.org/licenses/gpl-2.0.html/",
-
+	//
 	'release_info' => "{$module->getVar('mod_release_info')}",
 	'release_file' => XOOPS_URL."/modules/{\$dirname}/docs/{$module->getVar('mod_release_file')}",
 	'release_date' => "{$date}",
-
+	//
 	'manual' => "{$module->getVar('mod_manual')}",
 	'manual_file' => XOOPS_URL."/modules/{\$dirname}/docs/{$module->getVar('mod_manual_file')}",
 	'min_php' => "{$module->getVar('mod_min_php')}",
@@ -129,6 +129,7 @@ defined('XOOPS_ROOT_PATH') or die('Restricted access');
 	'dirmoduleadmin' => "Frameworks/moduleclasses/moduleadmin",
     'sysicons16' => "../../Frameworks/moduleclasses/icons/16",
 	'sysicons32' => "../../Frameworks/moduleclasses/icons/32",
+	// Local path icons
 	'modicons16' => "assets/images/icons/16",
 	'modicons32' => "assets/images/icons/32",
 	//About
@@ -139,7 +140,7 @@ defined('XOOPS_ROOT_PATH') or die('Restricted access');
 	'module_website_url' => "{$module->getVar('mod_website_url')}",
 	'module_website_name' => "{$module->getVar('mod_website_name')}",
 	'release' => "{$module->getVar('mod_release')}",
-	'module_status' => "{$module->getVar('mod_status')}",\n	
+	'module_status' => "{$module->getVar('mod_status')}",\n
 EOT;
 		if (is_object($table)) {
 			if ( $table->getVar('table_admin') == 1 ) {

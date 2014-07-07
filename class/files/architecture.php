@@ -19,9 +19,8 @@
  * @version         $Id: architecture.php 12258 2014-01-02 09:33:29Z timgno $
  */
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
+include_once TDMC_PATH . '/class/autoloader.php';
 require_once 'structure.php';
-/*include_once TDMC_PATH . '/include/functions.php';
-spl_autoload_register('tdmcreateAutoload');*/
 
 class TDMCreateArchitecture extends TDMCreateStructure
 {	

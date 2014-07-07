@@ -19,7 +19,15 @@
  * @version         $Id: functions.php 11084 2013-02-23 15:44:20Z timgno $
  */
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
-
+/**
+ * Get Requests
+ *
+ * @param       array   $global
+ * @param       string  $key
+ * @param       string  $default
+ * @param       mixed   $type
+ * @return      mixed   Returns string, integer or array
+ */
 function TDMCreate_CleanVars( &$global, $key, $default = '', $type = 'int' ) {
     switch ( $type ) {
         case 'string':
@@ -34,7 +42,12 @@ function TDMCreate_CleanVars( &$global, $key, $default = '', $type = 'int' ) {
     }
     return $ret;
 }
-
+/**
+ * Clear directory and its contents
+ *
+ * @param       string   $folder The contents
+ * @return      bool     Returns true on success, false on failure
+ */
 function TDMCreate_clearDir($folder) {
 	$opening = @opendir($folder);
 	if (!$opening) return;
@@ -95,38 +108,8 @@ function TDMCreate_copyr($source, $dest)
     $dir->close();
     return true;
 }
-
-function TDMCreate_autoload($classname) {
-    foreach($classname as $file) {
-	    if(file_exists($file)) {
-			include_once TDMC_PATH . '/class/files/admin_' . $file . '.php';
-			include_once TDMC_PATH . '/class/files/blocks_' . $file . '.php';
-			include_once TDMC_PATH . '/class/files/class_' . $file . '.php';
-			include_once TDMC_PATH . '/class/files/css_' . $file . '.php';
-			include_once TDMC_PATH . '/class/files/docs_' . $file . '.php';
-			include_once TDMC_PATH . '/class/files/include_' . $file . '.php';
-			include_once TDMC_PATH . '/class/files/language_' . $file . '.php';
-			include_once TDMC_PATH . '/class/files/templates_' . $file . '.php';
-			include_once TDMC_PATH . '/class/files/user_' . $file . '.php';
-		}
-	}    
-}
-
+//
 function UcFirstAndToLower($str)
 {
 	 return ucfirst(strtolower(trim($str)));
 }
-
-/*
-if(function_exists(isset($_GET['f']))) { // get function name and parameter  $_GET['f']($_GET["p"]);
-    include_once TDMC_PATH . '/class/modules.php';
-    $ret = TDMCreateModules::createLogo($_GET["iconName"], $_GET["caption"]);
-    phpFunction($ret);
-} else {
-	echo 'Method Not Exist';
-}
-
-function phpFunction($val='')
-{      // create php function here
-	echo $val;
-}*/
