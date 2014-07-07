@@ -7,6 +7,7 @@ Added mod_dirname field in modules to avoid conflicts with the names of the modu
 
 - Solved issues for upload images
 - Updated
+- Using the new class xoopsrequest.php
 
 Version of xoops
 ================
