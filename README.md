@@ -7,3 +7,14 @@ Added mod_dirname field in modules to avoid conflicts with the names of the modu
 
 - Solved issues for upload images
 - Updated
+
+Version of xoops
+================
+
+TDMCreate is a module that create other basic modules for CMS Xoops.
+
+Tested with xoops 2.5.7, you can not use it with earlier versions, unless because you do not fit some core files in the background and after some tests. 
+
+Now that is ahead xoops versions, and goes to 2.6.0, you should download xoops 2.5.7 and utlizzarlo with this latest version. 
+
+Therefore recommended not to use TDMCreate 1.91, with previous versions, to xoops 2.5.7
