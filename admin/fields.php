@@ -158,7 +158,7 @@ switch ($op)
 		if ( !$GLOBALS['xoopsSecurity']->check() ) {
             redirect_header('fields.php', 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
         }	
-		$field_id = XoopsRequest::getInt('field_id');
+		$fieldId = XoopsRequest::getInt('field_id');
 		// Fields Handler
 		$fields = $tdmcreate->getHandler('fields');		
 		// Set Variables		
@@ -213,9 +213,9 @@ switch ($op)
 			if (!$tdmcreate->getHandler('fieldelements')->insert($fieldelementObj) ) {
 				$GLOBALS['xoopsTpl']->assign('error', $fieldelementObj->getHtmlErrors() . ' Field element');
 			}			
-			redirect_header('fields.php', 2, sprintf(_AM_TDMCREATE_FIELD_FORM_SAVED_OK, $table_name));					
+			redirect_header('fields.php', 2, sprintf(_AM_TDMCREATE_FIELDS_FORM_SAVED_OK, $table_name));					
 		} else {
-			redirect_header('fields.php', 2, sprintf(_AM_TDMCREATE_FIELD_FORM_UPDATED_OK, $table_name));
+			redirect_header('fields.php', 2, sprintf(_AM_TDMCREATE_FIELDS_FORM_UPDATED_OK, $table_name));
 		}
         //
 		$GLOBALS['xoopsTpl']->assign('error', $fieldsObj->getHtmlErrors()); 		      
@@ -232,8 +232,8 @@ switch ($op)
 		$adminMenu->addItemButton(_AM_TDMCREATE_FIELDS_LIST, 'fields.php', 'list');           
 		$GLOBALS['xoopsTpl']->assign('buttons', $adminMenu->renderButton());
 		// Form Edit
-		$field_id = XoopsRequest::getInt('field_id');
-		$fieldsObj = $tdmcreate->getHandler('fields')->get( $field_id );        		
+		$fieldId = XoopsRequest::getInt('field_id');
+		$fieldsObj = $tdmcreate->getHandler('fields')->get( $fieldId );        		
 		$form = $fieldsObj->getFormEdit($field_mid, $fieldTid);
 		$GLOBALS['xoopsTpl']->assign('form', $form->render());
 		// Test -> Will be removed
@@ -242,9 +242,9 @@ switch ($op)
 
     case 'drag':        
         $side = TDMCreate_CleanVars( $_POST, 'field_id', 0, 'int' );
-		$field_id = XoopsRequest::getInt('field_id');
-        if ( $field_id > 0 ) {
-            $fieldsObj = $tdmcreate->getHandler('fields')->get( $field_id );
+		$fieldId = XoopsRequest::getInt('field_id');
+        if ( $fieldId > 0 ) {
+            $fieldsObj = $tdmcreate->getHandler('fields')->get( $fieldId );
             $fieldsObj->setVar('field_id', $side);
             if (!$tdmcreate->getHandler('fields')->insert( $fieldsObj )) {
                 redirect_header('fields.php', 5, _AM_TDMCREATE_FIELD_SIDE_ERROR);
@@ -271,11 +271,12 @@ switch ($op)
     break;	
 	
 	case 'display':
+		$fieldId = XoopsRequest::getInt('field_id');
 		// Get the list of fields
 		$criteria = new CriteriaCompo();
 		$criteria->add(new Criteria('field_tid', $fieldTid));
 	    $fields = $tdmcreate->getHandler('fields')->getObjects($criteria);
-        $fieldsObj =& $tdmcreate->getHandler('fields')->get($field_id);
+        $fieldsObj =& $tdmcreate->getHandler('fields')->get($fieldId);
 		if (isset($_GET['field_tid'])) {
             if (isset($_GET['field_parent'])) {
 				foreach ($fields as $field) {

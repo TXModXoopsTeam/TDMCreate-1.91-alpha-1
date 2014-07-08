@@ -223,7 +223,7 @@ EOT;
 		// Form Select
 		\${$fieldName}_select = new XoopsFormSelect({$language}, '{$fieldName}', \$this->getVar('{$fieldName}'));
 		\${$fieldName}_select->addOption('Empty'); 
-		\${$fieldName}_select->addOptionArray({$tableName}Handler->getList()); 
+		\${$fieldName}_select->addOptionArray(\${$tableName}Handler->getList()); 
 		\$form->addElement( \${$fieldName}_select{$required} );\n
 EOT;
 		return $ret;
@@ -279,6 +279,7 @@ EOT;
 	private function getXoopsFormTable($language, $moduleDirname, $tableName, $fields, $required = 'false') 
 	{    
 	    $fieldName = '';
+		$ucf_table_name = ucfirst($tableName);
 		foreach(array_keys($fields) as $f) 
 		{			
 			if(($fields[$f]->getVar('field_parent') == 1)) {
@@ -286,10 +287,10 @@ EOT;
 			}						
 		}
 		$ret = <<<EOT
-		// Form Table
+		// Form Topic {$ucf_table_name}
 		\${$tableName}Handler =& \$this->{$moduleDirname}->getHandler('{$tableName}');				
 		\${$fieldName}_select = new XoopsFormSelect({$language}, '{$fieldName}', \$this->getVar('{$fieldName}'));
-		\${$fieldName}_select->addOptionArray(\${$fieldName}Handler->getList());
+		\${$fieldName}_select->addOptionArray(\${$tableName}Handler->getList());
 		\$form->addElement( \${$fieldName}_select{$required} );\n
 EOT;
 		return $ret;

@@ -61,12 +61,14 @@ class AdminPages extends TDMCreateFile
 	*  @param string $moduleDirname
 	*  @param string $tableName
 	*/
-	public function getAdminPagesHeader($moduleDirname, $tableName) {  
+	public function getAdminPagesHeader($moduleDirname, $tableName, $fpif) {  
 		
 		$ret = <<<EOT
 include_once 'header.php';
 //It recovered the value of argument op in URL$
-\$op = {$moduleDirname}_CleanVars(\$_REQUEST, 'op', 'list', 'string');
+\$op = XoopsRequest::getString('op', 'list');
+// Request {$fpif}
+\${$fpif} = XoopsRequest::getInt('{$fpif}');
 // Switch options
 switch (\$op) 
 {\n
@@ -84,18 +86,18 @@ EOT;
 	*  @param string $fpif
 	*  @param string $fpmf
 	*/
-	public function getAdminPagesList($moduleDirname, $tableName, $tableFieldname, $language, $fields, $fpif, $fpmf) {  
-		$stu_module_dirname = strtoupper($moduleDirname);
-		$stu_table_name = strtoupper($tableName);
-		$stu_table_fieldname = strtoupper($tableFieldname);
+	public function getAdminPagesList($moduleDirname, $tableName, $tableFieldname, $tableAutoincrement, $language, $fields, $fpif, $fpmf) {  
+		$stuModuleDirname = strtoupper($moduleDirname);
+		$stuTableName = strtoupper($tableName);
+		$stuTableFieldname = strtoupper($tableFieldname);
 		$ret = <<<EOT
     case 'list': 
     default:  
-		\$limit = \${$moduleDirname}->getConfig('adminpager');
-		\$start = {$moduleDirname}_CleanVars(\$_REQUEST, 'start', 0);
+		\$start = XoopsRequest::getInt('start', 0);
+		\$limit = XoopsRequest::getInt('limit', \${$moduleDirname}->getConfig('adminpager'));		
 		\$template_main = '{$moduleDirname}_admin_{$tableName}.tpl';
 		\$GLOBALS['xoopsTpl']->assign('navigation', \$adminMenu->addNavigation('{$tableName}.php'));
-		\$adminMenu->addItemButton({$language}ADD_{$stu_table_fieldname}, '{$tableName}.php?op=new', 'add');		
+		\$adminMenu->addItemButton({$language}ADD_{$stuTableFieldname}, '{$tableName}.php?op=new', 'add');		
 		\$GLOBALS['xoopsTpl']->assign('buttons', \$adminMenu->renderButton());
 		\$criteria = new CriteriaCompo();
 		\$criteria->setSort('{$fpif} ASC, {$fpmf}');
@@ -103,8 +105,8 @@ EOT;
 		\${$tableName}_rows = \${$tableName}Handler->getCount(\$criteria);
 		\${$tableName}_arr = \${$tableName}Handler->getAll(\$criteria);
 		unset(\$criteria);
-		\$GLOBALS['xoopsTpl']->assign('{$moduleDirname}_url', {$stu_module_dirname}_URL);
-		\$GLOBALS['xoopsTpl']->assign('{$moduleDirname}_upload_url', {$stu_module_dirname}_UPLOAD_URL);
+		\$GLOBALS['xoopsTpl']->assign('{$moduleDirname}_url', {$stuModuleDirname}_URL);
+		\$GLOBALS['xoopsTpl']->assign('{$moduleDirname}_upload_url', {$stuModuleDirname}_UPLOAD_URL);
 		// Table view
 		if (\${$tableName}_rows > 0) 
 		{						
@@ -115,23 +117,25 @@ EOT;
 		{
 			$fieldName = $fields[$f]->getVar('field_name');
 			$rp_field_name = $fieldName;
-			// Verify if table_fieldname is not empty
-			if(!empty($tableFieldname)) {
-				if(strpos($fieldName, '_')) {       
-					$str = strpos($fieldName, '_'); 
-					if($str !== false){ 
-						$rp_field_name = substr($fieldName, $str + 1, strlen($fieldName));
-					} 		
+			if( ($fields[$f]->getVar('field_admin') == 1) || ($tableAutoincrement == 1) ) {
+				// Verify if table_fieldname is not empty
+				if(!empty($tableFieldname)) {
+					if(strpos($fieldName, '_')) {       
+						$str = strpos($fieldName, '_'); 
+						if($str !== false){ 
+							$rp_field_name = substr($fieldName, $str + 1, strlen($fieldName));
+						} 		
+					}
+					$lp_field_name = substr($fieldName, 0, strpos($fieldName, '_'));
+					$ret .= <<<EOT
+				\${$lp_field_name}['{$rp_field_name}'] = \${$tableName}_arr[\$i]->getVar('{$fieldName}');\n
+EOT;
+				} else {
+					$lp_field_name = $tableName;
+					$ret .= <<<EOT
+				\${$lp_field_name}['{$rp_field_name}'] = \${$tableName}_arr[\$i]->getVar('{$fieldName}');\n
+EOT;
 				}
-				$lp_field_name = substr($fieldName, 0, strpos($fieldName, '_'));
-				$ret .= <<<EOT
-				\${$lp_field_name}['{$rp_field_name}'] = \${$tableName}_arr[\$i]->getVar('{$fieldName}');\n
-EOT;
-			} else {
-				$lp_field_name = $tableName;
-				$ret .= <<<EOT
-				\${$lp_field_name}['{$rp_field_name}'] = \${$tableName}_arr[\$i]->getVar('{$fieldName}');\n
-EOT;
 			}
 		}
 			$ret .= <<<EOT
@@ -146,7 +150,7 @@ EOT;
 				\$GLOBALS['xoopsTpl']->assign('pagenav', \$pagenav->renderNav(4));
 			}
         } else {
-			\$GLOBALS['xoopsTpl']->assign('error', {$language}THEREARENT_{$stu_table_name});
+			\$GLOBALS['xoopsTpl']->assign('error', {$language}THEREARENT_{$stuTableName});
 		}	
     break;\n
 EOT;
@@ -160,11 +164,11 @@ EOT;
 	*  @param string $language
 	*/
 	public function getAdminPagesNew($moduleDirname, $tableName, $language) {  
-		$stu_table_name = strtoupper($tableName);
+		$stuTableName = strtoupper($tableName);
 		$ret = <<<EOT
 	case 'new':		
 		\$template_main = '{$moduleDirname}_admin_{$tableName}.tpl';
-        \$adminMenu->addItemButton({$language}{$stu_table_name}_LIST, '{$tableName}.php', 'list');
+        \$adminMenu->addItemButton({$language}{$stuTableName}_LIST, '{$tableName}.php', 'list');
         \$GLOBALS['xoopsTpl']->assign('navigation', \$adminMenu->addNavigation('{$tableName}.php'));
 		\$GLOBALS['xoopsTpl']->assign('buttons', \$adminMenu->renderButton());	
 		// Get Form		
@@ -192,8 +196,8 @@ EOT;
 		if ( !\$GLOBALS['xoopsSecurity']->check() ) {
            redirect_header('{$tableName}.php', 3, implode(',', \$GLOBALS['xoopsSecurity']->getErrors()));
         }
-        if (isset(\$_REQUEST['{$fpif}'])) {
-           \${$tableName}Obj =& \${$tableName}Handler->get(\$_REQUEST['{$fpif}']);
+        if (isset(\${$fpif})) {
+           \${$tableName}Obj =& \${$tableName}Handler->get(\${$fpif});
         } else {
            \${$tableName}Obj =& \${$tableName}Handler->create();
         }
@@ -251,17 +255,17 @@ EOT;
 	*  @param string $fpif
 	*/
 	public function getAdminPagesEdit($moduleDirname, $tableName, $tableFieldname, $language, $fpif) {  
-		$stu_table_name = strtoupper($tableName);
-		$stu_table_fieldname = strtoupper($tableFieldname);
+		$stuTableName = strtoupper($tableName);
+		$stuTableFieldname = strtoupper($tableFieldname);
 		$ret = <<<EOT
 	case 'edit':	    
 		\$template_main = '{$moduleDirname}_admin_{$tableName}.tpl';
-        \$adminMenu->addItemButton({$language}ADD_{$stu_table_fieldname}, '{$tableName}.php?op=new', 'add');
-		\$adminMenu->addItemButton({$language}{$stu_table_name}_LIST, '{$tableName}.php', 'list');
+        \$adminMenu->addItemButton({$language}ADD_{$stuTableFieldname}, '{$tableName}.php?op=new', 'add');
+		\$adminMenu->addItemButton({$language}{$stuTableName}_LIST, '{$tableName}.php', 'list');
         \$GLOBALS['xoopsTpl']->assign('navigation', \$adminMenu->addNavigation('{$tableName}.php'));
 		\$GLOBALS['xoopsTpl']->assign('buttons', \$adminMenu->renderButton());	
 		// Get Form
-		\${$tableName}Obj = \${$tableName}Handler->get(\$_REQUEST['{$fpif}']);
+		\${$tableName}Obj = \${$tableName}Handler->get(\${$fpif});
 		\$form = \${$tableName}Obj->getForm();
 		\$GLOBALS['xoopsTpl']->assign('form', \$form->render());
 	break;\n
@@ -278,7 +282,7 @@ EOT;
 		
 		$ret = <<<EOT
 	case 'delete':
-		\${$tableName}Obj =& \${$tableName}Handler->get(\$_REQUEST['{$fpif}']);
+		\${$tableName}Obj =& \${$tableName}Handler->get(\${$fpif});
 		if (isset(\$_REQUEST['ok']) && \$_REQUEST['ok'] == 1) {
 			if ( !\$GLOBALS['xoopsSecurity']->check() ) {
 				redirect_header('{$tableName}.php', 3, implode(', ', \$GLOBALS['xoopsSecurity']->getErrors()));
@@ -289,7 +293,7 @@ EOT;
 				echo \${$tableName}Obj->getHtmlErrors();
 			}
 		} else {
-			xoops_confirm(array('ok' => 1, '{$fpif}' => \$_REQUEST['{$fpif}'], 'op' => 'delete'), \$_SERVER['REQUEST_URI'], sprintf({$language}FORMSUREDEL, \${$tableName}Obj->getVar('{$fpmf}')));
+			xoops_confirm(array('ok' => 1, '{$fpif}' => \${$fpif}, 'op' => 'delete'), \$_SERVER['REQUEST_URI'], sprintf({$language}FORMSUREDEL, \${$tableName}Obj->getVar('{$fpmf}')));
 		}
 	break;\n
 EOT;
@@ -318,7 +322,8 @@ EOT;
 		$table = $this->getTable();
 		$moduleDirname = $module->getVar('mod_dirname');      
 		$tableName = $table->getVar('table_name');	
-		$tableFieldname = $table->getVar('table_fieldname');	
+		$tableFieldname = $table->getVar('table_fieldname');
+		$tableAutoincrement = $table->getVar('table_autoincrement');
 		$language = $this->getLanguage($moduleDirname, 'AM');
 		$fields = $this->getTableFields($table->getVar('table_id'));
 		foreach(array_keys($fields) as $f) 
@@ -332,8 +337,8 @@ EOT;
 			}
 		}		
 		$content = $this->getHeaderFilesComments($module, $filename);
-		$content .=	$this->getAdminPagesHeader($moduleDirname, $tableName);
-		$content .=	$this->getAdminPagesList($moduleDirname, $tableName, $tableFieldname, $language, $fields, $fpif, $fpmf);
+		$content .=	$this->getAdminPagesHeader($moduleDirname, $tableName, $fpif);
+		$content .=	$this->getAdminPagesList($moduleDirname, $tableName, $tableFieldname, $tableAutoincrement, $language, $fields, $fpif, $fpmf);
 		$content .=	$this->getAdminPagesNew($moduleDirname, $tableName, $language);		
 		$content .=	$this->getAdminPagesSave($moduleDirname, $tableName, $language, $fields, $fpif, $fpmf);
 		$content .=	$this->getAdminPagesEdit($moduleDirname, $tableName, $tableFieldname, $language, $fpif);

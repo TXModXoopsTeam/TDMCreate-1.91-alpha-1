@@ -54,11 +54,11 @@ class TemplatesAdminPages extends HtmlSmartyCodes
 	/*
 	*  @private function getTemplatesAdminPagesHeader
 	*  @param string $moduleDirname
-	*  @param string $table
+	*  @param string $tableName
+	*  @param string $fields
 	*  @param string $language
 	*/
-	private function getTemplatesAdminPagesHeader($moduleDirname, $table, $language) {    
-		$tableName = $table->getVar('table_name');
+	private function getTemplatesAdminPagesHeader($moduleDirname, $tableName, $fields, $language) {    
 		$ret = <<<EOT
 <{include file="db:{$moduleDirname}_admin_header.tpl"}>
 <{if {$tableName}_list}>
@@ -66,12 +66,11 @@ class TemplatesAdminPages extends HtmlSmartyCodes
 		<thead>
 			<tr class="head">\n
 EOT;
-		$fields = $this->getTableFields($table->getVar('table_id'));
 		foreach(array_keys($fields) as $f)
 		{
 			$fieldName = $fields[$f]->getVar('field_name');
 			$lang_fn = $language.strtoupper($fieldName);			
-			if( ($fields[$f]->getVar('field_inlist') == 1) || ($table->getVar('table_autoincrement') == 1) ) { 
+			if( $fields[$f]->getVar('field_inlist') == 1 ) { 
 				$ret .= <<<EOT
 				<th class="center"><{\$smarty.const.{$lang_fn}}></th>\n
 EOT;
@@ -87,19 +86,17 @@ EOT;
 	/*
 	*  @private function getTemplatesAdminPagesBody
 	*  @param string $moduleDirname
-	*  @param string $table
+	*  @param string $tableName
+	*  @param string $fields
 	*  @param string $language
 	*/
-	private function getTemplatesAdminPagesBody($moduleDirname, $table, $language) 
+	private function getTemplatesAdminPagesBody($moduleDirname, $tableName, $fields, $language) 
 	{    
-		$moduleDirname = strtolower($moduleDirname);
-		$tableName = $table->getVar('table_name');
 		$ret = <<<EOT
 		<tbody>
 			<{foreach item=list from=\${$tableName}_list}>	
 				<tr class="<{cycle values='odd, even'}>">\n
 EOT;
-		$fields = $this->getTableFields($table->getVar('table_id'));
 		foreach(array_keys($fields) as $f) 
 		{
 			$fieldName = $fields[$f]->getVar('field_name');
@@ -121,7 +118,7 @@ EOT;
 				} 		
 			}
 			$lp_field_name = substr($fieldName, 0, strpos($fieldName, '_'));
-			if( ($fields[$f]->getVar('field_inlist') == 1) || ($table->getVar('table_autoincrement') == 1) ) {	
+			if( $fields[$f]->getVar('field_inlist') == 1 ) {	
 				switch( $fieldElement ) {			    
 					case 8:			
 						$ret .= <<<EOT
@@ -165,18 +162,17 @@ EOT;
 	/*
 	*  @private function getTemplatesAdminPagesBodyFieldnameEmpty
 	*  @param string $moduleDirname
-	*  @param string $table
+	*  @param string $tableName
+	*  @param string $fields
 	*  @param string $language
 	*/
-	private function getTemplatesAdminPagesBodyFieldnameEmpty($moduleDirname, $table, $language) 
+	private function getTemplatesAdminPagesBodyFieldnameEmpty($moduleDirname, $tableName, $fields, $language) 
 	{ 		
-		$tableName = $table->getVar('table_name');		
 		$ret = <<<EOT
 	<tbody>
 			<{foreach item=list from=\${$tableName}_list}>	
 				<tr class="<{cycle values='odd, even'}>">\n
 EOT;
-		$fields = $this->getTableFields($table->getVar('table_id'));
 		foreach(array_keys($fields) as $f) 
 		{
 			$fieldName = $fields[$f]->getVar('field_name');
@@ -184,7 +180,7 @@ EOT;
 			if($f == 0) {
 				$field_id = $fieldName;							
 			}
-			if( ($fields[$f]->getVar('field_inlist') == 1) || ($table->getVar('table_autoincrement') == 1) ) { 
+			if( $fields[$f]->getVar('field_inlist') == 1 ) { 
 				switch( $fieldElement ) {			    
 					case 8:			
 						$ret .= <<<EOT
@@ -262,13 +258,14 @@ EOT;
 		$moduleDirname = $module->getVar('mod_dirname');		
 		$tableName = $table->getVar('table_name');
 		$tableFieldname = $table->getVar('table_fieldname');		
-		$language = $this->getLanguage($moduleDirname, 'AM');			
-		$content = $this->getTemplatesAdminPagesHeader($moduleDirname, $table, $language);
+		$language = $this->getLanguage($moduleDirname, 'AM');	
+		$fields = $this->getTableFields($table->getVar('table_id'));
+		$content = $this->getTemplatesAdminPagesHeader($moduleDirname, $tableName, $fields, $language);
 		// Verify if table_fieldname is not empty
 		if(!empty($tableFieldname)) {
-			$content .= $this->getTemplatesAdminPagesBody($moduleDirname, $table, $language);
+			$content .= $this->getTemplatesAdminPagesBody($moduleDirname, $tableName, $fields, $language);
 		} else {
-			$content .= $this->getTemplatesAdminPagesBodyFieldnameEmpty($moduleDirname, $table, $language);
+			$content .= $this->getTemplatesAdminPagesBodyFieldnameEmpty($moduleDirname, $tableName, $fields, $language);
 		}
 		$content .= $this->getTemplatesAdminPagesFooter($moduleDirname);
 		//

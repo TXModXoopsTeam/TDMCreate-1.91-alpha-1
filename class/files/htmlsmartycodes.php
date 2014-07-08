@@ -121,7 +121,7 @@ EOT;
 		return $ret;
 	}
 	/*
-	*  @public function getHtmlTable
+	*  @public function getHtmlTableThead
 	*  @param string $class
 	*  @param string $content
 	*/
@@ -134,7 +134,7 @@ EOT;
 		return $ret;
 	}
 	/*
-	*  @public function getHtmlTable
+	*  @public function getHtmlTableTbody
 	*  @param string $class
 	*  @param string $content
 	*/
@@ -197,22 +197,33 @@ EOT;
 	/*
 	*  @public function getSmartyConst
 	*  @param string $language
-	*  @param mixed $field_name
+	*  @param mixed $fieldName
 	*/
-	public function getSmartyConst($language, $field_name) {		
+	public function getSmartyConst($language, $fieldName) {		
 		$ret = <<<EOT
-		<{\$smarty.const.{$language}{$field_name}}>
+		<{\$smarty.const.{$language}{$fieldName}}>
+EOT;
+		return $ret;
+	}
+	/*
+	*  @public function getSmartyTableFieldNameEmptyData
+	*  @param string $tableName
+	*  @param string $fieldName
+	*/
+	public function getSmartyTableFieldNameEmptyData($tableName = '', $fieldName = '') {    
+		$ret = <<<EOT
+		<{\${$tableName}.{$fieldName}}>
 EOT;
 		return $ret;
 	}
 	/*
 	*  @public function getSmartyTableField
-	*  @param string $table_fieldname
-	*  @param string $field_name
+	*  @param string $tableFieldname
+	*  @param string $fieldName
 	*/
-	public function getSmartyTableFieldData($table_fieldname = '', $fieldname = '') {    
+	public function getSmartyTableFieldData($tableFieldname = '', $fieldName = '') {    
 		$ret = <<<EOT
-		<{\${$table_fieldname}.{$fieldname}}>
+		<{\${$tableFieldname}.{$fieldName}}>
 EOT;
 		return $ret;
 	}
@@ -220,9 +231,9 @@ EOT;
 	*  @public function getSmartyIncludeFile
 	*  @param string $name
 	*/
-	public function getSmartyIncludeFile($module_name, $fieldname = 'header') {    
+	public function getSmartyIncludeFile($moduleDirname, $tableName = 'header') {    
 		$ret = <<<EOT
-		<{include file='db:{$module_name}_{$fieldname}.html'}>
+		<{include file='db:{$moduleDirname}_{$tableName}.html'}>
 EOT;
 		return $ret;
 	}

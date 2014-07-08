@@ -30,16 +30,6 @@ define('_AM_TDMCREATE_ADMIN_NUMMODULES', "Statistics");
 define('_AM_TDMCREATE_THEREARE_NUMMODULES', "There are <span class='red bold'>%s</span> modules stored in the Database");
 define('_AM_TDMCREATE_THEREARE_NUMTABLES', "There are <span class='red bold'>%s</span> tables stored in the Database");
 define('_AM_TDMCREATE_THEREARE_NUMFIELDS', "There are <span class='red bold'>%s</span> fields stored in the Database");
-
-define('_AM_TDMCREATE_TABLES_FIELDS_MORE_ELEMENTS', "Forms: Elements");
-define('_AM_TDMCREATE_TABLES_FIELDS_MORE_PARENT_ID', "Parent: Category id");
-define('_AM_TDMCREATE_TABLES_FIELDS_MORE_DISPLAY_ADMIN', "Page: Show admin");
-define('_AM_TDMCREATE_TABLES_FIELDS_MORE_DISPLAY_USER', "Page: View User");
-define('_AM_TDMCREATE_TABLES_FIELDS_MORE_BLOC', "Block: View");
-define('_AM_TDMCREATE_TABLES_FIELDS_MORE_MAIN_FIELD', "Table: Main Field");
-define('_AM_TDMCREATE_TABLES_FIELDS_MORE_SEARCH', "Search: Index");
-define('_AM_TDMCREATE_TABLES_FIELDS_MORE_REQUIRED', "Forms: Required field");
-
 // General
 define('_AM_TDMCREATE_FORMOK', "Successfully saved");
 define('_AM_TDMCREATE_FORMDELOK', "Successfully deleted");
@@ -54,7 +44,7 @@ define('_AM_TDMCREATE_FORMFIELDS', "Edit fields");
 define('_AM_TDMCREATE_FORM_INFO_TABLE_OPTIONAL_FIELD', "Optional fields");
 define('_AM_TDMCREATE_FORM_INFO_TABLE_STRUCTURES_FIELD', "Structures fields");
 define('_AM_TDMCREATE_FORM_INFO_TABLE_ICON_FIELD', "Icon fields");
-
+//
 define('_AM_TDMCREATE_ID', "ID");
 define('_AM_TDMCREATE_NAME', "Name");
 define('_AM_TDMCREATE_BLOCKS', "Blocks");
@@ -70,8 +60,7 @@ define('_AM_TDMCREATE_ADD_MODULE', "Add new module");
 //Form
 define('_AM_TDMCREATE_MODULE_NEW', "New module");
 define('_AM_TDMCREATE_MODULE_EDIT', "Edit module");
-//define('_AM_TDMCREATE_MODULE_IMPORTANT', "Required Information");
-
+//
 define('_AM_TDMCREATE_MODULE_IMPORTANT', "<span style='color: #FF0000'>Required - Information</span>");
 define('_AM_TDMCREATE_MODULE_NOTIMPORTANT', "<span style='color: #00FF00'>Optional - Information</span>");
 define('_AM_TDMCREATE_MODULE_ID', "Id");
@@ -133,7 +122,10 @@ define('_AM_TDMCREATE_MODULE_MIN_PHP', "Minimum PHP");
 define('_AM_TDMCREATE_MODULE_MIN_XOOPS', "Minimum XOOPS");
 define('_AM_TDMCREATE_MODULE_MIN_ADMIN', "Minimum Admin");
 define('_AM_TDMCREATE_MODULE_MIN_MYSQL', "Minimum Database");
-
+// Added in version 1.91
+define('_AM_TDMCREATE_MODULE_FORM_CREATED_OK', "The module <b class='green'>%s</b> is successfully created");
+define('_AM_TDMCREATE_MODULE_FORM_UPDATED_OK', "The module <b class='green'>%s</b> is successfully updated");
+// ------------------- Tables --------------------------------- //
 //Tables.php
 // Buttons
 define('_AM_TDMCREATE_ADD_TABLE', "Add new table");
@@ -170,9 +162,8 @@ define('_AM_TDMCREATE_TABLE_NOTIFICATIONS', "Notifications for this table");
 define('_AM_TDMCREATE_TABLE_PERMISSIONS', "Permissions for this table");
 // v1.38
 define('_AM_TDMCREATE_TABLE_IMAGE_DESC', "<span class='red bold'>WARNING</span>: If you want to choose a new image, is best to name it with the module name before and follow with the name of the image so as not to overwrite any images with the same name, in the <span class='bold'>Frameworks/moduleclasses/moduleadmin/icons/32/</span>. Otherwise an other solution, would be to insert the images in the module, a new folder is created, with the creation of the same module - <span class='bold'>images/32</span>.");
-define('_AM_TDMCREATE_TABLE_FORM_SAVED_OK', "The table <b class='green'>%s</b> is successfully saved");
+define('_AM_TDMCREATE_TABLE_FORM_CREATED_OK', "The table <b class='green'>%s</b> is successfully created");
 define('_AM_TDMCREATE_TABLE_FORM_UPDATED_OK', "The table <b class='green'>%s</b> is successfully updated");
-
 // ------------------ Form Fields ------------------
 // Caption
 define('_AM_TDMCREATE_FIELDS_NEW', "New fields");
@@ -295,8 +286,8 @@ define('_AM_TDMCREATE_TABLE_MODSELOPT', "Select a Module");
 define('_AM_TDMCREATE_BUILD_MODSELOPT', "Select and build a Module");
 define('_AM_TDMCREATE_NOTMODULES', "There aren't modules, pleace create one first");
 define('_AM_TDMCREATE_NOTTABLES', "There aren't tables, pleace create one first");
-define('_AM_TDMCREATE_FIELD_FORM_SAVED_OK', "Fields of table %s successfully saved");
-define('_AM_TDMCREATE_FIELD_FORM_UPDATED_OK', "Fields of table %s successfully updated");
+define('_AM_TDMCREATE_FIELDS_FORM_SAVED_OK', "Fields of table <b class='green'>%s</b> successfully saved");
+define('_AM_TDMCREATE_FIELDS_FORM_UPDATED_OK', "Fields of table <b class='green'>%s</b> successfully updated");
 //
 define('_AM_TDMCREATE_THEREARENT_MODULES', "There aren't modules");
 define('_AM_TDMCREATE_THEREARENT_TABLES', "There aren't tables");

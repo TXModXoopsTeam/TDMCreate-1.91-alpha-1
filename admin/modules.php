@@ -87,8 +87,8 @@ switch ($op)
         $adminMenu->addItemButton(_AM_TDMCREATE_MODULES_LIST, 'modules.php', 'list');
         $GLOBALS['xoopsTpl']->assign('buttons', $adminMenu->renderButton());
         
-        $obj =& $tdmcreate->getHandler('modules')->create();
-        $form = $obj->getForm();			
+        $modulesObj =& $tdmcreate->getHandler('modules')->create();
+        $form = $modulesObj->getForm();			
         $GLOBALS['xoopsTpl']->assign('form', $form->render());
     break;	
 	
@@ -97,14 +97,14 @@ switch ($op)
            redirect_header('modules.php', 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
         }
         if (isset($mod_id)) {
-           $obj =& $tdmcreate->getHandler('modules')->get($mod_id);
+           $modulesObj =& $tdmcreate->getHandler('modules')->get($mod_id);
         } else {
-           $obj =& $tdmcreate->getHandler('modules')->create();
+           $modulesObj =& $tdmcreate->getHandler('modules')->create();
         }		
-		$mod_dirname = preg_replace('/[^a-zA-Z0-9]\s+/', '', strtolower($_POST['mod_dirname']));
+		$moduleDirname = preg_replace('/[^a-zA-Z0-9]\s+/', '', strtolower($_POST['mod_dirname']));
 		//Form module save		
-		$obj->setVars(array('mod_name' => $_POST['mod_name'], 
-							'mod_dirname' => $mod_dirname,
+		$modulesObj->setVars(array('mod_name' => $_POST['mod_name'], 
+							'mod_dirname' => $moduleDirname,
 							'mod_version' => $_POST['mod_version'],
 							'mod_since' => $_POST['mod_since'],
                             'mod_min_php' => $_POST['mod_min_php'], 
@@ -128,20 +128,20 @@ switch ($op)
 																	$tdmcreate->getConfig('maxsize'), null, null);
 		if ($uploader->fetchMedia($_POST['xoops_upload_file'][0])) {
 		    /*$extension = preg_replace( '/.*\.([^.]+)$/', '\\1', $_FILES['attachedfile']['name']);
-            $logo_image = $mod_dirname.'_slogo.'.$extension;
+            $logo_image = $moduleDirname.'_slogo.'.$extension;
 			$uploader->setPrefix($logo_image);*/
 			$uploader->fetchMedia($_POST['xoops_upload_file'][0]);
 			if (!$uploader->upload()) {
 				$errors = $uploader->getErrors();
 				redirect_header('javascript:history.go(-1)',3, $errors);
 			} else {
-				$obj->setVar('mod_image', $uploader->getSavedFileName());
+				$modulesObj->setVar('mod_image', $uploader->getSavedFileName());
 			}
 		} else {
-			$obj->setVar('mod_image', $_POST['mod_image']);
+			$modulesObj->setVar('mod_image', $_POST['mod_image']);
 		}		
 		//Form module save		
-		$obj->setVars(array('mod_demo_site_url' => $_POST['mod_demo_site_url'], 
+		$modulesObj->setVars(array('mod_demo_site_url' => $_POST['mod_demo_site_url'], 
 		                    'mod_demo_site_name' => $_POST['mod_demo_site_name'], 
 							'mod_support_url' => $_POST['mod_support_url'], 
 							'mod_support_name' => $_POST['mod_support_name'], 
@@ -150,7 +150,8 @@ switch ($op)
 							'mod_release' => $_POST['mod_release'], 
 							'mod_status' => $_POST['mod_status'],
 							'mod_admin' => (($_REQUEST['mod_admin'] == 1) ? '1' : '0'),
-							'mod_user' => (($_REQUEST['mod_user'] == 1) ? '1' : '0'),							
+							'mod_user' => (($_REQUEST['mod_user'] == 1) ? '1' : '0'),	
+                            'mod_blocks' => (($_REQUEST['mod_blocks'] == 1) ? '1' : '0'),							
 							'mod_search' => (($_REQUEST['mod_search'] == 1) ? '1' : '0'),
 							'mod_comments' => (($_REQUEST['mod_comments'] == 1) ? '1' : '0'),
 							'mod_notifications' => (($_REQUEST['mod_notifications'] == 1) ? '1' : '0'),
@@ -160,12 +161,16 @@ switch ($op)
 							'mod_subversion' => $_POST['mod_subversion'])
 					);
 		
-        if ($tdmcreate->getHandler('modules')->insert($obj)) {
-            redirect_header('modules.php', 2, _AM_TDMCREATE_FORMOK);
+        if ($tdmcreate->getHandler('modules')->insert($modulesObj)) {
+            if( $modulesObj->isNew() ) {
+				redirect_header('modules.php', 5, sprintf(_AM_TDMCREATE_MODULE_FORM_CREATED_OK, $_POST['mod_name']));
+			} else {
+				redirect_header('modules.php', 5, sprintf(_AM_TDMCREATE_MODULE_FORM_UPDATED_OK, $_POST['mod_name']));
+			}
         }
 
-        $GLOBALS['xoopsTpl']->assign('error', $obj->getHtmlErrors());
-        $form =& $obj->getForm();		
+        $GLOBALS['xoopsTpl']->assign('error', $modulesObj->getHtmlErrors());
+        $form =& $modulesObj->getForm();		
         $GLOBALS['xoopsTpl']->assign('form', $form->render());
 	break;
 	
@@ -178,24 +183,24 @@ switch ($op)
 		$adminMenu->addItemButton(_AM_TDMCREATE_MODULES_LIST, 'modules.php', 'list');        
         $GLOBALS['xoopsTpl']->assign('buttons', $adminMenu->renderButton());
 		
-		$obj = $tdmcreate->getHandler('modules')->get($mod_id);
-		$form = $obj->getForm();		
+		$modulesObj = $tdmcreate->getHandler('modules')->get($mod_id);
+		$form = $modulesObj->getForm();		
         $GLOBALS['xoopsTpl']->assign('form', $form->render());
 	break;
 	
 	case 'delete':
-		$obj =& $tdmcreate->getHandler('modules')->get($mod_id);
+		$modulesObj =& $tdmcreate->getHandler('modules')->get($mod_id);
 		if (isset($_REQUEST['ok']) && $_REQUEST['ok'] == 1) {
 			if ( !$GLOBALS['xoopsSecurity']->check() ) {
 				redirect_header('modules.php', 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
 			}
-			if ($tdmcreate->getHandler('modules')->delete($obj)) {
+			if ($tdmcreate->getHandler('modules')->delete($modulesObj)) {
 				redirect_header('modules.php', 3, _AM_TDMCREATE_FORMDELOK);
 			} else {
-				$GLOBALS['xoopsTpl']->assign('error', $obj->getHtmlErrors());
+				$GLOBALS['xoopsTpl']->assign('error', $modulesObj->getHtmlErrors());
 			}
 		} else {
-			xoops_confirm(array('ok' => 1, 'mod_id' => $mod_id, 'op' => 'delete'), $_SERVER['REQUEST_URI'], sprintf(_AM_TDMCREATE_FORMSUREDEL, $obj->getVar('mod_name')));
+			xoops_confirm(array('ok' => 1, 'mod_id' => $mod_id, 'op' => 'delete'), $_SERVER['REQUEST_URI'], sprintf(_AM_TDMCREATE_FORMSUREDEL, $modulesObj->getVar('mod_name')));
 		}
 	break;
 
@@ -208,21 +213,21 @@ switch ($op)
 		$mod_permissions = XoopsRequest::getInt('mod_permissions');	
 		
 		if ( $mod_id > 0 ) {          
-			$obj =& $tdmcreate->getHandler('modules')->get($mod_id);
+			$modulesObj =& $tdmcreate->getHandler('modules')->get($mod_id);
             if(isset($mod_adminm)) {
-				$obj->setVar('mod_admin', $mod_admin);
+				$modulesObj->setVar('mod_admin', $mod_admin);
 			} elseif(isset($mod_user)) {
-				$obj->setVar('mod_user', $mod_user);
+				$modulesObj->setVar('mod_user', $mod_user);
 			} elseif(isset($mod_search)) {
-				$obj->setVar('mod_search', $mod_search);
+				$modulesObj->setVar('mod_search', $mod_search);
 			} elseif(isset($mod_comments)) {
-				$obj->setVar('mod_comments', $mod_comments);
+				$modulesObj->setVar('mod_comments', $mod_comments);
 			} elseif(isset($mod_notifications)) {
-				$obj->setVar('mod_notifications', $mod_notifications);
+				$modulesObj->setVar('mod_notifications', $mod_notifications);
 			} elseif(isset($mod_permissions)) {
-				$obj->setVar('mod_permissions', $mod_permissions);
+				$modulesObj->setVar('mod_permissions', $mod_permissions);
 			}
-			if ($tdmcreate->getHandler('modules')->insert($obj, true)) {
+			if ($tdmcreate->getHandler('modules')->insert($modulesObj, true)) {
 				redirect_header('modules.php', 1, _AM_TDMCREATE_TOGGLE_SUCCESS);
 			} else {
 				redirect_header('modules.php', 1, _AM_TDMCREATE_TOGGLE_FAILED);

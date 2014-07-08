@@ -92,46 +92,48 @@ EOT;
 		{
 			$fieldName = $fields[$f]->getVar('field_name');
 			$rp_field_name = $fieldName;
-			// Verify if table_fieldname is not empty
-			if(!empty($tableFieldname)) {				
-				if(strpos($fieldName, '_')) {       
-					$str = strpos($fieldName, '_'); 
-					if($str !== false){ 
-						$rp_field_name = substr($fieldName, $str + 1, strlen($fieldName));
-					} 		
-				}
-				$lp_field_name = substr($fieldName, 0, strpos($fieldName, '_'));
-				$tname = $lp_field_name;
-				$fieldElement = $fields[$f]->getVar('field_element');
-				if ( $fields[$f]->getVar('field_main') == 1 ) {
-					$fpmf = $fieldName; // fpmf = fields parameters main field
-				}
-				// Verify if this is a textarea or dhtmltextarea
-				if (  $fieldElement == 2 || $fieldElement == 3 ) {
-					$ret .= <<<EOT
+			if( $fields[$f]->getVar('field_user') == 1 ) {
+				// Verify if table_fieldname is not empty
+				if(!empty($tableFieldname)) {				
+					if(strpos($fieldName, '_')) {       
+						$str = strpos($fieldName, '_'); 
+						if($str !== false){ 
+							$rp_field_name = substr($fieldName, $str + 1, strlen($fieldName));
+						} 		
+					}
+					$lp_field_name = substr($fieldName, 0, strpos($fieldName, '_'));
+					$tname = $lp_field_name;
+					$fieldElement = $fields[$f]->getVar('field_element');
+					if ( $fields[$f]->getVar('field_main') == 1 ) {
+						$fpmf = $fieldName; // fpmf = fields parameters main field
+					}
+					// Verify if this is a textarea or dhtmltextarea
+					if (  $fieldElement == 2 || $fieldElement == 3 ) {
+						$ret .= <<<EOT
 		\${$tname}['{$rp_field_name}'] = strip_tags(\${$stl_table_name}_arr[\$i]->getVar('{$fieldName}'));\n
 EOT;
-				} else {
-					$ret .= <<<EOT
+					} else {
+						$ret .= <<<EOT
 		\${$tname}['{$rp_field_name}'] = \${$stl_table_name}_arr[\$i]->getVar('{$fieldName}');\n
 EOT;
-				}
-			} else {
-			    $tname = $tableName;
-				$fieldElement = $fields[$f]->getVar('field_element');
-				if ( $fields[$f]->getVar('field_main') == 1 ) {
-					$fpmf = $fieldName; // fpmf = fields parameters main field
-				}
-				// Verify if this is a textarea or dhtmltextarea
-				if (  $fieldElement == 2 || $fieldElement == 3 ) {
-					$ret .= <<<EOT
+					}
+				} else {
+					$tname = $tableName;
+					$fieldElement = $fields[$f]->getVar('field_element');
+					if ( $fields[$f]->getVar('field_main') == 1 ) {
+						$fpmf = $fieldName; // fpmf = fields parameters main field
+					}
+					// Verify if this is a textarea or dhtmltextarea
+					if (  $fieldElement == 2 || $fieldElement == 3 ) {
+						$ret .= <<<EOT
 		\${$tname}['{$rp_field_name}'] = strip_tags(\${$stl_table_name}_arr[\$i]->getVar('{$fieldName}'));\n
 EOT;
-				} else {
-					$ret .= <<<EOT
+					} else {
+						$ret .= <<<EOT
 		\${$tname}['{$rp_field_name}'] = \${$stl_table_name}_arr[\$i]->getVar('{$fieldName}');\n
 EOT;
-				}			
+					}			
+				}
 			}
 		}
 		$ret .= <<<EOT
@@ -147,7 +149,7 @@ EOT;
     }
 }
 // keywords
-{$moduleDirname}_meta_keywords(xoops_getModuleOption('keywords', \$dirname) .', '. implode(', ', \$keywords));
+{$moduleDirname}_meta_keywords(\${$moduleDirname}->getConfig('keywords').', '. implode(', ', \$keywords));
 unset(\$keywords);
 // description
 {$moduleDirname}_meta_description({$language}{$stu_table_name}_DESC);

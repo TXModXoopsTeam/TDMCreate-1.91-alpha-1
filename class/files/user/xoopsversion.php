@@ -363,23 +363,22 @@ EOT;
 EOT;
         $fields = $this->getTableFields($table->getVar('table_id'));
 		foreach (array_keys($fields) as $f) 
-		{			
-			$fieldElement = $fields[$f]->getVar('field_element');	
-		}
-		if( $fieldElement == 3 ) {
-			$ret .= <<<EOT
+		{		
+			if( $fields[$f]->getVar('field_element') == 3 ) {
+				$ret .= <<<EOT
 // Editor
 xoops_load('xoopseditorhandler');
-\$editor_handler = XoopsEditorHandler::getInstance();
+\$editorHandler = XoopsEditorHandler::getInstance();
 \$modversion['config'][] = array(
     'name' => "{$moduleDirname}_editor",
     'title' => "{$language}EDITOR",
     'description' => "{$language}EDITOR_DESC",
     'formtype' => "select",
     'valuetype' => "text",
-    'options' => array_flip(\$editor_handler->getList()),
+    'options' => array_flip(\$editorHandler->getList()),
     'default' => "dhtml");\n\n
 EOT;
+			}
 		}
 		if ( $module->getVar('mod_permissions') == 1 ) {
 			$ret .= <<<EOT
@@ -427,9 +426,11 @@ EOT;
     'default' => "{$moduleDirname}, {$keyword}");\n
 EOT;
 		unset($this->keywords);
-		if( $fieldElement == 9 )
-		{
-			$ret .= <<<EOT
+		foreach (array_keys($fields) as $f) 
+		{		
+			$fieldElement = $fields[$f]->getVar('field_element');
+			if(( $fieldElement == 9 ) || ( $fieldElement == 10 )) {
+				$ret .= <<<EOT
 \n//Uploads : maxsize of image
 \$modversion['config'][] = array(
     'name' => "maxsize",
@@ -451,6 +452,7 @@ EOT;
                        "jpeg" => "image/jpeg","jpg" => "image/jpg","jpe" => "image/jpe",
 					   "png" => "image/png"));\n
 EOT;
+			}
 		}
 		if ($table->getVar('table_admin') == 1) {
 			$ret .= <<<EOT
@@ -539,7 +541,7 @@ EOT;
 	'name' => "category",
 	'title' => {$language}CATEGORY_NOTIFY,
 	'description' => {$language}CATEGORY_NOTIFY_DESC,
-	'subscribe_from' => array('viewcat.php', 'singlefile.php'),
+	'subscribe_from' => array({$notify_file}),
 	'item_name' => "cid",
 	'allow_bookmark' => 1);
 

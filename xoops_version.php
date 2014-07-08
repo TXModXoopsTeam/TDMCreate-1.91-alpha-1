@@ -90,7 +90,7 @@ $modversion['tables'][8] = "tdmcreate_fieldkey";
 $modversion['tables'][9] = "tdmcreate_fieldelements";
 // Scripts to run upon installation or update
 $modversion['onInstall'] = "include/install.php";
-//$modversion['onUpdate'] = "include/update.php";
+$modversion['onUpdate']  = "include/update.php";
 // Menu
 $modversion['hasMain'] = 0;
 // Config

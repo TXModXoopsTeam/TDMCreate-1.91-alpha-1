@@ -71,9 +71,11 @@ EOT;
 		{
 			$fieldName = $fields[$f]->getVar('field_name');			
 			$lang_stu_field_name = $language.strtoupper($fieldName);
-			$ret .= <<<EOT
+			if( $fields[$f]->getVar('field_user') == 1 ) {	
+				$ret .= <<<EOT
 			<th class="center"><{\$smarty.const.{$lang_stu_field_name}}></th>\n
 EOT;
+			}
 		}
 		$ret .= <<<EOT
 		</tr>
@@ -107,27 +109,29 @@ EOT;
 					$rp_field_name = substr($fieldName, $str + 1, strlen($fieldName));
 				} 		
 			}
-			switch( $field_element ) { 			    
-				case 8:			
-					$ret .= <<<EOT
+			if( $fields[$f]->getVar('field_user') == 1 ) {
+				switch( $field_element ) { 			    
+					case 8:							
+						$ret .= <<<EOT
 				<td class="center"><span style="background-color: <{\$list.{$rp_field_name}}>;">\t\t</span></td>\n
 EOT;
-				break;
-				case 9:
-					$ret .= <<<EOT
+					break;
+					case 9:
+						$ret .= <<<EOT
 				<td class="center"><img src="<{xoModuleIcons32}><{\$list.{$rp_field_name}}>" alt="{$tableName}"></td>\n
 EOT;
-				break;
-				case 10:
-					$ret .= <<<EOT
+					break;
+					case 10:
+						$ret .= <<<EOT
 				<td class="center"><img src="<{\${$moduleDirname}_upload_url}>/images/{$tableName}/<{\$list.{$rp_field_name}}>" alt="{$tableName}"></td>\n
 EOT;
-				break;
-				default:
-					$ret .= <<<EOT
+					break;
+					default:
+						$ret .= <<<EOT
 				<td class="center"><{\$list.{$rp_field_name}}></td>\n
 EOT;
-				break;
+					break;
+				}
 			}			
 		}
 		$ret .= <<<EOT
@@ -157,23 +161,25 @@ EOT;
 		{
 			$fieldName = $fields[$f]->getVar('field_name');
 			$field_element = $fields[$f]->getVar('field_element');			
-			switch( $field_element ) { 			    
-				case 8:			
-					$ret .= <<<EOT
+			if( $fields[$f]->getVar('field_user') == 1 ) {	
+				switch( $field_element ) { 			    
+					case 8:			
+						$ret .= <<<EOT
 			<td class="center"><span style="background-color: <{\$list.{$fieldName}}>;"></span></td>\n
 EOT;
-				break;
-				case 9:
-					$ret .= <<<EOT
+					break;
+					case 9:
+						$ret .= <<<EOT
 			<td class="center"><img src="<{\${$moduleDirname}_upload_url}>/images/{$tableName}/<{\$list.{$fieldName}}>" alt="{$tableName}"></td>\n
 EOT;
-				break;
-				default:
-					$ret .= <<<EOT
+					break;
+					default:
+						$ret .= <<<EOT
 			<td class="center"><{\$list.{$fieldName}}></td>\n
 EOT;
-				break;
-			}			
+					break;
+				}	
+			}
 		}
 		$ret .= <<<EOT
 			</tr>

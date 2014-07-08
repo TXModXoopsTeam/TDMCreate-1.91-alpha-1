@@ -101,23 +101,25 @@ EOT;
 		{	    
 			$fieldName = $fields[$f]->getVar('field_name');
 			$rp_field_name = $fieldName;
-			// Verify if table_fieldname is not empty
-			if(!empty($tableFieldname)) {
-				if(strpos($fieldName, '_')) {       
-					$str = strpos($fieldName, '_'); 
-					if($str !== false){ 
-						$rp_field_name = substr($fieldName, $str + 1, strlen($fieldName));
-					} 		
+			if( $fields[$f]->getVar('field_block') == 1 ) {
+				// Verify if table_fieldname is not empty
+				if(!empty($tableFieldname)) {
+					if(strpos($fieldName, '_')) {       
+						$str = strpos($fieldName, '_'); 
+						if($str !== false){ 
+							$rp_field_name = substr($fieldName, $str + 1, strlen($fieldName));
+						} 		
+					}
+					$tname = $tableFieldname;
+					$ret .= <<<EOT
+		\${$tname}['{$rp_field_name}'] = \${$tableName}_arr[\$i]->getVar('{$fieldName}');\n
+EOT;
+				} else {
+					$tname = $tableName;
+					$ret .= <<<EOT
+		\${$tname}['{$rp_field_name}'] = \${$tableName}_arr[\$i]->getVar('{$fieldName}');\n
+EOT;
 				}
-				$tname = $tableFieldname;
-				$ret .= <<<EOT
-		\${$tname}['{$rp_field_name}'] = \${$tableName}_arr[\$i]->getVar('{$fieldName}');\n
-EOT;
-		    } else {
-				$tname = $tableName;
-				$ret .= <<<EOT
-		\${$tname}['{$rp_field_name}'] = \${$tableName}_arr[\$i]->getVar('{$fieldName}');\n
-EOT;
 			}
 		}
 		$ret .= <<<EOT

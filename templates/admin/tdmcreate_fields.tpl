@@ -34,15 +34,15 @@
                 <td class='center'><u class='bold'><{$table.name}></u></td>
                 <td class='center'><img src="<{xoModuleIcons32}><{$table.image}>" alt="<{$table.name}>" height="22" /></td>
     	        <td class='center bold'><{$table.nbfields}></td>
-    	        <td class='center'><img src="<{$modPathIcon16}>/nb_fields.png" /></td>
-                <td class='center'><img src="<{$modPathIcon16}>/nb_fields.png" /></td>
-                <td class='center'><img src="<{$modPathIcon16}>/nb_fields.png" /></td>
-                <td class='center'><img src="<{$modPathIcon16}>/nb_fields.png" /></td>
-                <td class='center'><img src="<{$modPathIcon16}>/nb_fields.png" /></td>
-                <td class='center'><img src="<{$modPathIcon16}>/nb_fields.png" /></td>
-                <td class='center'><img src="<{$modPathIcon16}>/nb_fields.png" /></td>
-                <td class='center'><img src="<{$modPathIcon16}>/nb_fields.png" /></td>
-                <td class='center'><img src="<{$modPathIcon16}>/nb_fields.png" /></td>
+    	        <td class='center'><img src="<{$modPathIcon16}>/fields.png" /></td>
+                <td class='center'><img src="<{$modPathIcon16}>/fields.png" /></td>
+                <td class='center'><img src="<{$modPathIcon16}>/fields.png" /></td>
+                <td class='center'><img src="<{$modPathIcon16}>/fields.png" /></td>
+                <td class='center'><img src="<{$modPathIcon16}>/fields.png" /></td>
+                <td class='center'><img src="<{$modPathIcon16}>/fields.png" /></td>
+                <td class='center'><img src="<{$modPathIcon16}>/fields.png" /></td>
+                <td class='center'><img src="<{$modPathIcon16}>/fields.png" /></td>
+                <td class='center'><img src="<{$modPathIcon16}>/fields.png" /></td>
     	        <td class='xo-actions txtcenter width6'>
 		    <a href="tables.php?op=edit&amp;table_mid=<{$table.mid}>&amp;table_id=<{$table.id}>" title="<{$smarty.const._AM_TDMCREATE_EDIT_TABLE}>">
                        <img src="<{xoModuleIcons16 edit.png}>" alt="<{$smarty.const._AM_TDMCREATE_EDIT_TABLE}>" />
