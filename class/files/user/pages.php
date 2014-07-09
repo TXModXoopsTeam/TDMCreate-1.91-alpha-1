@@ -16,19 +16,24 @@
  * @package         tdmcreate
  * @since           2.5.0
  * @author          Txmod Xoops http://www.txmodxoops.org
- * @version         $Id: user_pages.php 12258 2014-01-02 09:33:29Z timgno $
+ * @version         $Id: pages.php 12258 2014-01-02 09:33:29Z timgno $
  */
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
-
+require_once 'objects.php';
 class UserPages extends TDMCreateFile
 {	
+	/*
+	* @var string
+	*/
+	private $userobjects = null;
 	/*
 	*  @public function constructor
 	*  @param null
 	*/
 	public function __construct() { 
 		parent::__construct();
-		$this->tdmcfile = TDMCreateFile::getInstance();		
+		$this->tdmcfile = TDMCreateFile::getInstance();	
+		$this->userobjects = UserObjects::getInstance();
 	}	
 	/*
 	*  @static function &getInstance
@@ -62,9 +67,10 @@ class UserPages extends TDMCreateFile
 		$table = $this->getTable();        		
 		$tableName = $table->getVar('table_name');
 		$tableFieldname = $table->getVar('table_fieldname');
-		$stu_mod_name = strtoupper($moduleDirname);
-        $stu_table_name = strtoupper($tableName);
-        $stl_table_name = strtolower($tableName);
+		$tableAutoincrement = $table->getVar('table_autoincrement');		
+		$stuModuleDirname = strtoupper($moduleDirname);
+        $stuTableName = strtoupper($tableName);
+        $stlTableName = strtolower($tableName);
 		$ret = <<<EOT
 \ninclude_once 'header.php';
 \$GLOBALS['xoopsOption']['template_main'] = '{$moduleDirname}_{$tableName}.tpl';	
@@ -74,16 +80,16 @@ include_once XOOPS_ROOT_PATH . '/header.php';
 // Define Stylesheet
 \$xoTheme->addStylesheet( \$style );
 // Get Handler
-\${$stl_table_name}Handler =& \${$moduleDirname}->getHandler('{$stl_table_name}');
+\${$stlTableName}Handler =& \${$moduleDirname}->getHandler('{$stlTableName}');
 //
-\$GLOBALS['xoopsTpl']->assign('{$moduleDirname}_upload_url', {$stu_mod_name}_UPLOAD_URL);
+\$GLOBALS['xoopsTpl']->assign('{$moduleDirname}_upload_url', {$stuModuleDirname}_UPLOAD_URL);
 //
 \$criteria = new CriteriaCompo();
-\${$stl_table_name}_count = \${$stl_table_name}Handler->getCount(\$criteria);
-\${$stl_table_name}_arr = \${$stl_table_name}Handler->getAll(\$criteria);
+\${$stlTableName}_count = \${$stlTableName}Handler->getCount(\$criteria);
+\${$stlTableName}_arr = \${$stlTableName}Handler->getAll(\$criteria);
 \$keywords = array();
-if (\${$stl_table_name}_count > 0) {
-	foreach (array_keys(\${$stl_table_name}_arr) as \$i) 
+if (\${$stlTableName}_count > 0) {
+	foreach (array_keys(\${$stlTableName}_arr) as \$i) 
 	{\n
 EOT;
 		// Fields
@@ -92,59 +98,45 @@ EOT;
 		{
 			$fieldName = $fields[$f]->getVar('field_name');
 			$rp_field_name = $fieldName;
-			if( $fields[$f]->getVar('field_user') == 1 ) {
-				// Verify if table_fieldname is not empty
-				if(!empty($tableFieldname)) {				
-					if(strpos($fieldName, '_')) {       
-						$str = strpos($fieldName, '_'); 
-						if($str !== false){ 
-							$rp_field_name = substr($fieldName, $str + 1, strlen($fieldName));
-						} 		
-					}
-					$lp_field_name = substr($fieldName, 0, strpos($fieldName, '_'));
-					$tname = $lp_field_name;
-					$fieldElement = $fields[$f]->getVar('field_element');
-					if ( $fields[$f]->getVar('field_main') == 1 ) {
-						$fpmf = $fieldName; // fpmf = fields parameters main field
-					}
-					// Verify if this is a textarea or dhtmltextarea
-					if (  $fieldElement == 2 || $fieldElement == 3 ) {
-						$ret .= <<<EOT
-		\${$tname}['{$rp_field_name}'] = strip_tags(\${$stl_table_name}_arr[\$i]->getVar('{$fieldName}'));\n
-EOT;
-					} else {
-						$ret .= <<<EOT
-		\${$tname}['{$rp_field_name}'] = \${$stl_table_name}_arr[\$i]->getVar('{$fieldName}');\n
-EOT;
-					}
-				} else {
-					$tname = $tableName;
-					$fieldElement = $fields[$f]->getVar('field_element');
-					if ( $fields[$f]->getVar('field_main') == 1 ) {
-						$fpmf = $fieldName; // fpmf = fields parameters main field
-					}
-					// Verify if this is a textarea or dhtmltextarea
-					if (  $fieldElement == 2 || $fieldElement == 3 ) {
-						$ret .= <<<EOT
-		\${$tname}['{$rp_field_name}'] = strip_tags(\${$stl_table_name}_arr[\$i]->getVar('{$fieldName}'));\n
-EOT;
-					} else {
-						$ret .= <<<EOT
-		\${$tname}['{$rp_field_name}'] = \${$stl_table_name}_arr[\$i]->getVar('{$fieldName}');\n
-EOT;
-					}			
-				}
+			// Verify if table_fieldname is not empty
+			$lpFieldName = !empty($tableFieldname) ? substr($fieldName, 0, strpos($fieldName, '_')) : $tableName;
+			if(strpos($fieldName, '_')) {       
+				$str = strpos($fieldName, '_'); 
+				if($str !== false){ 
+					$rpFieldName = substr($fieldName, $str + 1, strlen($fieldName));
+				} 		
+			}	
+			if ( $fields[$f]->getVar('field_main') == 1 ) {
+				$fpmf = $fieldName; // fpmf = fields parameters main field
 			}
+			$fieldElement = $fields[$f]->getVar('field_element');				
+			if( ($fields[$f]->getVar('field_user') == 1) || ($tableAutoincrement == 1) ) {	
+				switch($fieldElement) {
+					case 2:
+					case 3:
+						$ret .= $this->userobjects->getTextAreaGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName);
+					break;
+					case 7:
+						$ret .= $this->userobjects->getSelectUserGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName);
+					break;						
+					case 12:
+						$ret .= $this->userobjects->getTextDateSelectGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName);
+					break;
+					default:
+						$ret .= $this->userobjects->getSimpleGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName);
+					break;
+				}				
+			}			
 		}
 		$ret .= <<<EOT
-		\$GLOBALS['xoopsTpl']->append('{$stl_table_name}', \${$tname});
-		\$keywords[] = \${$stl_table_name}_arr[\$i]->getVar('{$fpmf}');
-        unset(\${$tname});
+		\$GLOBALS['xoopsTpl']->append('{$stlTableName}', \${$lpFieldName});
+		\$keywords[] = \${$stlTableName}_arr[\$i]->getVar('{$fpmf}');
+        unset(\${$lpFieldName});
     }
 	// Display Navigation
-    if (\${$stl_table_name}_count > \$limit) {
+    if (\${$stlTableName}_count > \$limit) {
 	    include_once XOOPS_ROOT_PATH . '/class/pagenav.php';
-        \$nav = new XoopsPageNav(\${$stl_table_name}_count, \$limit, \$start, 'start');
+        \$nav = new XoopsPageNav(\${$stlTableName}_count, \$limit, \$start, 'start');
         \$GLOBALS['xoopsTpl']->assign('pagenav', \$nav->renderNav(4));
     }
 }
@@ -152,9 +144,9 @@ EOT;
 {$moduleDirname}_meta_keywords(\${$moduleDirname}->getConfig('keywords').', '. implode(', ', \$keywords));
 unset(\$keywords);
 // description
-{$moduleDirname}_meta_description({$language}{$stu_table_name}_DESC);
+{$moduleDirname}_meta_description({$language}{$stuTableName}_DESC);
 //
-\$GLOBALS['xoopsTpl']->assign('xoops_mpageurl', {$stu_mod_name}_URL.'/{$stl_table_name}.php');
+\$GLOBALS['xoopsTpl']->assign('xoops_mpageurl', {$stuModuleDirname}_URL.'/{$stlTableName}.php');
 //
 include_once 'footer.php';	
 EOT;

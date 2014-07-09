@@ -2,7 +2,11 @@
 2014/01/02: Version 1.91 alpha 1
 =================================
 
-- Under Construction
+- Refactoring
+- Rewritten from scratch
+- Added templates admin
+- Added fields table
+- Added more parameters in fields form
 
 =================================
 2013/05/12: Version 1.39 RC 1

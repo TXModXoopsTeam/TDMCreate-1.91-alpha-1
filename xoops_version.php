@@ -24,12 +24,12 @@ $dirname = basename( dirname( __FILE__ ) ) ;
 $modversion['name'] = "{$dirname}";
 $modversion['version'] = 1.91;
 $modversion['description'] = _MI_TDMCREATE_DESC;
-$modversion['author'] = 'Xoops TDM';
+$modversion['author'] = "Xoops TDM";
 $modversion['author_website_url'] = "http://www.xoops.org/";
 $modversion['author_website_name'] = "Xoops Team Developers Module";
 $modversion['credits'] = "Mamba(Xoops), Timgno(Txmod Xoops)";
-$modversion['help'] = 'page=help';
-$modversion['license'] = 'GNU GPL 2.0 or later';
+$modversion['help'] = "page=help";
+$modversion['license'] = "GNU GPL 2.0 or later";
 $modversion['license_url'] = "www.gnu.org/licenses/gpl-2.0.html/";
 $modversion['release_info'] = "README";
 $modversion['release_file'] = XOOPS_URL."/modules/{$dirname}/docs/readme.txt";
@@ -38,16 +38,16 @@ $modversion['manual_file'] = XOOPS_URL."/modules/{$dirname}/docs/manual.txt";
 $modversion['image'] = "assets/images/logo.png";
 $modversion['dirname'] = "{$dirname}";
 
-$modversion['dirmoduleadmin'] = '/Frameworks/moduleclasses/moduleadmin';
-$modversion['sysicons16'] = '../../Frameworks/moduleclasses/icons/16';
-$modversion['sysicons32'] = '../../Frameworks/moduleclasses/icons/32';
+$modversion['dirmoduleadmin'] = "/Frameworks/moduleclasses/moduleadmin";
+$modversion['sysicons16'] = "../../Frameworks/moduleclasses/icons/16";
+$modversion['sysicons32'] = "../../Frameworks/moduleclasses/icons/32";
 // Local icons
-$modversion['modicons16'] = XOOPS_URL . '/modules/'.$dirname.'/assets/images/icons/16';
-$modversion['modicons32'] = XOOPS_URL . '/modules/'.$dirname.'/assets/images/icons/32';
+$modversion['modicons16'] = XOOPS_URL . "/modules/{$dirname}/assets/images/icons/16";
+$modversion['modicons32'] = XOOPS_URL . "/modules/{$dirname}/assets/images/icons/32";
 
 $modversion['targetdir'] = XOOPS_ROOT_PATH . "/modules/{$dirname}/modules/";
 
-$modversion['release_date'] = '2014/02/07';
+$modversion['release_date'] = "2014/02/07";
 $modversion['module_website_url'] = "http://www.xoops.org/";
 $modversion['module_website_name'] = "XOOPS";
 $modversion['module_status'] = "Alpha 1";
@@ -59,8 +59,8 @@ $modversion['min_db'] = array('mysql' => '5.0.7', 'mysqli' => '5.0.7');
 //about
 $modversion['demo_site_url'] = "http://www.xoops.org/";
 $modversion['demo_site_name'] = "Xoops TDM";
-$modversion['forum_site_url'] = "http://xoops.org/modules/newbb/viewtopic.php?post_id=352671";
-$modversion['forum_site_name'] = "TDMCreate - testers needed";
+$modversion['forum_site_url'] = "http://xoops.org/modules/newbb/viewtopic.php?post_id=358118";
+$modversion['forum_site_name'] = "TDMCreate 1.91 alpha 1 for Testing";
 $modversion['module_website_name'] = "Xoops TDM";
 // Admin things
 $modversion['system_menu'] = 1;
