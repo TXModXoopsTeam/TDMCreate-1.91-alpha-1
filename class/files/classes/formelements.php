@@ -272,25 +272,30 @@ EOT;
 	*  @private function getXoopsFormTable
 	*  @param string $language
 	*  @param string $moduleDirname
-	*  @param string $tableName
+	*  @param string $table
 	*  @param string $fields
 	*  @param string $required
 	*/
 	private function getXoopsFormTable($language, $moduleDirname, $tableName, $fields, $required = 'false') 
 	{    
-	    $fieldName = '';
-		$ucf_table_name = ucfirst($tableName);
+		$ucfTableName = ucfirst($tableName);
 		foreach(array_keys($fields) as $f) 
 		{			
-			if(($fields[$f]->getVar('field_parent') == 1)) {
+			if($fields[$f]->getVar('field_parent') == 1) {
 				$fieldName = $fields[$f]->getVar('field_name');
-			}						
-		}
+				$field_element = $fields[$f]->getVar('field_element');
+				if($field_element > 12) {					
+					$fieldelement = $this->tdmcreate->getHandler('fieldelements')->get($field_element);
+					$fieldelementName = $fieldelement->getVar('fieldelement_name');
+					$rpFieldelementName = strtolower(str_replace('Table : ', '', $fieldelementName));						
+				}
+			}
+		}		
 		$ret = <<<EOT
-		// Form Topic {$ucf_table_name}
-		\${$tableName}Handler =& \$this->{$moduleDirname}->getHandler('{$tableName}');				
+		// Form Topic {$ucfTableName}
+		\${$rpFieldelementName}Handler =& \$this->{$moduleDirname}->getHandler('{$rpFieldelementName}');				
 		\${$fieldName}_select = new XoopsFormSelect({$language}, '{$fieldName}', \$this->getVar('{$fieldName}'));
-		\${$fieldName}_select->addOptionArray(\${$tableName}Handler->getList());
+		\${$fieldName}_select->addOptionArray(\${$rpFieldelementName}Handler->getList());
 		\$form->addElement( \${$fieldName}_select{$required} );\n
 EOT;
 		return $ret;
@@ -299,14 +304,14 @@ EOT;
 	*  @private function getXoopsFormTopic
 	*  @param string $language
 	*  @param string $moduleDirname
-	*  @param string $tableName
+	*  @param string $table
 	*  @param string $fields
 	*  @param string $required
 	*/
 	private function getXoopsFormTopic($language, $moduleDirname, $table, $fields, $required = 'false') 
 	{    
 		$tableName = $table->getVar('table_name');
-		$ucf_table_name = ucfirst($tableName);
+		$ucfTableName = ucfirst($tableName);
 		foreach(array_keys($fields) as $f) 
 		{	
 			$fieldName = $fields[$f]->getVar('field_name');			
@@ -321,12 +326,12 @@ EOT;
 			}			
 		}
 		$ret = <<<EOT
-		// Form Topic {$ucf_table_name}
-		include_once(XOOPS_ROOT_PATH . '/class/tree.php');				
-		\${$tableName}Handler = \$this->{$moduleDirname}->getHandler('{$tableName}');
+		// Form Topic {$ucfTableName}						
+		//\${$tableName}Handler = \$this->{$moduleDirname}->getHandler('{$tableName}');
 		\$criteria = new CriteriaCompo();
 		\${$tableName} = \${$tableName}Handler->getObjects( \$criteria );
 		if(\${$tableName}) {
+			include_once(XOOPS_ROOT_PATH . '/class/tree.php');
 			\${$tableName}_tree = new XoopsObjectTree( \${$tableName}, '{$field_id}', '{$field_pid}' );
 			\${$field_pid} = \${$tableName}_tree->makeSelBox( '{$field_pid}', '{$field_main}', '--', \$this->getVar('{$field_pid}', 'e' ), true );
 			\$form->addElement( new XoopsFormLabel ( {$language}, \${$field_pid} ){$required} );

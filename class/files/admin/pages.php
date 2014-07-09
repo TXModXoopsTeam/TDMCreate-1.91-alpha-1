@@ -116,31 +116,37 @@ EOT;
 		foreach(array_keys($fields) as $f) 
 		{
 			$fieldName = $fields[$f]->getVar('field_name');
-			$rp_field_name = $fieldName;
-			if( ($fields[$f]->getVar('field_admin') == 1) || ($tableAutoincrement == 1) ) {
-				// Verify if table_fieldname is not empty
-				if(!empty($tableFieldname)) {
-					if(strpos($fieldName, '_')) {       
-						$str = strpos($fieldName, '_'); 
-						if($str !== false){ 
-							$rp_field_name = substr($fieldName, $str + 1, strlen($fieldName));
-						} 		
-					}
-					$lp_field_name = substr($fieldName, 0, strpos($fieldName, '_'));
-					$ret .= <<<EOT
-				\${$lp_field_name}['{$rp_field_name}'] = \${$tableName}_arr[\$i]->getVar('{$fieldName}');\n
-EOT;
-				} else {
-					$lp_field_name = $tableName;
-					$ret .= <<<EOT
-				\${$lp_field_name}['{$rp_field_name}'] = \${$tableName}_arr[\$i]->getVar('{$fieldName}');\n
-EOT;
-				}
+			$rpFieldName = $fieldName;			
+			// Verify if table_fieldname is not empty
+			$lpFieldName = !empty($tableFieldname) ? substr($fieldName, 0, strpos($fieldName, '_')) : $tableName;				
+			if(strpos($fieldName, '_')) {       
+				$str = strpos($fieldName, '_'); 
+				if($str !== false){ 
+					$rpFieldName = substr($fieldName, $str + 1, strlen($fieldName));
+				} 		
+			}				
+			$fieldElement = $fields[$f]->getVar('field_element');				
+			if( ($fields[$f]->getVar('field_admin') == 1) || ($tableAutoincrement == 1) ) {	
+				switch($fieldElement) {
+					case 2:
+					case 3:
+						$ret .= $this->adminobjects->getTextAreaGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName);
+					break;
+					case 7:
+						$ret .= $this->adminobjects->getSelectUserGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName);
+					break;						
+					case 12:
+						$ret .= $this->adminobjects->getTextDateSelectGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName);
+					break;
+					default:
+						$ret .= $this->adminobjects->getSimpleGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName);
+					break;
+				}				
 			}
 		}
 			$ret .= <<<EOT
-				\$GLOBALS['xoopsTpl']->append('{$tableName}_list', \${$lp_field_name});
-                unset(\${$lp_field_name});
+				\$GLOBALS['xoopsTpl']->append('{$tableName}_list', \${$lpFieldName});
+                unset(\${$lpFieldName});
 			}\n
 EOT;
 			$ret .= <<<EOT
@@ -211,19 +217,19 @@ EOT;
 				switch($fieldElement) {
 					case 4:
 					case 5:
-						$ret .= $this->adminobjects->getCheckBoxOrRadioYN($tableName, $fieldName);
+						$ret .= $this->adminobjects->getCheckBoxOrRadioYNSetVar($tableName, $fieldName);
 					break;
 					case 9:
-						$ret .= $this->adminobjects->getImageList($moduleDirname, $tableName, $fieldName);
+						$ret .= $this->adminobjects->getImageListSetVar($moduleDirname, $tableName, $fieldName);
 					break;
 					case 10:
-						$ret .= $this->adminobjects->getUploadImage($moduleDirname, $tableName, $fieldName);
+						$ret .= $this->adminobjects->getUploadImageSetVar($moduleDirname, $tableName, $fieldName);
 					break;
 					case 11:
-						$ret .= $this->adminobjects->getUploadFile($moduleDirname, $tableName, $fieldName);
+						$ret .= $this->adminobjects->getUploadFileSetVar($moduleDirname, $tableName, $fieldName);
 					break;
 					case 12:
-						$ret .= $this->adminobjects->getTextDateSelect($tableName, $fieldName);
+						$ret .= $this->adminobjects->getTextDateSelectSetVar($tableName, $fieldName);
 					break;
 					default:
 						$ret .= $this->adminobjects->getSimpleSetVar($tableName, $fieldName);

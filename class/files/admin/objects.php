@@ -47,11 +47,11 @@ EOT;
 		return $ret;
 	}
 	/*
-	*  @public function getTextDateSelect
+	*  @public function getTextDateSelectSetVar
 	*  @param string $tableName
 	*  @param string $fieldName
 	*/
-	public function getTextDateSelect($tableName, $fieldName) {    
+	public function getTextDateSelectSetVar($tableName, $fieldName) {    
 		$ret = <<<EOT
 		// Set Var {$fieldName}
 		\${$tableName}Obj->setVar('{$fieldName}', strtotime(\$_POST['{$fieldName}']));\n
@@ -59,11 +59,11 @@ EOT;
 		return $ret;
 	}
 	/*
-	*  @public function getCheckBoxOrRadioYN
+	*  @public function getCheckBoxOrRadioYNSetVar
 	*  @param string $tableName
 	*  @param string $fieldName
 	*/
-	public function getCheckBoxOrRadioYN($tableName, $fieldName) {    
+	public function getCheckBoxOrRadioYNSetVar($tableName, $fieldName) {    
 		$ret = <<<EOT
 		// Set Var {$fieldName}
 		\${$tableName}Obj->setVar('{$fieldName}', ((\$_REQUEST['{$fieldName}'] == 1) ? '1' : '0'));\n
@@ -71,12 +71,12 @@ EOT;
 		return $ret;
 	}
 	/*
-	*  @public function getImageList
+	*  @public function getImageListSetVar
 	*  @param string $moduleDirname
 	*  @param string $tableName
 	*  @param string $fieldName
 	*/
-	public function getImageList($moduleDirname, $tableName, $fieldName) {    
+	public function getImageListSetVar($moduleDirname, $tableName, $fieldName) {    
 		$ret = <<<EOT
 		// Set Var {$fieldName}
 		include_once XOOPS_ROOT_PATH.'/class/uploader.php';
@@ -99,12 +99,12 @@ EOT;
 		return $ret;
 	}
 	/*
-	*  @public function getUploadImage
+	*  @public function getUploadImageSetVar
 	*  @param string $moduleDirname
 	*  @param string $tableName
 	*  @param string $fieldName
 	*/
-	public function getUploadImage($moduleDirname, $tableName, $fieldName) {    
+	public function getUploadImageSetVar($moduleDirname, $tableName, $fieldName) {    
 		$stuModuleDirname = strtoupper($moduleDirname);
 		$ret = <<<EOT
 		// Set Var {$fieldName}
@@ -128,12 +128,12 @@ EOT;
 		return $ret;
 	}
 	/*
-	*  @public function getUploadFile
+	*  @public function getUploadFileSetVar
 	*  @param string $moduleDirname
 	*  @param string $tableName
 	*  @param string $fieldName
 	*/
-	public function getUploadFile($moduleDirname, $tableName, $fieldName) {    
+	public function getUploadFileSetVar($moduleDirname, $tableName, $fieldName) {    
 		$stuModuleDirname = strtoupper($moduleDirname);
 		$ret = <<<EOT
 		// Set Var {$fieldName}
@@ -153,5 +153,61 @@ EOT;
 		}\n
 EOT;
 		return $ret;
-	}	
+	}
+	/*
+	*  @public function getSimpleGetVar
+	*  @param string $lpFieldName
+	*  @param string $rpFieldName
+	*  @param string $tableName
+	*  @param string $fieldName	
+	*/
+	public function getSimpleGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName) {    
+		$ret = <<<EOT
+\t\t\t\t// Get Var {$fieldName}
+\t\t\t\t\${$lpFieldName}['{$rpFieldName}'] = \${$tableName}_arr[\$i]->getVar('{$fieldName}');\n
+EOT;
+		return $ret;
+	}
+	/*
+	*  @public function getTextAreaGetVar
+	*  @param string $lpFieldName
+	*  @param string $rpFieldName
+	*  @param string $tableName
+	*  @param string $fieldName	
+	*/
+	public function getTextAreaGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName) {    
+		$ret = <<<EOT
+\t\t\t\t// Get Var {$fieldName}
+\t\t\t\t\${$lpFieldName}['{$rpFieldName}'] = strip_tags(\${$tableName}_arr[\$i]->getVar('{$fieldName}'));\n
+EOT;
+		return $ret;
+	}
+	/*
+	*  @public function getSelectUserGetVar
+	*  @param string $lpFieldName
+	*  @param string $rpFieldName
+	*  @param string $tableName
+	*  @param string $fieldName	
+	*/
+	public function getSelectUserGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName) {    
+		$ret = <<<EOT
+\t\t\t\t// Get Var {$fieldName}
+\t\t\t\t\${$lpFieldName}['{$rpFieldName}'] = XoopsUser::getUnameFromId(\${$tableName}_arr[\$i]->getVar('{$fieldName}'), 's');\n
+EOT;
+		return $ret;
+	}
+	/*
+	*  @public function getTextDateSelectGetVar
+	*  @param string $lpFieldName
+	*  @param string $rpFieldName
+	*  @param string $tableName
+	*  @param string $fieldName	
+	*/
+	public function getTextDateSelectGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName) {    
+		$ret = <<<EOT
+\t\t\t\t// Get Var {$fieldName}
+\t\t\t\t\${$lpFieldName}['{$rpFieldName}'] = formatTimeStamp(\${$tableName}_arr[\$i]->getVar('{$fieldName}'), 's');\n
+EOT;
+		return $ret;
+	}
 }

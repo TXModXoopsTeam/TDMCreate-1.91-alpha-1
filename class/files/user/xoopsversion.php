@@ -518,7 +518,7 @@ EOT;
 			$tableName = $tables[$t]->getVar('table_name');
 			$count = count($tableName);
 			if($tables[$t]->getVar('table_notifications') == 1) {
-				if($t <= $count) {
+				if($t < $count) {
 					$notify_file .= "'".$tableName.".php', ";
 				} else {
 					$notify_file .= "'".$tableName.".php'";

@@ -178,8 +178,10 @@ EOT;
 	private function getHeadFunctionForm($module, $table) 
 	{    
 		$moduleDirname = $module->getVar('mod_dirname');
+		$tableName = $table->getVar('table_name');
+		$ucfTableName = ucfirst($tableName);
+		$stuTableName = strtoupper($tableName);
 		$language = $this->getLanguage($moduleDirname, 'AM');		
-		$stu_table_name = strtoupper($table->getVar('table_name'));
 		$this->formelements->initForm($module, $table);
 		$ret = <<<EOT
 	/*
@@ -193,11 +195,13 @@ EOT;
 			\$action = \$_SERVER['REQUEST_URI'];
 		}
 		// Title
-		\$title = \$this->isNew() ? sprintf({$language}{$stu_table_name}_ADD) : sprintf({$language}{$stu_table_name}_EDIT);
+		\$title = \$this->isNew() ? sprintf({$language}{$stuTableName}_ADD) : sprintf({$language}{$stuTableName}_EDIT);
 		// Get Theme Form
 		xoops_load('XoopsFormLoader');
 		\$form = new XoopsThemeForm(\$title, 'form', \$action, 'post', true);
-		\$form->setExtra('enctype="multipart/form-data"');		
+		\$form->setExtra('enctype="multipart/form-data"');
+		// {$ucfTableName} handler
+		\${$tableName}Handler =& \$this->{$moduleDirname}->getHandler('{$tableName}');
 {$this->formelements->renderElements()}
 EOT;
 		return $ret;
