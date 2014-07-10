@@ -130,7 +130,7 @@ EOT;
 				$content .= <<<EOT
 \$adminmenu[\$i]['title'] = {$language}{$menu};
 \$adminmenu[\$i]['link'] = 'admin/{$tables[$t]->getVar('table_name')}.php';
-\$adminmenu[\$i]['icon'] = \$sysPathIcon32.'/{$tables[$t]->getVar('table_image')}';\n
+\$adminmenu[\$i]['icon'] = 'assets/images/icons/32/{$tables[$t]->getVar('table_image')}';\n
 EOT;
 				//$content .= $this->getAdminMenuImagesPath($tables, $t);
 				$content .= <<<EOT

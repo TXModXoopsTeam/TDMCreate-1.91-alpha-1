@@ -106,7 +106,7 @@ class TDMCreateArchitecture extends TDMCreateStructure
 		$stlModuleAuthor = str_replace(' ', '', strtolower($module->getVar('mod_author')));
 		// Creation of the Directory in repository
 		$targetDirectory = $this->uploadPath.'/repository/'. $stlModuleDirname;			
-		$uploadImagesFolder = $this->uploadPath.'/images/repository';			
+		$uploadImagesRepository = $this->uploadPath.'/images/repository';	
 		// Creation of "module" folder
 		$this->structure->getPath($targetDirectory);
 		// Creation of "module" folder
@@ -133,7 +133,7 @@ class TDMCreateArchitecture extends TDMCreateStructure
 		$this->structure->makeDirAndCopyFile('assets/images', $indexFile, 'index.html');	
 		//Copy the logo of the module
 		$modImage = str_replace(' ', '', strtolower($module->getVar('mod_image')));
-		$this->structure->copyFile('assets/images', $uploadImagesFolder.'/'.$modImage, $modImage);				
+		$this->structure->copyFile('assets/images', $uploadImagesRepository.'/'.$modImage, $modImage);				
 		// Creation of 'images/icons' folder and index.html file - Added in Version 1.15
 		$this->structure->makeDirAndCopyFile('assets/images/icons', $indexFile, 'index.html');	
 		// Creation of "images/icons/16" folder and index.html file
@@ -141,7 +141,7 @@ class TDMCreateArchitecture extends TDMCreateStructure
 		// Creation of "images/icons/32" folder and index.html file
 		$this->structure->makeDirAndCopyFile('assets/images/icons/32', $indexFile, 'index.html');		
 		// Copy of 'module_author_logo.gif' file in uploads dir
-		$logoGifFrom = $uploadImagesFolder.'/'.$stlModuleAuthor.'_logo.gif';
+		$logoGifFrom = $uploadImagesRepository.'/'.$stlModuleAuthor.'_logo.gif';
 		if (!file_exists($logoGifFrom)) {
 			copy($logosFolder.'/'.$stlModuleAuthor.'_logo.gif', $logoGifFrom);
 		} 
@@ -203,6 +203,7 @@ class TDMCreateArchitecture extends TDMCreateStructure
 		$modId = $module->getVar('mod_id');
         $moduleDirname = $module->getVar('mod_dirname');
 		$uploadTablesIcons32 = $this->uploadPath.'/images/tables';
+		$framePathIcon32 = XOOPS_ROOT_PATH . '/Frameworks/moduleclasses/icons/32';
 		// Id of tables
 		$criteriaTables = new CriteriaCompo();
 		$criteriaTables->add(new Criteria('table_mid', $modId));		
@@ -227,9 +228,11 @@ class TDMCreateArchitecture extends TDMCreateStructure
 			// Get Table Object		
 			$table = $this->tdmcreate->getHandler('tables')->get($tableId);
 			// Copy of tables images file
-			if( file_exists($uploadTableImage = $uploadTablesIcons32.'/'.$tableImage)) {
+			if( file_exists($uploadTableImage = $uploadTablesIcons32.'/'.$tableImage )) {
 				$this->structure->copyFile('assets/images/icons/32', $uploadTableImage, $tableImage);
-			}										
+			} elseif( file_exists($uploadTableImage = $framePathIcon32.'/'.$tableImage )) {
+				$this->structure->copyFile('assets/images/icons/32', $uploadTableImage, $tableImage);
+			}									
 			// Creation of admin files
 			if ( $tableAdmin == 1) {	
 				// Admin Pages File

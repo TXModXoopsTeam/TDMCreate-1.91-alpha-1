@@ -21,7 +21,7 @@
 if (!defined('XOOPS_ROOT_PATH')){ exit(); }
 $dirname = basename( dirname( __FILE__ ) ) ;
 
-$modversion['name'] = "{$dirname}";
+$modversion['name'] = _MI_TDMCREATE_NAME;
 $modversion['version'] = 1.91;
 $modversion['description'] = _MI_TDMCREATE_DESC;
 $modversion['author'] = "Xoops TDM";
