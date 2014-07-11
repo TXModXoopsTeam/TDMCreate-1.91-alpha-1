@@ -290,6 +290,21 @@ class TDMCreateFile extends TDMCreateTableFields
 	}
 	
 	/*
+	*  @public function getRightString
+	*  @param string $string
+	*/
+	public function getRightString($string) {  
+        if(strpos($string, '_')) {       
+			$str = strpos($string, '_'); 
+			if($str !== false){ 
+				$ret = substr($string, $str + 1, strlen($string));
+				return $ret;
+			} 		
+		}		
+		return $string;
+	}
+	
+	/*
 	*  @public function getHeaderFilesComments
 	*  @param string $module
 	*  @param string $fileName

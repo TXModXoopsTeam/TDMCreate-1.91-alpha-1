@@ -70,15 +70,16 @@ class AdminHeader extends TDMCreateFile
 \nrequire_once dirname(dirname(dirname(dirname(__FILE__)))). '/include/cp_header.php';
 \$thisPath = dirname(dirname(__FILE__));
 include_once \$thisPath.'/include/common.php';
-include_once \$thisPath.'/include/functions.php';
 //\n
 EOT;
-		if ( $table->getVar('table_name') != '' ) {
-			$content .= <<<EOT
+		if (is_object($table)) {
+			if ( $table->getVar('table_name') != '' ) {
+				$content .= <<<EOT
 // Get instance of module
 \${$moduleDirname} = {$ucfModuleName}Helper::getInstance();\n
 EOT;
-		}	
+			}	
+		}
 		$content .= <<<EOT
 //
 \$sysPathIcon16 = '../' . \$xoopsModule->getInfo('sysicons16');

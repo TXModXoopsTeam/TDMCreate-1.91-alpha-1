@@ -83,11 +83,11 @@ switch ($op) {
 		} 
 		unset($nbModules);	
 		// Redirect if there aren't tables
-		$nbTables = $tdmcreate->getHandler('tables')->getCount();
+		/*$nbTables = $tdmcreate->getHandler('tables')->getCount();
 		if($nbTables == 0)  {
 			redirect_header('tables.php?op=new', 2, _AM_TDMCREATE_NOTTABLES );
 		}  
-		unset($nbTables);	
+		unset($nbTables);*/	
 		include_once TDMC_PATH . '/class/building.php';
 		$handler = TDMCreateBuilding::getInstance();
 		$form = $handler->getForm();

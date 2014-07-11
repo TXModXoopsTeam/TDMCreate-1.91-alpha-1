@@ -45,11 +45,13 @@ class AdminMenu extends TDMCreateFile
 	/*
 	*  @public function write
 	*  @param string $module
-	*  @param mixed $tables
+	*  @param object $table
+	*  @param array $tables
 	*  @param string $filename
 	*/
-	public function write($module, $tables, $filename) {    
+	public function write($module, $table, $tables, $filename) {    
 		$this->setModule($module);
+		$this->setTable($table);
 		$this->setTables($tables);
 		$this->setFileName($filename);
 	}
@@ -93,7 +95,7 @@ EOT;
 		{
 			$fieldElement = $fields[$f]->getVar('field_element');
 			switch( $fieldElement ) {				
-				case 10:
+				case 11:
 					$ret = <<<EOT
 \$adminmenu[\$i]['icon'] = 'assets/images/icons/32/{$tables[$t]->getVar('table_image')}';\n
 EOT;
@@ -113,6 +115,7 @@ EOT;
 	*/
 	public function render() {    
         $module = $this->getModule();
+		$table = $this->getTable();
 		$tables = $this->getTables();
 		$filename = $this->getFileName();
 		$moduleDirname = $module->getVar('mod_dirname');		
@@ -138,7 +141,7 @@ EOT;
 EOT;
 			}
 		}
-		if( $tablePermissions == 1 ) {
+		if (is_object($table) && $table->getVar('table_permissions') == 1) {	
 			$menu++;
 			$content .= <<<EOT
 \$adminmenu[\$i]['title'] = {$language}{$menu};

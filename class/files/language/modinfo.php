@@ -83,12 +83,12 @@ EOT;
 		foreach (array_keys($tables) as $i) 
 		{   
 			$menu++;
-			$ucf_table_name = ucfirst(str_replace('_', ' ', $tables[$i]->getVar('table_name')));			
+			$ucfTableName = ucfirst(str_replace('_', ' ', $tables[$i]->getVar('table_name')));			
 			$ret .= <<<EOT
-define('{$language}ADMENU{$menu}', "{$ucf_table_name}");\n
+define('{$language}ADMENU{$menu}', "{$ucfTableName}");\n
 EOT;
 		}
-		if ( $table->getVar('table_permissions') == 1 ) {
+		if (is_object($table) && $table->getVar('table_permissions') == 1) {
 			$menu++;
 			$ret .= <<<EOT
 define('{$language}ADMENU{$menu}', "Permissions");\n
@@ -279,7 +279,8 @@ EOT;
         $moduleDirname = $module->getVar('mod_dirname');		
 		$language = $this->getLanguage($moduleDirname, 'MI');
 		$content = $this->getHeaderFilesComments($module, $filename);
-		$content .= $this->getMain($language, $module);			
+		$content .= $this->getMain($language, $module);	
+		$content .= $this->getMenu($language, $table, $tables);		
 		if (is_object($table)) {
 			if ( $table->getVar('table_admin') == 1 ) {
 				$content .= $this->getAdmin($language);	
@@ -289,8 +290,7 @@ EOT;
 			}
 			if ( $table->getVar('table_submenu') == 1 ) {
 				$content .= $this->getSubmenu($language, $tables);
-			}
-			$content .= $this->getMenu($language, $table, $tables);
+			}			
 			$content .= $this->getBlocks($language, $tables);
 			$content .= $this->getConfig($language, $table);
 			if ( $table->getVar('table_notifications') == 1 ) 

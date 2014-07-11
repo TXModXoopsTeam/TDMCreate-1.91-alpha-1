@@ -62,8 +62,8 @@ class IncludeCommentFunctions extends TDMCreateFile
 		$table = $this->getTable();
 		$moduleDirname = $module->getVar('mod_dirname');
 		$tableName = $table->getVar('table_name');
-		$ucf_module_dirname = ucfirst($moduleDirname);
-		$ucf_table_name = ucfirst($tableName);
+		$ucfModuleDirname = ucfirst($moduleDirname);
+		$ucfTableName = ucfirst($tableName);
 		$filename = $this->getFileName();
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= <<<EOT
@@ -71,7 +71,7 @@ defined('XOOPS_ROOT_PATH') or die('Restricted access');
 function {$moduleDirname}_com_update(\$itemId, \$itemNumb) {
 	\$itemId = intval(\$itemId);
 	\$itemNumb = intval(\$itemNumb);
-	\$article = new {$ucf_module_dirname}{$ucf_table_name}(\$itemId);
+	\$article = new {$ucfModuleDirname}{$ucfTableName}(\$itemId);
 	if (!\$article->updateComments(\$itemNumb)) {
 		return false;
 	}

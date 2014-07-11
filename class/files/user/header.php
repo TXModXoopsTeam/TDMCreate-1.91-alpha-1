@@ -58,17 +58,16 @@ class UserHeader extends TDMCreateFile
 		$module = $this->getModule();
 		$moduleDirname = $module->getVar('mod_dirname');
 		$filename = $this->getFileName();
-		$stu_mod_name = strtoupper($moduleDirname);
-        $ucf_mod_name = ucfirst($moduleDirname);			
+		$stuModuleDirname = strtoupper($moduleDirname);
+        $ucfModuleDirname = ucfirst($moduleDirname);			
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= <<<EOT
 require_once dirname(dirname(dirname(__FILE__))) . '/mainfile.php';
 \$dirname = \$GLOBALS['xoopsModule']->getVar('dirname');
 \$pathname = XOOPS_ROOT_PATH. '/modules/'.\$dirname;
 include_once \$pathname . '/include/common.php';
-include_once \$pathname . '/include/functions.php';
 \$myts =& MyTextSanitizer::getInstance(); 
-\$style = {$stu_mod_name}_URL . '/assets/css/style.css';
+\$style = {$stuModuleDirname}_URL . '/assets/css/style.css';
 if(file_exists(\$style)) { return true; }
 //
 \$sysPathIcon16 = \$GLOBALS['xoopsModule']->getInfo('sysicons16');
@@ -81,7 +80,7 @@ if(file_exists(\$style)) { return true; }
 xoops_loadLanguage('modinfo', \$dirname);
 xoops_loadLanguage('main', \$dirname);
 //
-\${$moduleDirname} = {$ucf_mod_name}Helper::getInstance();
+\${$moduleDirname} = {$ucfModuleDirname}Helper::getInstance();
 EOT;
 		$this->tdmcfile->create($moduleDirname, '/', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();

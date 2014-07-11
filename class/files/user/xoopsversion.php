@@ -140,11 +140,7 @@ defined('XOOPS_ROOT_PATH') or die('Restricted access');
 	'module_website_url' => "{$module->getVar('mod_website_url')}",
 	'module_website_name' => "{$module->getVar('mod_website_name')}",
 	'release' => "{$module->getVar('mod_release')}",
-	'module_status' => "{$module->getVar('mod_status')}",\n
-EOT;
-		if (is_object($table)) {
-			if ( $table->getVar('table_admin') == 1 ) {
-			$ret .= <<<EOT
+	'module_status' => "{$module->getVar('mod_status')}",
 	// Admin system menu
 	'system_menu' => 1,
 	// Admin things
@@ -152,15 +148,6 @@ EOT;
 	'adminindex' => "admin/index.php",
 	'adminmenu' => "admin/menu.php",\n
 EOT;
-			}
-		} else {
-			$ret .= <<<EOT
-    // Admin system menu
-	'system_menu' => 0,	
-	// Admin things
-	'hasAdmin' => 0,\n
-EOT;
-		}
 		if (is_object($table)) {
 			if ( $table->getVar('table_user') == 1 ) {
 			$ret .= <<<EOT
@@ -176,8 +163,16 @@ EOT;
 		}
 		$ret .= <<<EOT
     // Install/Update
-	'onInstall' => "include/install.php",
-	'onUpdate' => "include/update.php"
+	'onInstall' => "include/install.php",\n
+EOT;
+		if (is_object($table)) {
+			if ( $table->getVar('table_name') != null ) {
+			$ret .= <<<EOT
+    'onUpdate' => "include/update.php"\n
+EOT;
+			}
+		} 
+		$ret .= <<<EOT
 );\n
 EOT;
 		return $ret;
@@ -245,7 +240,7 @@ EOT;
 	*  @private function getXoopsVersionTemplatesAdmin
 	*  @param string $moduleDirname 
 	*/
-	private function getXoopsVersionTemplatesAdmin($moduleDirname) 
+	private function getXoopsVersionTemplatesAdmin($moduleDirname, $table) 
 	{ 
 		$tables = $this->getTables();
 		$ret = <<<EOT
@@ -262,7 +257,7 @@ EOT;
 \$modversion['templates'][] = array('file' => '{$moduleDirname}_admin_{$tables[$t]->getVar('table_name')}.tpl', 'description' => '', 'type' => 'admin');\n
 EOT;
 		}
-		if ($tablePermissions == 1) {
+		if (is_object($table) && $table->getVar('table_permissions') == 1) {
 			$ret .= <<<EOT
 \$modversion['templates'][] = array('file' => '{$moduleDirname}_admin_permissions.tpl', 'description' => '', 'type' => 'admin');\n
 EOT;
@@ -644,7 +639,13 @@ EOT;
 		$moduleDirname = $module->getVar('mod_dirname');		
 		$language = $this->getLanguage($moduleDirname, 'MI');			
 		$content = $this->getHeaderFilesComments($module, $filename);
-		$content .= $this->getXoopsVersionHeader($module, $table, $language);					
+		$content .= $this->getXoopsVersionHeader($module, $table, $language);	
+		if( $module->getVar('mod_admin') == 1 ) {
+			$content .= $this->getXoopsVersionTemplatesAdmin($moduleDirname, $table);
+		}	
+		if( $module->getVar('mod_user') == 1 ) {
+			$content .= $this->getXoopsVersionTemplatesUser($moduleDirname);
+		}			
 		if (is_object($table)) {			
 			$content .= $this->getXoopsVersionMySQL($moduleDirname,  $table);        		
 			if ($table->getVar('table_search') == 1) { 	
@@ -653,12 +654,7 @@ EOT;
 			if ($table->getVar('table_comments') == 1) { 
 				$content .= $this->getXoopsVersionComments($moduleDirname);
 			}
-			if($table->getVar('table_admin') == 1) {
-				$content .= $this->getXoopsVersionTemplatesAdmin($moduleDirname);
-			}/**/
-			if($table->getVar('table_user') == 1) {
-				$content .= $this->getXoopsVersionTemplatesUser($moduleDirname);
-			}
+			
 			if ($table->getVar('table_submenu') == 1) { 
 				$content .= $this->getXoopsVersionSubmenu($language);
 			}

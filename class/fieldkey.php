@@ -32,6 +32,7 @@ class TDMCreateFieldkey extends XoopsObject
 	public function __construct()
 	{
 		$this->XoopsObject();
+		$this->initVar('fieldkey_id', XOBJ_DTYPE_INT);
 		$this->initVar('fieldkey_name', XOBJ_DTYPE_TXTBOX);	
 		$this->initVar('fieldkey_value', XOBJ_DTYPE_TXTBOX);			
 	}
@@ -44,6 +45,6 @@ class TDMCreateFieldkeyHandler extends XoopsPersistableObjectHandler
 {
     function __construct(&$db) 
     {
-        parent::__construct($db, 'tdmcreate_fieldkey', 'tdmcreatefieldkey', 'fieldkey_name', 'fieldkey_value');
+        parent::__construct($db, 'tdmcreate_fieldkey', 'tdmcreatefieldkey', 'fieldkey_id', 'fieldkey_name');
     }
 }

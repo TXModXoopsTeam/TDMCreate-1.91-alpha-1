@@ -113,15 +113,13 @@ class TDMCreateArchitecture extends TDMCreateStructure
 		$this->structure->makeDir($targetDirectory);
 		// Copied of index.html file in "root module" folder	
 		$this->structure->copyFile('', $indexFile, 'index.html');
-		if (is_object($table)) {
-			if ( $table->getVar('table_admin') == 1) {
-				// Creation of "admin" folder and index.html file
-				$this->structure->makeDirAndCopyFile('admin', $indexFile, 'index.html');
-			}
-			if ( $table->getVar('table_blocks') == 1) {
-				// Creation of "blocks" folder and index.html file
-				$this->structure->makeDirAndCopyFile('blocks', $indexFile, 'index.html');
-			}					
+		if ( $module->getVar('mod_admin') == 1) {
+			// Creation of "admin" folder and index.html file
+			$this->structure->makeDirAndCopyFile('admin', $indexFile, 'index.html');
+		}
+		if ( $module->getVar('mod_blocks') == 1) {
+			// Creation of "blocks" folder and index.html file
+			$this->structure->makeDirAndCopyFile('blocks', $indexFile, 'index.html');
 		}
 		// Creation of "class" folder and index.html file
 		$this->structure->makeDirAndCopyFile('class', $indexFile, 'index.html');
@@ -168,25 +166,25 @@ class TDMCreateArchitecture extends TDMCreateStructure
 		// Creation of "language/local_language" folder and index.html file	
 		$this->structure->makeDirAndCopyFile('language/'.$GLOBALS['xoopsConfig']['language'], $indexFile, 'index.html');	
 		// Creation of "language/local_language/help" folder and index.html file	
-		$this->structure->makeDirAndCopyFile('language/'.$GLOBALS['xoopsConfig']['language']. '/help', $indexFile, 'index.html');
-		if (is_object($table)) {
-			if (( $table->getVar('table_user') == 1) || ( $table->getVar('table_admin') == 1 )) {
-				// Creation of "templates" folder and index.html file	
-				$this->structure->makeDirAndCopyFile('templates', $indexFile, 'index.html');
-			}
-			if ( $table->getVar('table_admin') == 1 ) {
-				// Creation of "templates/admin" folder and index.html file	
-				$this->structure->makeDirAndCopyFile('templates/admin', $indexFile, 'index.html');	
-			}
-			if ( $table->getVar('table_blocks') == 1 ) {
+		$this->structure->makeDirAndCopyFile('language/'.$GLOBALS['xoopsConfig']['language']. '/help', $indexFile, 'index.html');		
+		if( $module->getVar('mod_admin') == 1 ) {
+			// Creation of "templates" folder and index.html file	
+			$this->structure->makeDirAndCopyFile('templates', $indexFile, 'index.html');
+		}
+		if( $module->getVar('mod_admin') == 1 ) {
+			// Creation of "templates/admin" folder and index.html file	
+			$this->structure->makeDirAndCopyFile('templates/admin', $indexFile, 'index.html');	
+		}
+		if(is_object($table)) {	
+			if( $table->getVar('table_blocks') == 1 ) {
 				// Creation of "templates/blocks" folder and index.html file	
 				$this->structure->makeDirAndCopyFile('templates/blocks', $indexFile, 'index.html');
 			}
-			if ( $table->getVar('table_name') != null ) {
+			if( $table->getVar('table_name') != null ) {
 				// Creation of "sql" folder and index.html file	
 				$this->structure->makeDirAndCopyFile('sql', $indexFile, 'index.html');	
 			}
-			if ( $table->getVar('table_notifications') == 1 ) {
+			if( $table->getVar('table_notifications') == 1 ) {
 				// Creation of "mail_template" folder and index.html file	
 				$this->structure->makeDirAndCopyFile('language/'.$GLOBALS['xoopsConfig']['language'].'/mail_template', $indexFile, 'index.html');	
 			}
@@ -277,7 +275,49 @@ class TDMCreateArchitecture extends TDMCreateStructure
 		// Language Modinfo File 
 		$languageModinfo = LanguageModinfo::getInstance();	
 		$languageModinfo->write($module, $table, $tables, 'modinfo.php');
-		$ret[] = $languageModinfo->render();	
+		$ret[] = $languageModinfo->render();
+		if( $module->getVar('mod_admin') == 1 ) {
+			// Admin Header File 
+			$adminHeader = AdminHeader::getInstance();
+			$adminHeader->write($module, $table, $tables, 'header.php');
+			$ret[] = $adminHeader->render();
+			// Admin Index File
+			$adminIndex = AdminIndex::getInstance();
+			$adminIndex->write($module, $tables, 'index.php');
+			$ret[] = $adminIndex->render();
+			// Admin Menu File
+			$adminMenu = AdminMenu::getInstance();
+			$adminMenu->write($module, $table, $tables, 'menu.php');
+			$ret[] = $adminMenu->render();
+			// Admin About File 
+			$adminAbout = AdminAbout::getInstance();
+			$adminAbout->write($module, 'about.php');				
+			$ret[] = $adminAbout->render();	
+			// Admin Footer File 
+			$adminFooter = AdminFooter::getInstance();	
+			$adminFooter->write($module, 'footer.php');
+			$ret[] = $adminFooter->render();
+			// Templates Admin About File
+			$adminTemplatesAbout = TemplatesAdminAbout::getInstance();
+			$adminTemplatesAbout->write($module, $moduleDirname.'_admin_about.tpl');
+			$ret[] = $adminTemplatesAbout->render();
+			// Templates Admin Index File
+			$adminTemplatesIndex = TemplatesAdminIndex::getInstance();
+			$adminTemplatesIndex->write($module, $moduleDirname.'_admin_index.tpl');
+			$ret[] = $adminTemplatesIndex->render();
+			// Templates Admin Footer File 
+			$adminTemplatesFooter = TemplatesAdminFooter::getInstance();
+			$adminTemplatesFooter->write($module, $moduleDirname.'_admin_footer.tpl');				
+			$ret[] = $adminTemplatesFooter->render();	
+			// Templates Admin Header File 
+			$adminTemplatesHeader = TemplatesAdminHeader::getInstance();
+			$adminTemplatesHeader->write($module, $moduleDirname.'_admin_header.tpl');
+			$ret[] = $adminTemplatesHeader->render();
+			// Language Admin File 
+			$languageAdmin = LanguageAdmin::getInstance();	
+			$languageAdmin->write($module, $tables, 'admin.php');
+			$ret[] = $languageAdmin->render();
+		}
 		// Creation of blocks language file
 		if (is_object($table)) {
 			if ( $table->getVar('table_blocks') == 1) {			
@@ -286,21 +326,12 @@ class TDMCreateArchitecture extends TDMCreateStructure
 				$languageBlocks->write($module, $tables, 'blocks.php');
 				$ret[] = $languageBlocks->render();
 			}		
-					
+			// Class Helper File
+			$classHelper = ClassHelper::getInstance();
+			$classHelper->write($module, 'helper.php');
+			$ret[] = $classHelper->render();		
 			// Creation of admin files
-			if ( $table->getVar('table_admin') == 1) {					
-				// Admin Header File 
-				$adminHeader = AdminHeader::getInstance();
-				$adminHeader->write($module, $table, $tables, 'header.php');
-				$ret[] = $adminHeader->render();
-				// Admin Index File
-				$adminIndex = AdminIndex::getInstance();
-				$adminIndex->write($module, $tables, 'index.php');
-				$ret[] = $adminIndex->render();
-				// Admin Menu File
-				$adminMenu = AdminMenu::getInstance();
-				$adminMenu->write($module, $tables, 'menu.php');
-				$ret[] = $adminMenu->render();
+			if ( $table->getVar('table_admin') == 1) {				
 				// Creation of admin permission file
 				if (( $table->getVar('table_permissions') == 1)) {
 					// Admin Permissions File
@@ -311,35 +342,7 @@ class TDMCreateArchitecture extends TDMCreateStructure
 					$adminTemplatesPermissions = TemplatesAdminPermissions::getInstance();
 					$adminTemplatesPermissions->write($module, $moduleDirname.'_admin_permissions.tpl');
 					$ret[] = $adminTemplatesPermissions->render();
-				}
-				// Admin Aboutr File 
-				$adminAbout = AdminAbout::getInstance();
-				$adminAbout->write($module, 'about.php');				
-				$ret[] = $adminAbout->render();	
-				// Admin Footer File 
-				$adminFooter = AdminFooter::getInstance();	
-				$adminFooter->write($module, 'footer.php');
-				$ret[] = $adminFooter->render();
-				// Language Admin File 
-				$languageAdmin = LanguageAdmin::getInstance();	
-				$languageAdmin->write($module, $tables, 'admin.php');
-				$ret[] = $languageAdmin->render();
-				// Templates Admin About File
-				$adminTemplatesAbout = TemplatesAdminAbout::getInstance();
-				$adminTemplatesAbout->write($module, $moduleDirname.'_admin_about.tpl');
-				$ret[] = $adminTemplatesAbout->render();
-				// Templates Admin Index File
-				$adminTemplatesIndex = TemplatesAdminIndex::getInstance();
-				$adminTemplatesIndex->write($module, $moduleDirname.'_admin_index.tpl');
-				$ret[] = $adminTemplatesIndex->render();
-				// Templates Admin Footer File 
-				$adminTemplatesFooter = TemplatesAdminFooter::getInstance();
-				$adminTemplatesFooter->write($module, $moduleDirname.'_admin_footer.tpl');				
-				$ret[] = $adminTemplatesFooter->render();	
-				// Templates Admin Header File 
-				$adminTemplatesHeader = TemplatesAdminHeader::getInstance();
-				$adminTemplatesHeader->write($module, $moduleDirname.'_admin_header.tpl');
-				$ret[] = $adminTemplatesHeader->render();
+				}								
 			}		
 			// Creation of notifications files
 			if ( $table->getVar('table_notifications') == 1 ) {
@@ -361,7 +364,15 @@ class TDMCreateArchitecture extends TDMCreateStructure
 				// Sql File
 				$sqlFile = SqlFile::getInstance();
 				$sqlFile->write($module, $tables, 'mysql.sql');
-				$ret[] = $sqlFile->render();	
+				$ret[] = $sqlFile->render();
+				// Include Functions File
+				$includeFunctions = IncludeFunctions::getInstance();
+				$includeFunctions->write($module, 'functions.php');
+				$ret[] = $includeFunctions->render();
+				// Include Update File
+				$includeUpdate = IncludeUpdate::getInstance();
+				$includeUpdate->write($module, 'update.php');
+				$ret[] = $includeUpdate->renderFile();
 			}
 			// Creation of search file
 			if ( $table->getVar('table_search') == 1) {
@@ -398,19 +409,7 @@ class TDMCreateArchitecture extends TDMCreateStructure
 				$ret[] = $includeCommentFunctions->renderFile();
 			}
 			// Creation of user files
-			if ( ($table->getVar('table_user') == 1)) {							
-				// Templates Index File
-				$userTemplatesIndex = TemplatesUserIndex::getInstance();
-				$userTemplatesIndex->write($module, $moduleDirname.'_index.tpl');
-				$ret[] = $userTemplatesIndex->render();
-				// Templates Footer File 
-				$userTemplatesFooter = TemplatesUserFooter::getInstance();
-				$userTemplatesFooter->write($module, $table, $moduleDirname.'_footer.tpl');				
-				$ret[] = $userTemplatesFooter->render();	
-				// Templates Header File 
-				$userTemplatesHeader = TemplatesUserHeader::getInstance();
-				$userTemplatesHeader->write($module, $tables, $moduleDirname.'_header.tpl');
-				$ret[] = $userTemplatesHeader->render();	
+			if ( ($table->getVar('table_user') == 1)) {						
 				// User Footer File 
 				$userFooter = UserFooter::getInstance();
 				$userFooter->write($module, 'footer.php');				
@@ -434,27 +433,29 @@ class TDMCreateArchitecture extends TDMCreateStructure
 				$languageMain->write($module, $table, $tables, 'main.php');
 				$ret[] = $languageMain->render();
 			}
-		}	
-		// Class Helper File
-		$classHelper = ClassHelper::getInstance();
-		$classHelper->write($module, 'helper.php');
-		$ret[] = $classHelper->render();
+		}
+		if( $module->getVar('mod_admin') == 1 ) {
+			// Templates Index File
+			$userTemplatesIndex = TemplatesUserIndex::getInstance();
+			$userTemplatesIndex->write($module, $moduleDirname.'_index.tpl');
+			$ret[] = $userTemplatesIndex->render();
+			// Templates Footer File 
+			$userTemplatesFooter = TemplatesUserFooter::getInstance();
+			$userTemplatesFooter->write($module, $table, $moduleDirname.'_footer.tpl');				
+			$ret[] = $userTemplatesFooter->render();	
+			// Templates Header File 
+			$userTemplatesHeader = TemplatesUserHeader::getInstance();
+			$userTemplatesHeader->write($module, $tables, $moduleDirname.'_header.tpl');
+			$ret[] = $userTemplatesHeader->render();
+		}		
 		// Css Styles File
 		$cssStyles = CssStyles::getInstance();	
 		$cssStyles->write($module, 'style.css');
 		$ret[] = $cssStyles->render();	
 		// Include Common File
 		$includeCommon = IncludeCommon::getInstance();
-		$includeCommon->write($module, 'common.php');
-		$ret[] = $includeCommon->render();
-		// Include Functions File
-		$includeFunctions = IncludeFunctions::getInstance();
-		$includeFunctions->write($module, 'functions.php');
-		$ret[] = $includeFunctions->render();
-		// Include Update File
-		$includeUpdate = IncludeUpdate::getInstance();
-		$includeUpdate->write($module, 'update.php');
-		$ret[] = $includeUpdate->renderFile();
+		$includeCommon->write($module, $table, 'common.php');
+		$ret[] = $includeCommon->render();		
 		// Docs Changelog File
 		$docsChangelog = DocsChangelog::getInstance();
 		$docsChangelog->write($module, 'changelog.txt');

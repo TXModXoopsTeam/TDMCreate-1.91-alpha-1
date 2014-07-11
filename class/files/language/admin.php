@@ -247,10 +247,12 @@ EOT;
 		$moduleDirname = $module->getVar('mod_dirname');		
 		$language = $this->getLanguage($moduleDirname, 'AM');
 		$content = $this->getHeaderFilesComments($module, $filename);
-		$content .= $this->getLanguageAdminIndex($language, $tables);
-		$content .= $this->getLanguageAdminPages($language, $tables);
-		$content .= $this->getLanguageAdminClass($language, $tables);
-		$content .= $this->getLanguageAdminPermissions($language);
+		if(is_array($tables)) {	
+			$content .= $this->getLanguageAdminIndex($language, $tables);		
+			$content .= $this->getLanguageAdminPages($language, $tables);
+			$content .= $this->getLanguageAdminClass($language, $tables);		
+			$content .= $this->getLanguageAdminPermissions($language);
+		}
 		$content .= $this->getLanguageAdminFoot($language);
 		//
 		$this->tdmcfile->create($moduleDirname, 'language/'.$GLOBALS['xoopsConfig']['language'], $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);

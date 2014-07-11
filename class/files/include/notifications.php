@@ -60,7 +60,8 @@ class IncludeNotifications extends TDMCreateFile
 	*/
 	public function getNotificationsFunction($moduleDirname)
     {
-        $table = $this->getTable();
+        $stuModuleDirname = strtoupper($moduleDirname);
+		$table = $this->getTable();
 		$tableName = $table->getVar('table_name');
 		$tableFieldname = $table->getVar('table_fieldname');
 		$fields = $this->getTableFields($table->getVar('table_id'));
@@ -90,37 +91,34 @@ function {$moduleDirname}_notify_iteminfo(\$category, \$item_id)
 		\$module =& \$xoopsModule;
 		\$config =& \$xoopsModuleConfig;
 	}
-
+	//
 	xoops_loadLanguage('main', '{$moduleDirname}');
-
-	if (\$category=='global')
-	{
-		\$item['name'] = '';
-		\$item['url'] = '';
-		return \$item;
-	}
-
+	//
 	global \$xoopsDB;
-	if (\$category=='category')
-	{
-		// Assume we have a valid category id
-		\$sql = 'SELECT {$fpmf} FROM ' . \$xoopsDB->prefix('mod_{$moduleDirname}_{$tableName}') . ' WHERE {$fpif} = '. \$item_id;
-		\$result = \$xoopsDB->query(\$sql); // TODO: error check
-		\$result_array = \$xoopsDB->fetchArray(\$result);
-		\$item['name'] = \$result_array['{$fpmf}'];
-		\$item['url'] = XOOPS_URL . '/modules/' . \$module->getVar('dirname') . '/{$tableName}.php?{$fieldName}=' . \$item_id;
-		return \$item;
-	}
-
-	if (\$category=='{$tableFieldname}')
-	{
-		// Assume we have a valid link id
-		\$sql = 'SELECT {$fieldName}, {$fpmf} FROM '.\$xoopsDB->prefix('mod_{$moduleDirname}_{$tableName}') . ' WHERE {$fpif} = ' . \$item_id;
-		\$result = \$xoopsDB->query(\$sql); // TODO: error check
-		\$result_array = \$xoopsDB->fetchArray(\$result);
-		\$item['name'] = \$result_array['title'];
-		\$item['url'] = XOOPS_URL . '/modules/' . \$module->getVar('dirname') . '/{$tableName}.php?{$fieldName}=' . \$result_array['{$fieldName}'] . '&amp;{$fpif}=' . \$item_id;
-		return \$item;
+	switch(\$category) {
+		case 'global':
+			\$item['name'] = '';
+			\$item['url'] = '';
+			return \$item;
+		break;
+		case 'category':
+			// Assume we have a valid category id
+			\$sql = 'SELECT {$fpif}, {$fpmf} FROM ' . \$xoopsDB->prefix('{$moduleDirname}_{$tableName}') . ' WHERE {$fpif} = '. \$item_id;
+			\$result = \$xoopsDB->query(\$sql); // TODO: error check
+			\$result_array = \$xoopsDB->fetchArray(\$result);
+			\$item['name'] = \$result_array['{$fpmf}'];
+			\$item['url'] = {$stuModuleDirname}_URL . '/{$tableName}.php?{$fpif}=' . \$item_id;
+			return \$item;			
+		break;						
+		case '{$tableFieldname}':
+			// Assume we have a valid link id
+			\$sql = 'SELECT {$fpif}, {$fpmf} FROM '.\$xoopsDB->prefix('{$moduleDirname}_{$tableName}') . ' WHERE {$fpif} = ' . \$item_id;
+			\$result = \$xoopsDB->query(\$sql); // TODO: error check
+			\$result_array = \$xoopsDB->fetchArray(\$result);
+			\$item['name'] = \$result_array['{$fpmf}'];
+			\$item['url'] = {$stuModuleDirname}_URL . '/{$tableName}.php?{$fieldName}=' . \$result_array['{$fieldName}'] . '&amp;{$fpif}=' . \$item_id;
+			return \$item;
+		break;		
 	}
 }
 EOT;

@@ -32,7 +32,8 @@ class TDMCreateFieldattributes extends XoopsObject
 	public function __construct()
 	{
 		$this->XoopsObject();	
-		$this->initVar('fieldattribute_name', XOBJ_DTYPE_TXTBOX);	
+		$this->initVar('fieldattribute_id', XOBJ_DTYPE_INT);
+        $this->initVar('fieldattribute_name', XOBJ_DTYPE_TXTBOX);		
         $this->initVar('fieldattribute_value', XOBJ_DTYPE_TXTBOX);			       		
 	}
 }
@@ -44,6 +45,6 @@ class TDMCreateFieldattributesHandler extends XoopsPersistableObjectHandler
 {
     function __construct(&$db) 
     {
-        parent::__construct($db, 'tdmcreate_fieldattributes', 'tdmcreatefieldattributes', 'fieldattribute_name', 'fieldattribute_value');
+        parent::__construct($db, 'tdmcreate_fieldattributes', 'tdmcreatefieldattributes', 'fieldattribute_id', 'fieldattribute_name');
     }
 }

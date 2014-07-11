@@ -98,34 +98,33 @@ EOT;
 		{
 			$fieldName = $fields[$f]->getVar('field_name');
 			$fieldElement = $fields[$f]->getVar('field_element');
-			$rp_field_name = $fieldName;
-			if(strpos($fieldName, '_')) {       
-				$str = strpos($fieldName, '_'); 
-				if($str !== false){ 
-					$rp_field_name = substr($fieldName, $str + 1, strlen($fieldName));
-				} 		
-			}
-			if( $fieldElement == 8 ) {
-				$ret .= <<<EOT
-				<td class="center"><span style="background-color: <{\$list.{$rp_field_name}}>;">\t\t</span></td>\n
+			$rpFieldName = $this->tdmcfile->getRightString($fieldName);
+			switch( $fieldElement ) {			    
+				case 9:			
+					$ret .= <<<EOT
+				<td class="center"><span style="background-color: <{\$list.{$rpFieldName}}>;">\t\t</span></td>\n		
 EOT;
-			} elseif( $fieldElement == 9 ) {			
-				$ret .= <<<EOT
+				break;
+				case 10:
+					$ret .= <<<EOT
 				<td class="center">
-					<img src="<{xoModuleIcons32}><{\$list.{$rp_field_name}}>" alt="{$tableName}">
+					<img src="<{xoModuleIcons32}><{\$list.{$rpFieldName}}>" alt="{$tableName}">
 				</td>\n
 EOT;
-			} elseif( $fieldElement == 10 ) {			
-				$ret .= <<<EOT
+				break;
+				case 11:
+					$ret .= <<<EOT
 				<td class="center">
-					<img src="<{\${$moduleDirname}_upload_url}>/images/{$tableName}/<{\$list.{$rp_field_name}}>" alt="{$tableName}">
+					<img src="<{\${$moduleDirname}_upload_url}>/images/{$tableName}/<{\$list.{$rpFieldName}}>" alt="{$tableName}">
 				</td>\n
 EOT;
-			} else {
-				$ret .= <<<EOT
-				<td class="center"><{\$list.{$rp_field_name}}></td>\n
+				break;
+				default:
+					$ret .= <<<EOT
+				<td class="center"><{\$list.{$rpFieldName}}></td>\n
 EOT;
-			}
+				break;
+			}			
 		}
 		$ret .= <<<EOT
 			</tr>
@@ -154,27 +153,32 @@ EOT;
 		{
 			$fieldName = $fields[$f]->getVar('field_name');
 			$fieldElement = $fields[$f]->getVar('field_element');			
-			if( $fieldElement == 8 ) {
-				$ret .= <<<EOT
-				<td class="center"><span style="background-color: <{\$list.{$fieldName}}>;">\t\t</span></td>\n
+			switch( $fieldElement ) {			    
+				case 9:			
+					$ret .= <<<EOT
+				<td class="center"><span style="background-color: <{\$list.{$fieldName}}>;">\t\t</span></td>\n	
 EOT;
-			} elseif( $fieldElement == 9 ) {			
-				$ret .= <<<EOT
+				break;
+				case 10:
+					$ret .= <<<EOT
 				<td class="center">
 					<img src="<{xoModuleIcons32}><{\$list.{$fieldName}}>" alt="{$tableName}">
 				</td>\n
 EOT;
-			} elseif( $fieldElement == 10 ) {			
-				$ret .= <<<EOT
+				break;
+				case 11:
+					$ret .= <<<EOT
 				<td class="center">
 					<img src="<{\${$moduleDirname}_upload_url}>/images/{$tableName}/<{\$list.{$fieldName}}>" alt="{$tableName}">
 				</td>\n
 EOT;
-			} else {
-				$ret .= <<<EOT
+				break;
+				default:
+					$ret .= <<<EOT
 				<td class="center"><{\$list.{$fieldName}}></td>\n
 EOT;
-			}
+				break;
+			}			
 		}
 		$ret .= <<<EOT
 			</tr>

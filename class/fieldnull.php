@@ -31,7 +31,8 @@ class TDMCreateFieldnull extends XoopsObject
 	*/
 	public function __construct()
 	{
-		$this->XoopsObject();		
+		$this->XoopsObject();	
+		$this->initVar('fieldnull_id', XOBJ_DTYPE_INT);
 		$this->initVar('fieldnull_name', XOBJ_DTYPE_TXTBOX);	
 		$this->initVar('fieldnull_value', XOBJ_DTYPE_TXTBOX);		
 	}
@@ -44,6 +45,6 @@ class TDMCreateFieldnullHandler extends XoopsPersistableObjectHandler
 {
     function __construct(&$db) 
     {
-        parent::__construct($db, 'tdmcreate_fieldnull', 'tdmcreatefieldnull', 'fieldnull_name', 'fieldnull_value');
+        parent::__construct($db, 'tdmcreate_fieldnull', 'tdmcreatefieldnull', 'fieldnull_id', 'fieldnull_name');
     }
 }

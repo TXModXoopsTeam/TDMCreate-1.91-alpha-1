@@ -70,10 +70,10 @@ EOT;
 		foreach(array_keys($fields) as $f) 
 		{
 			$fieldName = $fields[$f]->getVar('field_name');			
-			$lang_stu_field_name = $language.strtoupper($fieldName);
+			$langStuFieldName = $language.strtoupper($fieldName);
 			if( $fields[$f]->getVar('field_user') == 1 ) {	
 				$ret .= <<<EOT
-			<th class="center"><{\$smarty.const.{$lang_stu_field_name}}></th>\n
+			<th class="center"><{\$smarty.const.{$langStuFieldName}}></th>\n
 EOT;
 			}
 		}
@@ -101,34 +101,28 @@ EOT;
 		foreach(array_keys($fields) as $f) 
 		{
 			$fieldName = $fields[$f]->getVar('field_name');
-			$field_element = $fields[$f]->getVar('field_element');
-			$rp_field_name = $fieldName;
-			if(strpos($fieldName, '_')) {       
-				$str = strpos($fieldName, '_'); 
-				if($str !== false){ 
-					$rp_field_name = substr($fieldName, $str + 1, strlen($fieldName));
-				} 		
-			}
+			$fieldElement = $fields[$f]->getVar('field_element');
+			$rpFieldName = $this->tdmcfile->getRightString($fieldName);
 			if( $fields[$f]->getVar('field_user') == 1 ) {
-				switch( $field_element ) { 			    
-					case 8:							
+				switch( $fieldElement ) { 			    
+					case 9:							
 						$ret .= <<<EOT
-				<td class="center"><span style="background-color: <{\$list.{$rp_field_name}}>;">\t\t</span></td>\n
-EOT;
-					break;
-					case 9:
-						$ret .= <<<EOT
-				<td class="center"><img src="<{xoModuleIcons32}><{\$list.{$rp_field_name}}>" alt="{$tableName}"></td>\n
+				<td class="center"><span style="background-color: <{\$list.{$rpFieldName}}>;">\t\t</span></td>\n
 EOT;
 					break;
 					case 10:
 						$ret .= <<<EOT
-				<td class="center"><img src="<{\${$moduleDirname}_upload_url}>/images/{$tableName}/<{\$list.{$rp_field_name}}>" alt="{$tableName}"></td>\n
+				<td class="center"><img src="<{xoModuleIcons32}><{\$list.{$rpFieldName}}>" alt="{$tableName}"></td>\n
+EOT;
+					break;
+					case 11:
+						$ret .= <<<EOT
+				<td class="center"><img src="<{\${$moduleDirname}_upload_url}>/images/{$tableName}/<{\$list.{$rpFieldName}}>" alt="{$tableName}"></td>\n
 EOT;
 					break;
 					default:
 						$ret .= <<<EOT
-				<td class="center"><{\$list.{$rp_field_name}}></td>\n
+				<td class="center"><{\$list.{$rpFieldName}}></td>\n
 EOT;
 					break;
 				}
@@ -160,15 +154,15 @@ EOT;
 		foreach(array_keys($fields) as $f) 
 		{
 			$fieldName = $fields[$f]->getVar('field_name');
-			$field_element = $fields[$f]->getVar('field_element');			
+			$fieldElement = $fields[$f]->getVar('field_element');			
 			if( $fields[$f]->getVar('field_user') == 1 ) {	
-				switch( $field_element ) { 			    
-					case 8:			
+				switch( $fieldElement ) { 			    
+					case 9:			
 						$ret .= <<<EOT
 			<td class="center"><span style="background-color: <{\$list.{$fieldName}}>;"></span></td>\n
 EOT;
 					break;
-					case 9:
+					case 10:
 						$ret .= <<<EOT
 			<td class="center"><img src="<{\${$moduleDirname}_upload_url}>/images/{$tableName}/<{\$list.{$fieldName}}>" alt="{$tableName}"></td>\n
 EOT;

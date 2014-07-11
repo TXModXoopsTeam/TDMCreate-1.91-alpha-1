@@ -16,7 +16,7 @@
  * @package         tdmcreate
  * @since           2.5.0
  * @author          Txmod Xoops http://www.txmodxoops.org
- * @version         $Id: sql_file.php 12258 2014-01-02 09:33:29Z timgno $
+ * @version         $Id: mysql.php 12258 2014-01-02 09:33:29Z timgno $
  */
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
 
@@ -58,10 +58,10 @@ class SqlFile extends TDMCreateFile
 	}
 	
 	/*
-	*  @public function getHeaderSqlComments
+	*  @private function getHeaderSqlComments
 	*  @param string $moduleName
 	*/
-	public function getHeaderSqlComments($moduleName) 
+	private function getHeaderSqlComments($moduleName) 
 	{   
 		$date = date('D M d, Y');
 		$time = date('G:i');
@@ -83,19 +83,19 @@ SQL;
 	}	
 	
 	/*
-	*  @public function getHeadDatabaseTable
+	*  @private function getHeadDatabaseTable
 	*  @param string $moduleDirname
 	*  @param string $tableName
-	*  @param integer $nb_fields
+	*  @param integer $fieldsNumb
 	*
 	*  Unused IF NOT EXISTS
 	*/
-	public function getHeadDatabaseTable($moduleDirname, $tableName, $nb_fields) 
+	private function getHeadDatabaseTable($moduleDirname, $tableName, $fieldsNumb) 
 	{    
 		$ret = <<<SQL
 
 #
-# Structure table for `{$moduleDirname}_{$tableName}` {$nb_fields}
+# Structure table for `{$moduleDirname}_{$tableName}` {$fieldsNumb}
 #
 		
 CREATE TABLE `{$moduleDirname}_{$tableName}` (\n
@@ -104,49 +104,49 @@ SQL;
 	}
 	
 	/*
-	*  @public function getDatabaseTables
+	*  @private function getDatabaseTables
 	*  @param string $moduleDirname
 	*/
-	public function getDatabaseTables($moduleDirname) 
+	private function getDatabaseTables($moduleDirname) 
 	{    
 		$ret = null;
 		$tables = $this->getTables();
 		foreach(array_keys($tables) as $t) 
 		{
-			$table_id = $tables[$t]->getVar('table_id');
+			$tableId = $tables[$t]->getVar('table_id');
 			$tableName = $tables[$t]->getVar('table_name');
-			$table_autoincrement = $tables[$t]->getVar('table_autoincrement');
-			$nb_fields = $tables[$t]->getVar('table_nbfields');					
-			$ret .= $this->getDatabaseFields($moduleDirname, $table_id, $tableName, $table_autoincrement, $nb_fields);
+			$tableAutoincrement = $tables[$t]->getVar('table_autoincrement');
+			$fieldsNumb = $tables[$t]->getVar('table_nbfields');					
+			$ret .= $this->getDatabaseFields($moduleDirname, $tableId, $tableName, $tableAutoincrement, $fieldsNumb);
 		}		
 		return $ret;
 	}
 	
 	/*
-	*  @public function getDatabaseFields
+	*  @private function getDatabaseFields
 	*  @param string $moduleDirname
 	*  @param string $tableName
-	*  @param boolean $table_autoincrement
-	*  @param integer $nb_fields
+	*  @param integer $tableAutoincrement
+	*  @param integer $fieldsNumb
 	*/
-	public function getDatabaseFields($moduleDirname, $table_id, $tableName, $table_autoincrement, $nb_fields) 
+	private function getDatabaseFields($moduleDirname, $tableId, $tableName, $tableAutoincrement, $fieldsNumb) 
 	{    		
 		$ret = null; $j = 0; $comma = array(); $row = array();
-        $fields = $this->getTableFields($table_id);		
+        $fields = $this->getTableFields($tableId);		
 		foreach(array_keys($fields) as $f) 
 		{
 			// Creation of database table  
-			$ret = $this->getHeadDatabaseTable($moduleDirname, $tableName, $nb_fields);
-			$field_name = $fields[$f]->getVar('field_name');
-			$field_type = $fields[$f]->getVar('field_type');
-			$field_value = $fields[$f]->getVar('field_value');
-			$field_attribute = $fields[$f]->getVar('field_attribute');
-			$field_null = $fields[$f]->getVar('field_null');
-			$field_default = $fields[$f]->getVar('field_default');
-			$field_key = $fields[$f]->getVar('field_key');
-			if ( !empty($field_name) )
+			$ret = $this->getHeadDatabaseTable($moduleDirname, $tableName, $fieldsNumb);
+			$fieldName = $fields[$f]->getVar('field_name');
+			$fieldType = $fields[$f]->getVar('field_type');
+			$fieldValue = $fields[$f]->getVar('field_value');
+			$fieldAttribute = $fields[$f]->getVar('field_attribute');
+			$fieldNull = $fields[$f]->getVar('field_null');
+			$fieldDefault = $fields[$f]->getVar('field_default');
+			$fieldKey = $fields[$f]->getVar('field_key');
+			if ( !empty($fieldName) )
 			{								
-				switch( $field_type ) {
+				switch( $fieldType ) {
 					case 'TEXT':
 					case 'TINYTEXT':
 					case 'MEDIUMTEXT':
@@ -154,44 +154,54 @@ SQL;
 					case 'DATE':	
 					case 'DATETIME':
 					case 'TIMESTAMP':
-						$type = $field_type;
+						$type = $fieldType;
 						$default = null;
                     break;					
 					default:
-						$type = $field_type.'('.$field_value.')';
-						$default = "DEFAULT '{$field_default}'";
+						$type = $fieldType.'('.$fieldValue.')';
+						$default = "DEFAULT '{$fieldDefault}'";
 					break;
 				}	
-				if ( ($f == 0) && ($table_autoincrement == 1) ) {
-					$row[] = $this->getFieldRow($field_name, $type, $field_attribute, $field_null, null, 'AUTO_INCREMENT');					
-					$comma[$j] = '  PRIMARY KEY (`'.$field_name.'`)';//$this->getKey(1, $field_name);
+				if( ($f == 0) && ($tableAutoincrement == 1) ) {
+					$row[] = $this->getFieldRow($fieldName, $type, $fieldAttribute, $fieldNull, null, 'AUTO_INCREMENT');					
+					$comma[$j] = $this->getKey(1, $fieldName);
+					$j++;
+				} elseif( ($f == 0) && ($tableAutoincrement == 0) ) {
+					$row[] = $this->getFieldRow($fieldName, $type, $fieldAttribute, $fieldNull, $default);					
+					$comma[$j] = $this->getKey(1, $fieldName);
 					$j++;
 				} else {
-					if ( $field_key == 'UNIQUE' || $field_key == 'INDEX' || $field_key == 'FULLTEXT')
+					if( $fieldKey == 'UNIQUE' || $fieldKey == 'KEY' || $fieldKey == 'INDEX' || $fieldKey == 'FULLTEXT')
 					{
-						switch( $field_key ) {					
+						switch( $fieldKey ) {					
 							case 'UNIQUE':
-								$row[] = $this->getFieldRow($field_name, $type, $field_attribute, $field_null, $default);
-								$comma[$j] = '  KEY `'.$field_name.'` (`'.$field_name.'`)';//$this->getKey(2, $field_name);
+								$row[] = $this->getFieldRow($fieldName, $type, $fieldAttribute, $fieldNull, $default);
+								$comma[$j] = $this->getKey(2, $fieldName);
+								$j++;
+							break;
+							case 'KEY':
+								$row[] = $this->getFieldRow($fieldName, $type, $fieldAttribute, $fieldNull, $default);
+								$comma[$j] = $this->getKey(3, $fieldName);
 								$j++;
 							break;
 							case 'INDEX':
-								$row[] = $this->getFieldRow($field_name, $type, $field_attribute, $field_null, $default);
-								$comma[$j] = '  INDEX (`'.$field_name.'`)';//$this->getKey(3, $field_name);
+								$row[] = $this->getFieldRow($fieldName, $type, $fieldAttribute, $fieldNull, $default);
+								$comma[$j] = $this->getKey(4, $fieldName);
 								$j++;
 							break;
 							case 'FULLTEXT':
-								$row[] = $this->getFieldRow($field_name, $type, $field_attribute, $field_null, $default);
-								$comma[$j] = '  FULLTEXT KEY `'.$field_name.'` (`'.$field_name.'`)';//$this->getKey(4, $field_name);
+								$row[] = $this->getFieldRow($fieldName, $type, $fieldAttribute, $fieldNull, $default);
+								$comma[$j] = $this->getKey(5, $fieldName);
 								$j++;
 							break;											
 						}	
 					} else {
-						$row[] = $this->getFieldRow($field_name, $type, $field_attribute, $field_null, $default);
+						$row[] = $this->getFieldRow($fieldName, $type, $fieldAttribute, $fieldNull, $default);
 					}										
 				}								
 			}
 		}
+		// ================= COMMA ================= //
 		for ($i=0; $i < $j; $i++) {
 			if ( $i != $j - 1 ) {
 				$row[] = $comma[$i].',';
@@ -199,10 +209,9 @@ SQL;
 				$row[] = $comma[$i];
 			}
 		}
-       // echo $key."================= KEY ========================= </br>";
-		$ret .= implode("\n", $row);
-		//$ret .= $key;
-		//$row[] = $this->getCommaCicle($j, $comma);		
+		// ================= COMMA CICLE ================= //
+		//$row[] = $this->getCommaCicle($comma, $j);
+		$ret .= implode("\n", $row);				
 		unset($j);
 		$ret .= $this->getFootDatabaseTable();
 		return $ret;
@@ -219,62 +228,67 @@ SQL;
 	}
 	/*
 	*  @private function getFieldRow
-	*  @param string $field_name
-	*  @param string $field_type_value
-	*  @param string $field_attribute
-	*  @param string $field_null
-	*  @param string $field_default
+	*  @param string $fieldName
+	*  @param string $fieldTypeValue
+	*  @param string $fieldAttribute
+	*  @param string $fieldNull
+	*  @param string $fieldDefault
 	*  @param string $autoincrement
 	*/
-	private function getFieldRow($field_name, $field_type_value, $field_attribute = null, $field_null = null, $field_default = null, $autoincrement = null) {    
-		$ret_autoincrement = <<<SQL
-  `{$field_name}` {$field_type_value} {$field_attribute} {$field_null} {$autoincrement},
+	private function getFieldRow($fieldName, $fieldTypeValue, $fieldAttribute = null, $fieldNull = null, $fieldDefault = null, $autoincrement = null) {    
+		$retAutoincrement = <<<SQL
+  `{$fieldName}` {$fieldTypeValue} {$fieldAttribute} {$fieldNull} {$autoincrement},
 SQL;
-		$ret_field_attribute = <<<SQL
-  `{$field_name}` {$field_type_value} {$field_attribute} {$field_null} {$field_default},
+		$retFieldAttribute = <<<SQL
+  `{$fieldName}` {$fieldTypeValue} {$fieldAttribute} {$fieldNull} {$fieldDefault},
 SQL;
-		$ret_no_field_attribute = <<<SQL
-  `{$field_name}` {$field_type_value} {$field_null} {$field_default},
+		$fieldDefault = <<<SQL
+  `{$fieldName}` {$fieldTypeValue} {$fieldNull} {$fieldDefault},
 SQL;
-		$ret_short = <<<SQL
-  `{$field_name}` {$field_type_value},
+		$retShort = <<<SQL
+  `{$fieldName}` {$fieldTypeValue},
 SQL;
 		if($autoincrement != null) {
-			$ret = $ret_autoincrement;
-		} elseif($field_attribute != null) {
-			$ret = $ret_field_attribute;
-		} elseif($field_attribute == null) {
-			$ret = $ret_no_field_attribute;
+			$ret = $retAutoincrement;
+		} elseif($fieldAttribute != null) {
+			$ret = $retFieldAttribute;
+		} elseif($fieldAttribute == null) {
+			$ret = $fieldDefault;
 		} else {
-			$ret = $ret_short;
+			$ret = $retShort;
 		}
 		return $ret;
 	}
 	/*
 	*  @private function getKey
 	*  @param integer $key
-	*  @param array $field_name
+	*  @param array $fieldName
 	*/
-	private function getKey($key, $field_name) {    
+	private function getKey($key, $fieldName) {    
 		switch( $key ) {
-			case 1:
+			case 1: // PRIMARY KEY
 				$ret = <<<SQL
-	PRIMARY KEY (`$field_name`)
+  PRIMARY KEY (`{$fieldName}`)
 SQL;
 			break;
 			case 2: // UNIQUE KEY
 				$ret = <<<SQL
-	KEY `$field_name` (`$field_name`)
+  UNIQUE KEY `{$fieldName}` (`{$fieldName}`)
 SQL;
 			break;
-			case 3:
+			case 3: // KEY
 				$ret = <<<SQL
-	INDEX (`$field_name`)
+  KEY `{$fieldName}` (`{$fieldName}`)
 SQL;
 			break;
-			case 4:
+			case 4: // INDEX
 				$ret = <<<SQL
-	FULLTEXT KEY `$field_name` (`$field_name`)
+  INDEX (`{$fieldName}`)
+SQL;
+			break;
+			case 5: // FULLTEXT KEY
+				$ret = <<<SQL
+  FULLTEXT KEY `{$fieldName}` (`{$fieldName}`)
 SQL;
 			break;
 		}
@@ -283,28 +297,28 @@ SQL;
 		
 	/*
 	*  @private function getComma
-	*  @param array $array
+	*  @param array $row
 	*  @param string $comma
 	*/
-	private function getComma($array = array(), $comma = null) {    
+	private function getComma($row, $comma = null) {    
 		$ret = <<<SQL
-			{$array}{$comma}
+			{$row}{$comma}
 SQL;
 		return $ret;
 	}	
 	/*
 	*  @private function getCommaCicle
+	*  @param array $comma
 	*  @param integer $index
 	*/
-	private function getCommaCicle($index, $comma = array()) {    
+	private function getCommaCicle($comma, $index) {    
 		// Comma issue
-		$ret = '';			
 		for ($i = 1; $i <= $index; $i++)
 		{
 			if ( $i != $index - 1 ) {
-				$ret .= $this->getComma(isset($comma[$i]), ','). "\n";
+				$ret = $this->getComma(isset($comma[$i]), ','). "\n";
 			} else {
-				$ret .= $this->getComma(isset($comma[$i])). "\n";
+				$ret = $this->getComma(isset($comma[$i])). "\n";
 			}
 		}
 		return $ret;
@@ -321,6 +335,7 @@ SQL;
         $moduleDirname = strtolower($module->getVar('mod_dirname'));		
 		$content = $this->getHeaderSqlComments($moduleName);
 		$content .= $this->getDatabaseTables($moduleDirname);
+		//
 		$this->tdmcfile->create($moduleDirname, 'sql', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}

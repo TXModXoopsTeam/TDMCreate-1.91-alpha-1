@@ -56,8 +56,8 @@ class BlocksFiles extends TDMCreateFile
 	*  @param null
 	*/
 	public function getBlocksShow($moduleDirname, $tableName, $tableFieldname, $tableCategory, $fields, $fpif) {		
-		$stu_module_dirname = strtoupper($moduleDirname);
-		$ucfmod_name = ucfirst($moduleDirname);
+		$stuModuleDirname = strtoupper($moduleDirname);
+		$ucfModuleDirname = ucfirst($moduleDirname);
 		$ret = <<<EOT
 include_once XOOPS_ROOT_PATH.'/modules/{$moduleDirname}/include/common.php';
 include_once XOOPS_ROOT_PATH.'/modules/{$moduleDirname}/include/functions.php';	
@@ -65,12 +65,12 @@ function b_{$moduleDirname}_{$tableName}_show(\$options)
 {
 	include_once XOOPS_ROOT_PATH.'/modules/{$moduleDirname}/class/{$tableName}.php';
 	\$myts =& MyTextSanitizer::getInstance();
-    \$GLOBALS['xoopsTpl']->assign('{$moduleDirname}_upload_url', {$stu_module_dirname}_UPLOAD_URL);
+    \$GLOBALS['xoopsTpl']->assign('{$moduleDirname}_upload_url', {$stuModuleDirname}_UPLOAD_URL);
 	\${$tableFieldname} = array();
 	\$type_block = \$options[0];
 	\$nb_{$tableName} = \$options[1];
 	\$lenght_title = \$options[2];
-	\${$moduleDirname} = {$ucfmod_name}Helper::getInstance();
+	\${$moduleDirname} = {$ucfModuleDirname}Helper::getInstance();
 	\${$tableName}Handler =& \${$moduleDirname}->getHandler('{$tableName}');
 	\$criteria = new CriteriaCompo();
 	array_shift(\$options);
@@ -100,26 +100,13 @@ EOT;
 		foreach(array_keys($fields) as $f) 
 		{	    
 			$fieldName = $fields[$f]->getVar('field_name');
-			$rp_field_name = $fieldName;
-			if( $fields[$f]->getVar('field_block') == 1 ) {
-				// Verify if table_fieldname is not empty
-				if(!empty($tableFieldname)) {
-					if(strpos($fieldName, '_')) {       
-						$str = strpos($fieldName, '_'); 
-						if($str !== false){ 
-							$rp_field_name = substr($fieldName, $str + 1, strlen($fieldName));
-						} 		
-					}
-					$tname = $tableFieldname;
-					$ret .= <<<EOT
-		\${$tname}['{$rp_field_name}'] = \${$tableName}_arr[\$i]->getVar('{$fieldName}');\n
+			// Verify if table_fieldname is not empty
+			$lpFieldName = !empty($tableFieldname) ? substr($fieldName, 0, strpos($fieldName, '_')) : $tableName;
+			$rpFieldName = $this->tdmcfile->getRightString($fieldName);
+			if( $fields[$f]->getVar('field_block') == 1 ) {				
+				$ret .= <<<EOT
+		\${$lpFieldName}['{$rpFieldName}'] = \${$tableName}_arr[\$i]->getVar('{$fieldName}');\n
 EOT;
-				} else {
-					$tname = $tableName;
-					$ret .= <<<EOT
-		\${$tname}['{$rp_field_name}'] = \${$tableName}_arr[\$i]->getVar('{$fieldName}');\n
-EOT;
-				}
 			}
 		}
 		$ret .= <<<EOT

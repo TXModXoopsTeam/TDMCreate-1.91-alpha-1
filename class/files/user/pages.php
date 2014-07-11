@@ -97,15 +97,9 @@ EOT;
 		foreach(array_keys($fields) as $f) 
 		{
 			$fieldName = $fields[$f]->getVar('field_name');
-			$rp_field_name = $fieldName;
 			// Verify if table_fieldname is not empty
 			$lpFieldName = !empty($tableFieldname) ? substr($fieldName, 0, strpos($fieldName, '_')) : $tableName;
-			if(strpos($fieldName, '_')) {       
-				$str = strpos($fieldName, '_'); 
-				if($str !== false){ 
-					$rpFieldName = substr($fieldName, $str + 1, strlen($fieldName));
-				} 		
-			}	
+			$rpFieldName = $this->tdmcfile->getRightString($fieldName);	
 			if ( $fields[$f]->getVar('field_main') == 1 ) {
 				$fpmf = $fieldName; // fpmf = fields parameters main field
 			}

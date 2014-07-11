@@ -52,8 +52,8 @@ CREATE TABLE `tdmcreate_modules` (
   `mod_donations`           VARCHAR(50)         NOT NULL DEFAULT '6KJ7RW5DR3VTJ',
   `mod_subversion`          VARCHAR(10)         NOT NULL DEFAULT '12550',
   PRIMARY KEY (`mod_id`),
-  UNIQUE KEY `mod_name` (`mod_name`),
-  KEY `mod_dirname` (`mod_dirname`)
+  KEY `mod_name` (`mod_name`),
+  UNIQUE KEY `mod_dirname` (`mod_dirname`)
 )ENGINE =MyISAM;
 
 
@@ -79,7 +79,7 @@ CREATE TABLE `tdmcreate_tables` (
   `table_permissions`   TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`table_id`),
   KEY `table_mid` (`table_mid`),
-  KEY `table_name` (`table_name`)
+  UNIQUE KEY `table_name` (`table_name`)
 )ENGINE =MyISAM;
 
 #
@@ -87,27 +87,27 @@ CREATE TABLE `tdmcreate_tables` (
 #
 
 CREATE TABLE `tdmcreate_fields` (
-  `field_id`        INT(8) UNSIGNED  NOT NULL AUTO_INCREMENT,
-  `field_mid`       INT(5) UNSIGNED  NOT NULL DEFAULT '0',
-  `field_tid`       INT(5) UNSIGNED  NOT NULL DEFAULT '0',
-  `field_numb`      INT(10) UNSIGNED NOT NULL DEFAULT '0',
-  `field_name`      VARCHAR(255)     NOT NULL DEFAULT '',
-  `field_type`      VARCHAR(100)     NOT NULL DEFAULT '',
-  `field_value`     CHAR(4)          NOT NULL DEFAULT '',
-  `field_attribute` VARCHAR(50)      NOT NULL DEFAULT '',
-  `field_null`      CHAR(10)         NOT NULL DEFAULT '',
-  `field_default`   VARCHAR(150)     NOT NULL DEFAULT '',
-  `field_key`       CHAR(10)         NOT NULL DEFAULT '',
-  `field_element`   VARCHAR(150)     NOT NULL DEFAULT '',
-  `field_parent`    TINYINT(1)       NOT NULL DEFAULT '0',
-  `field_inlist`    TINYINT(1)       NOT NULL DEFAULT '0',
-  `field_inform`    TINYINT(1)       NOT NULL DEFAULT '0',
-  `field_admin`     TINYINT(1)       NOT NULL DEFAULT '0',
-  `field_user`      TINYINT(1)       NOT NULL DEFAULT '0',
-  `field_block`     TINYINT(1)       NOT NULL DEFAULT '0',
-  `field_main`      TINYINT(1)       NOT NULL DEFAULT '0',
-  `field_search`    TINYINT(1)       NOT NULL DEFAULT '0',
-  `field_required`  TINYINT(1)       NOT NULL DEFAULT '0',
+  `field_id`        INT(8)       UNSIGNED NOT NULL AUTO_INCREMENT,
+  `field_mid`       INT(5)       UNSIGNED NOT NULL DEFAULT '0',
+  `field_tid`       INT(5)       UNSIGNED NOT NULL DEFAULT '0',
+  `field_numb`      INT(10)      UNSIGNED NOT NULL DEFAULT '0',
+  `field_name`      VARCHAR(255)          NOT NULL DEFAULT '',
+  `field_type`      VARCHAR(100)          NOT NULL DEFAULT '',
+  `field_value`     CHAR(4)               NOT NULL DEFAULT '',
+  `field_attribute` VARCHAR(50)           NOT NULL DEFAULT '',
+  `field_null`      CHAR(10)              NOT NULL DEFAULT '',
+  `field_default`   VARCHAR(150)          NOT NULL DEFAULT '',
+  `field_key`       CHAR(10)              NOT NULL DEFAULT '',
+  `field_element`   VARCHAR(150)          NOT NULL DEFAULT '',
+  `field_parent`    TINYINT(1)            NOT NULL DEFAULT '0',
+  `field_inlist`    TINYINT(1)            NOT NULL DEFAULT '0',
+  `field_inform`    TINYINT(1)       	  NOT NULL DEFAULT '0',
+  `field_admin`     TINYINT(1)       	  NOT NULL DEFAULT '0',
+  `field_user`      TINYINT(1)      	  NOT NULL DEFAULT '0',
+  `field_block`     TINYINT(1)     		  NOT NULL DEFAULT '0',
+  `field_main`      TINYINT(1)     		  NOT NULL DEFAULT '0',
+  `field_search`    TINYINT(1)    		  NOT NULL DEFAULT '0',
+  `field_required`  TINYINT(1)      	  NOT NULL DEFAULT '0',
   PRIMARY KEY (`field_id`),
   KEY `field_mid` (`field_mid`),
   KEY `field_tid` (`field_tid`)
@@ -118,11 +118,11 @@ CREATE TABLE `tdmcreate_fields` (
 #
 
 CREATE TABLE `tdmcreate_languages` (
-  `lng_id`   INT(5) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `lng_mid`  INT(5) UNSIGNED NOT NULL DEFAULT '0',
-  `lng_file` VARCHAR(255) NULL DEFAULT '',
-  `lng_define`  VARCHAR(255) NULL DEFAULT '',
-  `lng_description` VARCHAR(255) NULL DEFAULT '',
+  `lng_id`          INT(5)       UNSIGNED NOT NULL AUTO_INCREMENT,
+  `lng_mid`         INT(5)       UNSIGNED NOT NULL DEFAULT '0',
+  `lng_file`        VARCHAR(255)          NOT NULL DEFAULT '',
+  `lng_define`      VARCHAR(255)          NOT NULL DEFAULT '',
+  `lng_description` VARCHAR(255)          NOT NULL DEFAULT '',
   PRIMARY KEY (`lng_id`),
   KEY `lng_mid` (`lng_mid`)  
 )ENGINE =MyISAM;
@@ -132,110 +132,120 @@ CREATE TABLE `tdmcreate_languages` (
 #
 
 CREATE TABLE `tdmcreate_fieldtype` (
-  `fieldtype_name`  VARCHAR(255) NOT NULL DEFAULT '',
-  `fieldtype_value` VARCHAR(255) NOT NULL DEFAULT '',
-  PRIMARY KEY (`fieldtype_name`)
+  `fieldtype_id`    INT(5)       UNSIGNED NOT NULL AUTO_INCREMENT,
+  `fieldtype_name`  VARCHAR(100)          NOT NULL DEFAULT '',
+  `fieldtype_value` VARCHAR(100)          NOT NULL DEFAULT '',
+  PRIMARY KEY (`fieldtype_id`),
+  KEY `fieldtype_name` (`fieldtype_name`)
 )ENGINE =MyISAM;
 
-INSERT INTO `tdmcreate_fieldtype` (`fieldtype_name`, `fieldtype_value`) VALUES
-  ('', ''),
-  ('INT', 'INT'),
-  ('TINYINT', 'TINYINT'),
-  ('MEDIUMINT', 'MEDIUMINT'),
-  ('SMALLINT', 'SMALLINT'),
-  ('FLOAT', 'FLOAT'),
-  ('DOUBLE', 'DOUBLE'),
-  ('DECIMAL', 'DECIMAL'),
-  ('SET', 'SET'),
-  ('ENUM', 'ENUM'),
-  ('EMAIL', 'EMAIL'),
-  ('URL', 'URL'),
-  ('CHAR', 'CHAR'),
-  ('VARCHAR', 'VARCHAR'),
-  ('TEXT', 'TEXT'),
-  ('TINYTEXT', 'TINYTEXT'),
-  ('MEDIUMTEXT', 'MEDIUMTEXT'),
-  ('LONGTEXT', 'LONGTEXT'),
-  ('DATE', 'DATE'),
-  ('DATETIME', 'DATETIME'),
-  ('TIMESTAMP', 'TIMESTAMP'),
-  ('TIME', 'TIME'),
-  ('YEAR', 'YEAR');
+INSERT INTO `tdmcreate_fieldtype` (`fieldtype_id`, `fieldtype_name`, `fieldtype_value`) VALUES
+  (1, '', ''),
+  (2, 'INT', 'INT'),
+  (3, 'TINYINT', 'TINYINT'),
+  (4, 'MEDIUMINT', 'MEDIUMINT'),
+  (5, 'SMALLINT', 'SMALLINT'),
+  (6, 'FLOAT', 'FLOAT'),
+  (7, 'DOUBLE', 'DOUBLE'),
+  (8, 'DECIMAL', 'DECIMAL'),
+  (9, 'SET', 'SET'),
+  (10, 'ENUM', 'ENUM'),
+  (11, 'EMAIL', 'EMAIL'),
+  (12, 'URL', 'URL'),
+  (13, 'CHAR', 'CHAR'),
+  (14, 'VARCHAR', 'VARCHAR'),
+  (15, 'TEXT', 'TEXT'),
+  (16, 'TINYTEXT', 'TINYTEXT'),
+  (17, 'MEDIUMTEXT', 'MEDIUMTEXT'),
+  (18, 'LONGTEXT', 'LONGTEXT'),
+  (19, 'DATE', 'DATE'),
+  (20, 'DATETIME', 'DATETIME'),
+  (21, 'TIMESTAMP', 'TIMESTAMP'),
+  (22, 'TIME', 'TIME'),
+  (23, 'YEAR', 'YEAR');
 
 #
 # Table structure for table `tdmcreate_fieldattributes` 3
 #
 
 CREATE TABLE `tdmcreate_fieldattributes` (
-  `fieldattribute_name`  VARCHAR(255) NOT NULL DEFAULT '',
-  `fieldattribute_value` VARCHAR(255) NOT NULL DEFAULT '',
-  PRIMARY KEY (`fieldattribute_name`)
+  `fieldattribute_id`    INT(5)       UNSIGNED NOT NULL AUTO_INCREMENT,
+  `fieldattribute_name`  VARCHAR(100)          NOT NULL DEFAULT '',
+  `fieldattribute_value` VARCHAR(100)          NOT NULL DEFAULT '',
+  PRIMARY KEY (`fieldattribute_id`),
+  KEY `fieldattribute_name` (`fieldattribute_name`)
 )ENGINE =MyISAM;
 
-INSERT INTO `tdmcreate_fieldattributes` (`fieldattribute_name`, `fieldattribute_value`) VALUES
-  ('', ''),
-  ('BINARY', 'BINARY'),
-  ('UNSIGNED', 'UNSIGNED'),
-  ('UNSIGNED_ZEROFILL', 'UNSIGNED_ZEROFILL'),
-  ('CURRENT_TIMESTAMP', 'CURRENT_TIMESTAMP');
+INSERT INTO `tdmcreate_fieldattributes` (`fieldattribute_id`, `fieldattribute_name`, `fieldattribute_value`) VALUES
+  (1, '', ''),
+  (2, 'BINARY', 'BINARY'),
+  (3, 'UNSIGNED', 'UNSIGNED'),
+  (4, 'UNSIGNED_ZEROFILL', 'UNSIGNED_ZEROFILL'),
+  (5, 'CURRENT_TIMESTAMP', 'CURRENT_TIMESTAMP');
 
 #
 # Table structure for table `tdmcreate_fieldnull` 3
 #
 
 CREATE TABLE `tdmcreate_fieldnull` (
-  `fieldnull_name`  VARCHAR(255) NOT NULL DEFAULT '',
-  `fieldnull_value` VARCHAR(255) NOT NULL DEFAULT '',
-  PRIMARY KEY (`fieldnull_name`)
+  `fieldnull_id`    INT(5)       UNSIGNED NOT NULL AUTO_INCREMENT,
+  `fieldnull_name`  VARCHAR(100)          NOT NULL DEFAULT '',
+  `fieldnull_value` VARCHAR(100)          NOT NULL DEFAULT '',
+  PRIMARY KEY (`fieldnull_id`),
+  KEY `fieldnull_name` (`fieldnull_name`)
 )ENGINE =MyISAM;
 
-INSERT INTO `tdmcreate_fieldnull` (`fieldnull_name`, `fieldnull_value`) VALUES
-  ('', ''),
-  ('NOT NULL', 'NOT NULL'),
-  ('NULL', 'NULL');
+INSERT INTO `tdmcreate_fieldnull` (`fieldnull_id`, `fieldnull_name`, `fieldnull_value`) VALUES
+  (1, '', ''),
+  (2, 'NOT NULL', 'NOT NULL'),
+  (3, 'NULL', 'NULL');
 
 #
 # Table structure for table `tdmcreate_fieldkey` 3
 #
 
 CREATE TABLE `tdmcreate_fieldkey` (
-  `fieldkey_name`  VARCHAR(255) NOT NULL DEFAULT '',
-  `fieldkey_value` VARCHAR(255) NOT NULL DEFAULT '',
-  PRIMARY KEY (`fieldkey_name`)
+  `fieldkey_id`    INT(5)       UNSIGNED NOT NULL AUTO_INCREMENT,
+  `fieldkey_name`  VARCHAR(100)          NOT NULL DEFAULT '',
+  `fieldkey_value` VARCHAR(100)          NOT NULL DEFAULT '',
+  PRIMARY KEY (`fieldkey_id`),
+  KEY `fieldkey_name` (`fieldkey_name`)
 )ENGINE =MyISAM;
 
-INSERT INTO `tdmcreate_fieldkey` (`fieldkey_name`, `fieldkey_value`) VALUES
-  ('', ''),
-  ('PRIMARY', 'PRIMARY KEY'),
-  ('UNIQUE', 'UNIQUE KEY'),
-  ('INDEX', 'INDEX'),
-  ('FULLTEXT', 'FULLTEXT');
+INSERT INTO `tdmcreate_fieldkey` (`fieldkey_id`, `fieldkey_name`, `fieldkey_value`) VALUES
+  (1, '', ''),
+  (2, 'PRIMARY', 'PRIMARY'),
+  (3, 'UNIQUE', 'UNIQUE'),
+  (4, 'KEY', 'KEY'),
+  (5, 'INDEX', 'INDEX'),
+  (6, 'FULLTEXT', 'FULLTEXT');
 
 #
-# Table structure for table `tdmcreate_fieldelements` 3
+# Table structure for table `tdmcreate_fieldelements` 5
 #
 
 CREATE TABLE `tdmcreate_fieldelements` (
-  `fieldelement_id`    INT(5)       NOT NULL AUTO_INCREMENT,
-  `fieldelement_mid`   INT(11)      NOT NULL DEFAULT '0',
-  `fieldelement_tid`   INT(11)      NOT NULL DEFAULT '0',
-  `fieldelement_name`  VARCHAR(100) NOT NULL DEFAULT '',
-  `fieldelement_value` VARCHAR(100) NOT NULL DEFAULT '',
+  `fieldelement_id`    INT(5)       UNSIGNED NOT NULL AUTO_INCREMENT,
+  `fieldelement_mid`   INT(11)      UNSIGNED NOT NULL DEFAULT '0',
+  `fieldelement_tid`   INT(11)      UNSIGNED NOT NULL DEFAULT '0',
+  `fieldelement_name`  VARCHAR(100)          NOT NULL DEFAULT '',
+  `fieldelement_value` VARCHAR(100)          NOT NULL DEFAULT '',
   PRIMARY KEY (`fieldelement_id`),
   KEY `fieldelement_mid` (`fieldelement_mid`),
   KEY `fieldelement_tid` (`fieldelement_tid`)
 )ENGINE =MyISAM;
 
 INSERT INTO `tdmcreate_fieldelements` (`fieldelement_id`, `fieldelement_mid`, `fieldelement_tid`, `fieldelement_name`, `fieldelement_value`) VALUES
-  (1, 0, 0, 'Text', 'XoopsFormText'),
-  (2, 0, 0, 'TextArea', 'XoopsFormTextArea'),
-  (3, 0, 0, 'DhtmlTextArea', 'XoopsFormDhtmlTextArea'),
-  (4, 0, 0, 'CheckBox', 'XoopsFormCheckBox'),
-  (5, 0, 0, 'RadioYN', 'XoopsFormRadioYN'),
-  (6, 0, 0, 'SelectBox', 'XoopsFormSelect'),
-  (7, 0, 0, 'SelectUser', 'XoopsFormSelectUser'),
-  (8, 0, 0, 'ColorPicker', 'XoopsFormColorPicker'),
-  (9, 0, 0, 'ImageList', 'XoopsFormImageList'),
-  (10, 0, 0, 'UploadImage', 'XoopsFormUploadImage'),
-  (11, 0, 0, 'UploadFile', 'XoopsFormUploadFile'),
-  (12, 0, 0, 'TextDateSelect', 'XoopsFormTextDateSelect');
+  (1, 0, 0, '', ''),
+  (2, 0, 0, 'Text', 'XoopsFormText'),
+  (3, 0, 0, 'TextArea', 'XoopsFormTextArea'),
+  (4, 0, 0, 'DhtmlTextArea', 'XoopsFormDhtmlTextArea'),
+  (5, 0, 0, 'CheckBox', 'XoopsFormCheckBox'),
+  (6, 0, 0, 'RadioYN', 'XoopsFormRadioYN'),
+  (7, 0, 0, 'SelectBox', 'XoopsFormSelect'),
+  (8, 0, 0, 'SelectUser', 'XoopsFormSelectUser'),
+  (9, 0, 0, 'ColorPicker', 'XoopsFormColorPicker'),
+  (10, 0, 0, 'ImageList', 'XoopsFormImageList'),
+  (11, 0, 0, 'UploadImage', 'XoopsFormUploadImage'),
+  (12, 0, 0, 'UploadFile', 'XoopsFormUploadFile'),
+  (13, 0, 0, 'TextDateSelect', 'XoopsFormTextDateSelect');

@@ -132,14 +132,14 @@ EOT;
 	*  @param array $fields
 	*/
 	private function getHeadClass($moduleDirname, $tableName, $fields) {    
-		$ucf_module_dirname = ucfirst($moduleDirname);
-		$ucf_table_name = ucfirst($tableName);	
+		$ucfModuleDirname = ucfirst($moduleDirname);
+		$ucfTableName = ucfirst($tableName);	
 		$ret = <<<EOT
 defined('XOOPS_ROOT_PATH') or die("Restricted access");
 /*
- * Class Object {$ucf_module_dirname}{$ucf_table_name}
+ * Class Object {$ucfModuleDirname}{$ucfTableName}
  */
-class {$ucf_module_dirname}{$ucf_table_name} extends XoopsObject
+class {$ucfModuleDirname}{$ucfTableName} extends XoopsObject
 { 
 	/*
 	* @var mixed
@@ -152,7 +152,7 @@ class {$ucf_module_dirname}{$ucf_table_name} extends XoopsObject
 	 */
 	public function __construct()
 	{
-		\$this->{$moduleDirname} = {$ucf_module_dirname}Helper::getInstance();
+		\$this->{$moduleDirname} = {$ucfModuleDirname}Helper::getInstance();
 {$this->getInitVars($fields)}\t}
 	/*
 	*  @static function &getInstance
@@ -212,9 +212,9 @@ EOT;
 	*  @param string $fpif
 	*/
 	private function getPermissionsInFunctionForm($moduleDirname, $fpif) {    
-		$perm_approve = $this->getLanguage($moduleDirname, 'AM', 'PERMISSIONS_APPROVE');
-		$perm_submit = $this->getLanguage($moduleDirname, 'AM', 'PERMISSIONS_SUBMIT');
-		$perm_view = $this->getLanguage($moduleDirname, 'AM', 'PERMISSIONS_VIEW');
+		$permissionApprove = $this->getLanguage($moduleDirname, 'AM', 'PERMISSIONS_APPROVE');
+		$permissionSubmit = $this->getLanguage($moduleDirname, 'AM', 'PERMISSIONS_SUBMIT');
+		$permissionView = $this->getLanguage($moduleDirname, 'AM', 'PERMISSIONS_VIEW');
 		$ret = <<<EOT
 		// Permissions
 		\$member_handler = & xoops_gethandler ( 'member' );
@@ -227,15 +227,15 @@ EOT;
 			\$groups_ids_submit = \$gperm_handler->getGroupIds ( '{$moduleDirname}_submit', \$this->getVar ( '{$fpif}' ), \$xoopsModule->getVar ( 'mid' ) );
 			\$groups_ids_view = \$gperm_handler->getGroupIds ( '{$moduleDirname}_view', \$this->getVar ( '{$fpif}' ), \$xoopsModule->getVar ( 'mid' ) );
 			\$groups_ids_approve = array_values ( \$groups_ids_approve );
-			\$groups_can_approve_checkbox = new XoopsFormCheckBox ( {$perm_approve}, 'groups_approve[]', \$groups_ids_approve );
+			\$groups_can_approve_checkbox = new XoopsFormCheckBox ( {$permissionApprove}, 'groups_approve[]', \$groups_ids_approve );
 			\$groups_ids_submit = array_values ( \$groups_ids_submit );
-			\$groups_can_submit_checkbox = new XoopsFormCheckBox ( {$perm_submit}, 'groups_submit[]', \$groups_ids_submit );	
+			\$groups_can_submit_checkbox = new XoopsFormCheckBox ( {$permissionSubmit}, 'groups_submit[]', \$groups_ids_submit );	
 			\$groups_ids_view = array_values ( \$groups_ids_view );
-			\$groups_can_view_checkbox = new XoopsFormCheckBox ( {$perm_view}, 'groups_view[]', \$groups_ids_view );			
+			\$groups_can_view_checkbox = new XoopsFormCheckBox ( {$permissionView}, 'groups_view[]', \$groups_ids_view );			
 		} else {
-			\$groups_can_approve_checkbox = new XoopsFormCheckBox ( {$perm_approve}, 'groups_approve[]', \$full_list );
-			\$groups_can_submit_checkbox = new XoopsFormCheckBox ( {$perm_submit}, 'groups_submit[]', \$full_list );		
-			\$groups_can_view_checkbox = new XoopsFormCheckBox ( {$perm_view}, 'groups_view[]', \$full_list );
+			\$groups_can_approve_checkbox = new XoopsFormCheckBox ( {$permissionApprove}, 'groups_approve[]', \$full_list );
+			\$groups_can_submit_checkbox = new XoopsFormCheckBox ( {$permissionSubmit}, 'groups_submit[]', \$full_list );		
+			\$groups_can_view_checkbox = new XoopsFormCheckBox ( {$permissionView}, 'groups_view[]', \$full_list );
 		}		
 		// For approve
 		\$groups_can_approve_checkbox->addOptionArray ( \$group_list );
@@ -272,14 +272,14 @@ EOT;
 	*  @param string $fpmf
 	*/
 	private function getClassHandler($moduleDirname, $tableName, $fpif, $fpmf) {		
-		$ucf_module_dirname = ucfirst($moduleDirname);
-        $ucf_table_name = ucfirst($tableName);
-        $ucf_mod_table_handler = $ucf_module_dirname . $ucf_table_name;		
+		$ucfModuleDirname = ucfirst($moduleDirname);
+        $ucfTableName = ucfirst($tableName);
+        $ucfModuleTable = $ucfModuleDirname . $ucfTableName;		
 		$ret = <<<EOT
 /*
- * Class Object Handler {$ucf_module_dirname}{$ucf_table_name}
+ * Class Object Handler {$ucfModuleDirname}{$ucfTableName}
  */
-class {$ucf_mod_table_handler}Handler extends XoopsPersistableObjectHandler 
+class {$ucfModuleTable}Handler extends XoopsPersistableObjectHandler 
 {
 	/*
 	 * Constructor

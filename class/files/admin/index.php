@@ -68,26 +68,38 @@ class AdminIndex extends TDMCreateFile
 include_once 'header.php';
 // Count elements\n
 EOT;
-		foreach (array_keys($tables) as $i)
-		{
-			$tableName = $tables[$i]->getVar('table_name');
-			$content .= <<<EOT
+		$tableName = null;
+		if(is_array($tables)) {	
+			foreach (array_keys($tables) as $i)
+			{
+				$tableName = $tables[$i]->getVar('table_name');
+				$content .= <<<EOT
 \$count_{$tableName} = \${$tableName}Handler->getCount();\n
 EOT;
+			}
 		}
 		$content .= <<<EOT
 // Template Index
-\$template_main = '{$moduleDirname}_admin_index.tpl';
+\$template_main = '{$moduleDirname}_admin_index.tpl';\n
+EOT;
+		if(is_array($tables)) {
+			$content .= <<<EOT
 // InfoBox Statistics
 \$adminMenu->addInfoBox({$language}STATISTICS);
 // Info elements\n
 EOT;
-		foreach (array_keys($tables) as $i)
-		{
-			$tableName = $tables[$i]->getVar('table_name');
-			$stuTableName = $language_thereare.strtoupper($tableName);
-			$content .= <<<EOT
+			foreach (array_keys($tables) as $i)
+			{
+				$tableName = $tables[$i]->getVar('table_name');
+				$stuTableName = $language_thereare.strtoupper($tableName);
+				$content .= <<<EOT
 \$adminMenu->addInfoBoxLine({$language}STATISTICS, '<label>'.{$stuTableName}.'</label>', \$count_{$tableName});\n
+EOT;
+			}
+		} 
+		if($tableName == null) {
+			$content .= <<<EOT
+\$adminMenu->addInfoBoxLine({$language}STATISTICS, '<label>No statistics</label>', 0);\n
 EOT;
 		}
 		$content .= <<<EOT

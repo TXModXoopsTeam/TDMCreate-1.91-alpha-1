@@ -31,7 +31,8 @@ class TDMCreateFieldtype extends XoopsObject
 	*/
 	public function __construct()
 	{
-		$this->XoopsObject();        		
+		$this->XoopsObject(); 
+        $this->initVar('fieldtype_id', XOBJ_DTYPE_INT);		
 		$this->initVar('fieldtype_name', XOBJ_DTYPE_TXTBOX);
 		$this->initVar('fieldtype_value', XOBJ_DTYPE_TXTBOX);		
 	}
@@ -44,6 +45,6 @@ class TDMCreateFieldtypeHandler extends XoopsPersistableObjectHandler
 {
     function __construct(&$db) 
     {
-        parent::__construct($db, 'tdmcreate_fieldtype', 'tdmcreatefieldtype', 'fieldtype_name', 'fieldtype_value');
+        parent::__construct($db, 'tdmcreate_fieldtype', 'tdmcreatefieldtype', 'fieldtype_id', 'fieldtype_name');
     }
 }

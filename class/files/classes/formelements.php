@@ -284,7 +284,7 @@ EOT;
 			if($fields[$f]->getVar('field_parent') == 1) {
 				$fieldName = $fields[$f]->getVar('field_name');
 				$field_element = $fields[$f]->getVar('field_element');
-				if($field_element > 12) {					
+				if($field_element > 13) {					
 					$fieldelement = $this->tdmcreate->getHandler('fieldelements')->get($field_element);
 					$fieldelementName = $fieldelement->getVar('fieldelement_name');
 					$rpFieldelementName = strtolower(str_replace('Table : ', '', $fieldelementName));						
@@ -364,40 +364,42 @@ EOT;
 				// Switch elements
 				switch($fieldElement)
 				{
-					case 1:
-						$ret .= $this->getXoopsFormText($language, $fieldName, $required);
+					case 1:						
 					break;
 					case 2:
-						$ret .= $this->getXoopsFormTextArea($language, $fieldName, $required);
+						$ret .= $this->getXoopsFormText($language, $fieldName, $required);
 					break;
 					case 3:
-						$ret .= $this->getXoopsFormDhtmlTextArea($language, $moduleDirname, $fieldName, $required);
+						$ret .= $this->getXoopsFormTextArea($language, $fieldName, $required);
 					break;
 					case 4:
-						$ret .= $this->getXoopsFormCheckBox($language, $fieldName, $required);
+						$ret .= $this->getXoopsFormDhtmlTextArea($language, $moduleDirname, $fieldName, $required);
 					break;
 					case 5:
-						$ret .= $this->getXoopsFormRadioYN($language, $fieldName, $required);
+						$ret .= $this->getXoopsFormCheckBox($language, $fieldName, $required);
 					break;
 					case 6:
-						$ret .= $this->getXoopsFormSelect($language, $tableName, $fieldName, $required);
+						$ret .= $this->getXoopsFormRadioYN($language, $fieldName, $required);
 					break;
 					case 7:
-						$ret .= $this->getXoopsFormSelectUser($language, $fieldName, $required);
+						$ret .= $this->getXoopsFormSelect($language, $tableName, $fieldName, $required);
 					break;
 					case 8:
-						$ret .= $this->getXoopsFormColorPicker($language, $moduleDirname, $fieldName, $required);
+						$ret .= $this->getXoopsFormSelectUser($language, $fieldName, $required);
 					break;
 					case 9:
-						$ret .= $this->getXoopsFormImageList($language_funct, $moduleDirname, $tableName, $fieldName, $required);
+						$ret .= $this->getXoopsFormColorPicker($language, $moduleDirname, $fieldName, $required);
 					break;
 					case 10:
-						$ret .= $this->getXoopsFormUploadImage($language_funct, $moduleDirname, $tableName, $required);
+						$ret .= $this->getXoopsFormImageList($language_funct, $moduleDirname, $tableName, $fieldName, $required);
 					break;
 					case 11:
-						$ret .= $this->getXoopsFormUploadFile($language, $moduleDirname, $tableName, $fieldName, $required);
+						$ret .= $this->getXoopsFormUploadImage($language_funct, $moduleDirname, $tableName, $required);
 					break;
 					case 12:
+						$ret .= $this->getXoopsFormUploadFile($language, $moduleDirname, $tableName, $fieldName, $required);
+					break;
+					case 13:
 						$ret .= $this->getXoopsFormTextDateSelect($language, $moduleDirname, $fieldName, $required);
 					break;
 					default:
@@ -407,7 +409,7 @@ EOT;
 						}				
 					break;
 				}
-				if ($fieldElement > 12) {
+				if ($fieldElement > 13) {
 					if($table->getVar('table_category') == 1) {
 						$ret .= $this->getXoopsFormTopic($language, $moduleDirname, $table, $fields, $required);
 					} else {

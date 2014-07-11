@@ -427,5 +427,5 @@ $modversion['config'][$i]['title'] = "_MI_TDMCREATE_SUBVERSION";
 $modversion['config'][$i]['description'] = "";
 $modversion['config'][$i]['formtype'] = "textbox";
 $modversion['config'][$i]['valuetype'] = "text";
-$modversion['config'][$i]['default'] = '12680';
+$modversion['config'][$i]['default'] = '12694';
 unset($i);

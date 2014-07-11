@@ -101,43 +101,33 @@ EOT;
 		{
 			$fieldName = $fields[$f]->getVar('field_name');
 			$fieldElement = $fields[$f]->getVar('field_element');
-			$rp_field_name = $fieldName;
 			if($f == 0) {
 				$field_id = $fieldName;
-				if(strpos($fieldName, '_')) {       
-					$str = strpos($fieldName, '_'); 
-					if($str !== false) { 
-						$rp_field_id = substr($fieldName, $str + 1, strlen($fieldName));
-					} 		
-				}				
-			}
-			if(strpos($fieldName, '_')) {       
-				$str = strpos($fieldName, '_'); 
-				if($str !== false) { 
-					$rp_field_name = substr($fieldName, $str + 1, strlen($fieldName));
-				} 		
-			}
+				$rpFieldName = $this->tdmcfile->getRightString($field_id);				
+			} else {
+				$rpFieldName = $this->tdmcfile->getRightString($fieldName);
+			}			
 			$lp_field_name = substr($fieldName, 0, strpos($fieldName, '_'));
 			if( $fields[$f]->getVar('field_inlist') == 1 ) {	
 				switch( $fieldElement ) {			    
-					case 8:			
+					case 9:			
 						$ret .= <<<EOT
-					<td class="center"><span style="background-color: <{\$list.{$rp_field_name}}>;">&nbsp;&nbsp;&nbsp;&nbsp;</span></td>\n			
-EOT;
-					break;
-					case 9:
-						$ret .= <<<EOT
-					<td class="center"><img src="<{xoModuleIcons32}><{\$list.{$rp_field_name}}>" alt="{$tableName}"></td>\n
+					<td class="center"><span style="background-color: <{\$list.{$rpFieldName}}>;">&nbsp;&nbsp;&nbsp;&nbsp;</span></td>\n			
 EOT;
 					break;
 					case 10:
 						$ret .= <<<EOT
-					<td class="center"><img src="<{\${$moduleDirname}_upload_url}>/images/{$tableName}/<{\$list.{$rp_field_name}}>" alt="{$tableName}"></td>\n
+					<td class="center"><img src="<{xoModuleIcons32}><{\$list.{$rpFieldName}}>" alt="{$tableName}"></td>\n
+EOT;
+					break;
+					case 11:
+						$ret .= <<<EOT
+					<td class="center"><img src="<{\${$moduleDirname}_upload_url}>/images/{$tableName}/<{\$list.{$rpFieldName}}>" alt="{$tableName}"></td>\n
 EOT;
 					break;
 					default:
 						$ret .= <<<EOT
-					<td class="center"><{\$list.{$rp_field_name}}></td>\n
+					<td class="center"><{\$list.{$rpFieldName}}></td>\n
 EOT;
 					break;
 				}
@@ -182,17 +172,17 @@ EOT;
 			}
 			if( $fields[$f]->getVar('field_inlist') == 1 ) { 
 				switch( $fieldElement ) {			    
-					case 8:			
+					case 9:			
 						$ret .= <<<EOT
 					<td class="center"><span style="background-color: <{\$list.{$fieldName}}>;">\t\t</span></td>\n			
 EOT;
 					break;
-					case 9:
+					case 10:
 						$ret .= <<<EOT
 					<td class="center"><img src="<{xoModuleIcons32}><{\$list.{$fieldName}}>" alt="{$tableName}"></td>\n
 EOT;
 					break;
-					case 10:
+					case 11:
 						$ret .= <<<EOT
 					<td class="center"><img src="<{\${$moduleDirname}_upload_url}>/images/{$tableName}/<{\$list.{$fieldName}}>" alt="{$tableName}"></td>\n
 EOT;

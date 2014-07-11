@@ -116,26 +116,21 @@ EOT;
 		foreach(array_keys($fields) as $f) 
 		{
 			$fieldName = $fields[$f]->getVar('field_name');
-			$rpFieldName = $fieldName;			
 			// Verify if table_fieldname is not empty
 			$lpFieldName = !empty($tableFieldname) ? substr($fieldName, 0, strpos($fieldName, '_')) : $tableName;				
-			if(strpos($fieldName, '_')) {       
-				$str = strpos($fieldName, '_'); 
-				if($str !== false){ 
-					$rpFieldName = substr($fieldName, $str + 1, strlen($fieldName));
-				} 		
-			}				
+			$rpFieldName = $this->tdmcfile->getRightString($fieldName);
+			//				
 			$fieldElement = $fields[$f]->getVar('field_element');				
 			if( ($fields[$f]->getVar('field_admin') == 1) || ($tableAutoincrement == 1) ) {	
 				switch($fieldElement) {
-					case 2:
 					case 3:
+					case 4:
 						$ret .= $this->adminobjects->getTextAreaGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName);
 					break;
-					case 7:
+					case 5:
 						$ret .= $this->adminobjects->getSelectUserGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName);
 					break;						
-					case 12:
+					case 13:
 						$ret .= $this->adminobjects->getTextDateSelectGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName);
 					break;
 					default:
@@ -215,20 +210,20 @@ EOT;
 			$fieldElement = $fields[$f]->getVar('field_element');
 			if($f > 0) { // If we want to hide field id
 				switch($fieldElement) {
-					case 4:
 					case 5:
+					case 6:
 						$ret .= $this->adminobjects->getCheckBoxOrRadioYNSetVar($tableName, $fieldName);
 					break;
-					case 9:
+					case 10:
 						$ret .= $this->adminobjects->getImageListSetVar($moduleDirname, $tableName, $fieldName);
 					break;
-					case 10:
+					case 11:
 						$ret .= $this->adminobjects->getUploadImageSetVar($moduleDirname, $tableName, $fieldName);
 					break;
-					case 11:
+					case 12:
 						$ret .= $this->adminobjects->getUploadFileSetVar($moduleDirname, $tableName, $fieldName);
 					break;
-					case 12:
+					case 13:
 						$ret .= $this->adminobjects->getTextDateSelectSetVar($tableName, $fieldName);
 					break;
 					default:

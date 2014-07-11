@@ -72,21 +72,22 @@ class TemplatesUserFooter extends HtmlSmartyCodes
 <{/if}>
 <div class="left"><{\$copyright}></div>\n
 EOT;
-		if( $table->getVar('table_name') != null ) {
-			$content .= <<<EOT
+		if (is_object($table)) {
+			if( $table->getVar('table_name') != null ) {
+				$content .= <<<EOT
 <{if \$pagenav != ''}>
 	<div class="right"><{\$pagenav}></div>
 <{/if}>
 <br />\n
 EOT;
-		}
-		$content .= <<<EOT
+			}
+			$content .= <<<EOT
 <{if \$xoops_isadmin}>
    <div class="center bold"><a href="<{\$admin}>"><{\$smarty.const.{$language}ADMIN}></a></div><br />
 <{/if}>\n
 EOT;
-		if ( $table->getVar('table_comments') == 1 ) {
-			$content .= <<<EOT
+			if ( $table->getVar('table_comments') == 1 ) {
+				$content .= <<<EOT
 <div class="pad2 marg2">
 	<{if \$comment_mode == "flat"}>
 		<{include file="db:system_comments_flat.html"}>
@@ -98,11 +99,12 @@ EOT;
 </div>\n
 <br />\n
 EOT;
-		}
-		if ( $table->getVar('table_notifications') == 1 ) {
-			$content .= <<<EOT
+			}
+			if ( $table->getVar('table_notifications') == 1 ) {
+				$content .= <<<EOT
 <{include file='db:system_notification_select.html'}>
 EOT;
+			}
 		}
 		$this->tdmcfile->create($moduleDirname, 'templates', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();

@@ -44,10 +44,12 @@ class IncludeCommon extends TDMCreateFile
     /*
 	*  @public function write
 	*  @param string $module
+	*  @param object $table
 	*  @param string $filename
 	*/
-	public function write($module, $filename) {    
+	public function write($module, $table, $filename) {    
 		$this->setModule($module);
+		$this->setTable($table);
 		$this->setFileName($filename);
 	}	
 	/*
@@ -56,26 +58,26 @@ class IncludeCommon extends TDMCreateFile
 	*/
 	private function getCommonCode($module) 
 	{ 		
+		$table = $this->getTable();
 		$moduleDirname = $module->getVar('mod_dirname');
-		$stu_mn = strtoupper($moduleDirname); 
-		$mod_author = $module->getVar('mod_author');
-		$mod_a_w_name = $module->getVar('mod_author_website_name');
-		$mod_a_w_url = $module->getVar('mod_author_website_url');
-		$awn = str_replace(' ', '', strtolower($mod_a_w_name));
-		$mod_author_image = str_replace(' ', '', strtolower($mod_author));
+		$stuModuleDirname = strtoupper($moduleDirname); 
+		$moduleAuthor = $module->getVar('mod_author');
+		$moduleAuthorWebsiteName = $module->getVar('mod_author_website_name');
+		$moduleAuthorWebsiteUrl = $module->getVar('mod_author_website_url');
+		$moduleAuthorImage = str_replace(' ', '', strtolower($moduleAuthor));
 		$ret = <<<EOT
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
-if (!defined('{$stu_mn}_MODULE_PATH')) {
-	define('{$stu_mn}_DIRNAME', '{$moduleDirname}');
-	define('{$stu_mn}_PATH', XOOPS_ROOT_PATH.'/modules/'.{$stu_mn}_DIRNAME);
-	define('{$stu_mn}_URL', XOOPS_URL.'/modules/'.{$stu_mn}_DIRNAME);	
-	define('{$stu_mn}_UPLOAD_PATH', XOOPS_UPLOAD_PATH.'/'.{$stu_mn}_DIRNAME);
-	define('{$stu_mn}_UPLOAD_URL', XOOPS_UPLOAD_URL.'/'.{$stu_mn}_DIRNAME);
-	define('{$stu_mn}_IMAGE_PATH', {$stu_mn}_PATH.'/assets/images');
-	define('{$stu_mn}_IMAGE_URL', {$stu_mn}_URL.'/assets/images/');
-	define('{$stu_mn}_ADMIN', {$stu_mn}_URL . '/admin/index.php');
-	\$local_logo = {$stu_mn}_IMAGE_URL . '/{$mod_author_image}_logo.gif';
-	/*if(is_dir({$stu_mn}_IMAGE_PATH) && file_exists(\$local_logo)) {
+if (!defined('{$stuModuleDirname}_MODULE_PATH')) {
+	define('{$stuModuleDirname}_DIRNAME', '{$moduleDirname}');
+	define('{$stuModuleDirname}_PATH', XOOPS_ROOT_PATH.'/modules/'.{$stuModuleDirname}_DIRNAME);
+	define('{$stuModuleDirname}_URL', XOOPS_URL.'/modules/'.{$stuModuleDirname}_DIRNAME);	
+	define('{$stuModuleDirname}_UPLOAD_PATH', XOOPS_UPLOAD_PATH.'/'.{$stuModuleDirname}_DIRNAME);
+	define('{$stuModuleDirname}_UPLOAD_URL', XOOPS_UPLOAD_URL.'/'.{$stuModuleDirname}_DIRNAME);
+	define('{$stuModuleDirname}_IMAGE_PATH', {$stuModuleDirname}_PATH.'/assets/images');
+	define('{$stuModuleDirname}_IMAGE_URL', {$stuModuleDirname}_URL.'/assets/images/');
+	define('{$stuModuleDirname}_ADMIN', {$stuModuleDirname}_URL . '/admin/index.php');
+	\$local_logo = {$stuModuleDirname}_IMAGE_URL . '/{$moduleAuthorImage}_logo.gif';
+	/*if(is_dir({$stuModuleDirname}_IMAGE_PATH) && file_exists(\$local_logo)) {
 		\$logo = \$local_logo;
 	} else {
 		\$sysPathIcon32 = \$GLOBALS['xoopsModule']->getInfo('icons32');
@@ -83,12 +85,17 @@ if (!defined('{$stu_mn}_MODULE_PATH')) {
 	}*/	
 }
 // module information
-\$copyright = "<a href='{$mod_a_w_url}' title='{$mod_a_w_name}' target='_blank'>
-                     <img src='".\$local_logo."' alt='{$mod_a_w_name}' /></a>";
+\$copyright = "<a href='{$moduleAuthorWebsiteUrl}' title='{$moduleAuthorWebsiteName}' target='_blank'>
+                     <img src='".\$local_logo."' alt='{$moduleAuthorWebsiteName}' /></a>";
 					 
 include_once XOOPS_ROOT_PATH.'/class/xoopsrequest.php';
-include_once {$stu_mn}_PATH.'/class/helper.php';
 EOT;
+		if (is_object($table)) {	
+			$ret .= <<<EOT
+include_once {$stuModuleDirname}_PATH.'/class/helper.php';
+include_once {$stuModuleDirname}_PATH.'/include/functions.php';
+EOT;
+		}
 		return $ret;
 	}
 	/*
