@@ -43,6 +43,10 @@ class TDMCreateStructure
 	*/ 
 	private $path = null;
 	/*
+	* @var mixed
+	*/
+	//private $uploadPath = null;
+	/*
 	* @var string
 	*/
 	private $fromFile = null;
@@ -76,6 +80,20 @@ class TDMCreateStructure
 	public function getPath($path) {		
 		$this->path = $path;
 	} 
+	/*
+	*  @public function getPath
+	*  @param string $path
+	*/
+	/*public function getPath($path) {		
+		$this->path = TDMC_PATH . DIRECTORY_SEPARATOR . $path;
+	}*/
+	/*
+	*  @public function getUploadPath
+	*  @param string $path
+	*/
+	/*public function getUploadPath($path) {		
+		$this->uploadPath = TDMC_UPLOAD_PATH . DIRECTORY_SEPARATOR . $path;
+	}*/
 	/* 
 	*  @public function isDir
 	*  @param string $dname                                 

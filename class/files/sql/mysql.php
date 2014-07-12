@@ -144,54 +144,72 @@ SQL;
 			$fieldNull = $fields[$f]->getVar('field_null');
 			$fieldDefault = $fields[$f]->getVar('field_default');
 			$fieldKey = $fields[$f]->getVar('field_key');
+			if($fieldType > 1) {					
+				$fType = $this->tdmcreate->getHandler('fieldtype')->get($fieldType);
+				$fieldTypeName = $fType->getVar('fieldtype_name');									
+			} else {
+				$fieldType = null;
+			}
+			if($fieldAttribute > 1) {					
+				$fAttribute = $this->tdmcreate->getHandler('fieldattributes')->get($fieldAttribute);
+				$fieldAttribute = $fAttribute->getVar('fieldattribute_name');									
+			} else {
+				$fieldAttribute = null;
+			}
+			if($fieldNull > 1) {					
+				$fNull = $this->tdmcreate->getHandler('fieldnull')->get($fieldNull);
+				$fieldNull = $fNull->getVar('fieldnull_name');									
+			} else {
+				$fieldNull = null;
+			}			
 			if ( !empty($fieldName) )
 			{								
 				switch( $fieldType ) {
-					case 'TEXT':
-					case 'TINYTEXT':
-					case 'MEDIUMTEXT':
-					case 'LONGTEXT':
-					case 'DATE':	
-					case 'DATETIME':
-					case 'TIMESTAMP':
-						$type = $fieldType;
+					case 15:
+					case 16:
+					case 17:
+					case 18:
+					case 19:	
+					case 20:
+					case 21:
+						$type = $fieldTypeName;
 						$default = null;
                     break;					
 					default:
-						$type = $fieldType.'('.$fieldValue.')';
+						$type = $fieldTypeName.'('.$fieldValue.')';
 						$default = "DEFAULT '{$fieldDefault}'";
 					break;
 				}	
 				if( ($f == 0) && ($tableAutoincrement == 1) ) {
 					$row[] = $this->getFieldRow($fieldName, $type, $fieldAttribute, $fieldNull, null, 'AUTO_INCREMENT');					
-					$comma[$j] = $this->getKey(1, $fieldName);
+					$comma[$j] = $this->getKey(2, $fieldName);
 					$j++;
 				} elseif( ($f == 0) && ($tableAutoincrement == 0) ) {
 					$row[] = $this->getFieldRow($fieldName, $type, $fieldAttribute, $fieldNull, $default);					
-					$comma[$j] = $this->getKey(1, $fieldName);
+					$comma[$j] = $this->getKey(2, $fieldName);
 					$j++;
 				} else {
-					if( $fieldKey == 'UNIQUE' || $fieldKey == 'KEY' || $fieldKey == 'INDEX' || $fieldKey == 'FULLTEXT')
+					if( $fieldKey == 3 || $fieldKey == 4 || $fieldKey == 5 || $fieldKey == 6)
 					{
 						switch( $fieldKey ) {					
-							case 'UNIQUE':
-								$row[] = $this->getFieldRow($fieldName, $type, $fieldAttribute, $fieldNull, $default);
-								$comma[$j] = $this->getKey(2, $fieldName);
-								$j++;
-							break;
-							case 'KEY':
+							case 3:
 								$row[] = $this->getFieldRow($fieldName, $type, $fieldAttribute, $fieldNull, $default);
 								$comma[$j] = $this->getKey(3, $fieldName);
 								$j++;
 							break;
-							case 'INDEX':
+							case 4:
 								$row[] = $this->getFieldRow($fieldName, $type, $fieldAttribute, $fieldNull, $default);
 								$comma[$j] = $this->getKey(4, $fieldName);
 								$j++;
 							break;
-							case 'FULLTEXT':
+							case 5:
 								$row[] = $this->getFieldRow($fieldName, $type, $fieldAttribute, $fieldNull, $default);
 								$comma[$j] = $this->getKey(5, $fieldName);
+								$j++;
+							break;
+							case 6:
+								$row[] = $this->getFieldRow($fieldName, $type, $fieldAttribute, $fieldNull, $default);
+								$comma[$j] = $this->getKey(6, $fieldName);
 								$j++;
 							break;											
 						}	
@@ -266,27 +284,27 @@ SQL;
 	*/
 	private function getKey($key, $fieldName) {    
 		switch( $key ) {
-			case 1: // PRIMARY KEY
+			case 2: // PRIMARY KEY
 				$ret = <<<SQL
   PRIMARY KEY (`{$fieldName}`)
 SQL;
 			break;
-			case 2: // UNIQUE KEY
+			case 3: // UNIQUE KEY
 				$ret = <<<SQL
   UNIQUE KEY `{$fieldName}` (`{$fieldName}`)
 SQL;
 			break;
-			case 3: // KEY
+			case 4: // KEY
 				$ret = <<<SQL
   KEY `{$fieldName}` (`{$fieldName}`)
 SQL;
 			break;
-			case 4: // INDEX
+			case 5: // INDEX
 				$ret = <<<SQL
   INDEX (`{$fieldName}`)
 SQL;
 			break;
-			case 5: // FULLTEXT KEY
+			case 6: // FULLTEXT KEY
 				$ret = <<<SQL
   FULLTEXT KEY `{$fieldName}` (`{$fieldName}`)
 SQL;

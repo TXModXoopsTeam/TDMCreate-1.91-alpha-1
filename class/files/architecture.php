@@ -320,6 +320,10 @@ class TDMCreateArchitecture extends TDMCreateStructure
 		}
 		// Creation of blocks language file
 		if (is_object($table)) {
+			// Include Install File
+			$includeInstall = IncludeInstall::getInstance();
+			$includeInstall->write($module, $table, $tables, 'install.php');
+			$ret[] = $includeInstall->render();
 			if ( $table->getVar('table_blocks') == 1) {			
 				// Language Blocks File 
 				$languageBlocks = LanguageBlocks::getInstance();
@@ -354,11 +358,7 @@ class TDMCreateArchitecture extends TDMCreateStructure
 				$languageMailTpl = LanguageMailTpl::getInstance();	
 				$languageMailTpl->write($module);
 				$ret[] = $languageMailTpl->renderFile('category_new_notify.tpl');
-			}
-			// Include Install File
-			$includeInstall = IncludeInstall::getInstance();
-			$includeInstall->write($module, $table, $tables, 'install.php');
-			$ret[] = $includeInstall->render();
+			}			
 			// Creation of sql file
 			if ( $table->getVar('table_name') != null) {
 				// Sql File

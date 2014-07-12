@@ -106,14 +106,17 @@ EOT;
 			$fieldElement = $fields[$f]->getVar('field_element');				
 			if( ($fields[$f]->getVar('field_user') == 1) || ($tableAutoincrement == 1) ) {	
 				switch($fieldElement) {
-					case 2:
 					case 3:
+					case 4:
 						$ret .= $this->userobjects->getTextAreaGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName);
 					break;
-					case 7:
+					case 8:
 						$ret .= $this->userobjects->getSelectUserGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName);
-					break;						
-					case 12:
+					break;	
+					case 11:
+						$ret .= $this->userobjects->getUploadImageGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName);
+					break;
+					case 13:
 						$ret .= $this->userobjects->getTextDateSelectGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName);
 					break;
 					default:

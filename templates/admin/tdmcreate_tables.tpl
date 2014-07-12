@@ -32,7 +32,7 @@
             </td>
             <td class='center bold green'><{$module.name}></td>
             <td class='center'><img src="<{$tdmc_upload_imgmod_url}>/<{$module.image}>" alt="" height="35" /></td>
-	    <td class='center'><img src="<{$modPathIcon16}>/nb_fields.png" alt="16" /></td>
+	    <td class='center'><img src="<{$modPathIcon16}>/fields.png" alt="16" /></td>
 	    <td class='center'><img src="<{$modPathIcon16}>/blocks.png" alt="16" /></td>
 	    <td class='center'><img id="loading_img_admin<{$module.id}>" src="<{$modPathIcon16}>/spinner.gif" style="display:none;" title="<{$smarty.const._AM_SYSTEM_LOADING}>" alt="<{$smarty.const._AM_SYSTEM_LOADING}>" /><img style="cursor:pointer;" class="tooltip" id="img_admin<{$module.id}>" onclick="tdmcreate_setStatus( { op: 'display', mod_id: <{$module.id}>, mod_admin: <{if $module.admin == 1}>0<{else}>1<{/if}> }, 'img_admin<{$module.id}>', 'modules.php' )" src="<{xoModuleIcons16}><{$module.admin}>.png" alt="<{$smarty.const._AM_TDMCREATE_CHANGE_DISPLAY}>&nbsp;<{$module.name}>" title="<{$smarty.const._AM_TDMCREATE_CHANGE_DISPLAY}>&nbsp;<{$module.name}>" />
             </td>

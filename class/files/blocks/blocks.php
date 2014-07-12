@@ -60,7 +60,7 @@ class BlocksFiles extends TDMCreateFile
 		$ucfModuleDirname = ucfirst($moduleDirname);
 		$ret = <<<EOT
 include_once XOOPS_ROOT_PATH.'/modules/{$moduleDirname}/include/common.php';
-include_once XOOPS_ROOT_PATH.'/modules/{$moduleDirname}/include/functions.php';	
+// Function show block
 function b_{$moduleDirname}_{$tableName}_show(\$options) 
 {
 	include_once XOOPS_ROOT_PATH.'/modules/{$moduleDirname}/class/{$tableName}.php';
@@ -128,6 +128,7 @@ EOT;
 		$stuModuleDirname = strtoupper($moduleDirname);
 		$ucfModuleDirname = ucfirst($moduleDirname);
 		$ret = <<<EOT
+// Function edit block
 function b_{$moduleDirname}_{$tableName}_edit(\$options) 
 {	
     include_once XOOPS_ROOT_PATH.'/modules/{$moduleDirname}/class/{$tableName}.php';		

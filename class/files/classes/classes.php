@@ -81,44 +81,50 @@ EOT;
 		{
 			$fieldName = $fields[$f]->getVar('field_name');
 			$fieldType = $fields[$f]->getVar('field_type');
+			if($fieldType > 1) {					
+				$fType = $this->tdmcreate->getHandler('fieldtype')->get($fieldType);
+				$fieldTypeName = $fType->getVar('fieldtype_name');									
+			} else {
+				$fieldType = null;
+			}
 			switch($fieldType) {
-				case 'INT': 
-				case 'TINYINT': 
-				case 'MEDIUMINT': 
-				case 'SMALLINT':
+				case 2: 
+				case 3: 
+				case 4: 
+				case 5:
 					$ret .= $this->getInitVar($fieldName, 'INT');
 				break;
-				case 'CHAR': 
-				case 'VARCHAR': 				
-					$ret .= $this->getInitVar($fieldName, 'TXTBOX');
-				break;
-				case 'TEXT': 
-				case 'TINYTEXT': 
-				case 'MEDIUMTEXT': 
-				case 'LONGTEXT':
-					$ret .= $this->getInitVar($fieldName, 'TXTAREA');
-				break;				
-				case 'FLOAT': 				
+				case 6: 				
 					$ret .= $this->getInitVar($fieldName, 'FLOAT');
 				break;
-				case 'DECIMAL': 
-				case 'DOUBLE': 				
+				case 7: 
+				case 8: 				
 					$ret .= $this->getInitVar($fieldName, 'DECIMAL');
 				break;
-				case 'ENUM': 				
+				case 10: 				
 					$ret .= $this->getInitVar($fieldName, 'ENUM');
 				break;
-				case 'EMAIL': 				
+				case 11: 				
 					$ret .= $this->getInitVar($fieldName, 'EMAIL');
 				break;
-				case 'URL': 				
+				case 12: 				
 					$ret .= $this->getInitVar($fieldName, 'URL');
-				break;  
-				case 'DATE': 
-				case 'DATETIME': 
-				case 'TIMESTAMP': 
-				case 'TIME':
-				case 'YEAR':
+				break;
+				case 13: 
+				case 14: 				
+					$ret .= $this->getInitVar($fieldName, 'TXTBOX');
+				break;
+				case 15: 
+				case 16: 
+				case 17: 
+				case 18:
+					$ret .= $this->getInitVar($fieldName, 'TXTAREA');
+				break;				  
+				case 19: 
+				case 20: 
+				case 21: 
+				case 22:
+				case 23:
 					$ret .= $this->getInitVar($fieldName, 'LTIME');
 				break;
 			}

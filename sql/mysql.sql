@@ -140,7 +140,7 @@ CREATE TABLE `tdmcreate_fieldtype` (
 )ENGINE =MyISAM;
 
 INSERT INTO `tdmcreate_fieldtype` (`fieldtype_id`, `fieldtype_name`, `fieldtype_value`) VALUES
-  (1, '', ''),
+  (1, '...', ''),
   (2, 'INT', 'INT'),
   (3, 'TINYINT', 'TINYINT'),
   (4, 'MEDIUMINT', 'MEDIUMINT'),
@@ -177,7 +177,7 @@ CREATE TABLE `tdmcreate_fieldattributes` (
 )ENGINE =MyISAM;
 
 INSERT INTO `tdmcreate_fieldattributes` (`fieldattribute_id`, `fieldattribute_name`, `fieldattribute_value`) VALUES
-  (1, '', ''),
+  (1, '...', ''),
   (2, 'BINARY', 'BINARY'),
   (3, 'UNSIGNED', 'UNSIGNED'),
   (4, 'UNSIGNED_ZEROFILL', 'UNSIGNED_ZEROFILL'),
@@ -196,7 +196,7 @@ CREATE TABLE `tdmcreate_fieldnull` (
 )ENGINE =MyISAM;
 
 INSERT INTO `tdmcreate_fieldnull` (`fieldnull_id`, `fieldnull_name`, `fieldnull_value`) VALUES
-  (1, '', ''),
+  (1, '...', ''),
   (2, 'NOT NULL', 'NOT NULL'),
   (3, 'NULL', 'NULL');
 
@@ -213,7 +213,7 @@ CREATE TABLE `tdmcreate_fieldkey` (
 )ENGINE =MyISAM;
 
 INSERT INTO `tdmcreate_fieldkey` (`fieldkey_id`, `fieldkey_name`, `fieldkey_value`) VALUES
-  (1, '', ''),
+  (1, '...', ''),
   (2, 'PRIMARY', 'PRIMARY'),
   (3, 'UNIQUE', 'UNIQUE'),
   (4, 'KEY', 'KEY'),
@@ -236,7 +236,7 @@ CREATE TABLE `tdmcreate_fieldelements` (
 )ENGINE =MyISAM;
 
 INSERT INTO `tdmcreate_fieldelements` (`fieldelement_id`, `fieldelement_mid`, `fieldelement_tid`, `fieldelement_name`, `fieldelement_value`) VALUES
-  (1, 0, 0, '', ''),
+  (1, 0, 0, '...', ''),
   (2, 0, 0, 'Text', 'XoopsFormText'),
   (3, 0, 0, 'TextArea', 'XoopsFormTextArea'),
   (4, 0, 0, 'DhtmlTextArea', 'XoopsFormDhtmlTextArea'),

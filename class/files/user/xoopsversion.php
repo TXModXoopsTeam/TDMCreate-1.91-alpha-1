@@ -359,7 +359,7 @@ EOT;
         $fields = $this->getTableFields($table->getVar('table_id'));
 		foreach (array_keys($fields) as $f) 
 		{		
-			if( $fields[$f]->getVar('field_element') == 3 ) {
+			if( $fields[$f]->getVar('field_element') == 4 ) {
 				$ret .= <<<EOT
 // Editor
 xoops_load('xoopseditorhandler');

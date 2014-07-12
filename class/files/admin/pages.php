@@ -127,9 +127,12 @@ EOT;
 					case 4:
 						$ret .= $this->adminobjects->getTextAreaGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName);
 					break;
-					case 5:
+					case 8:
 						$ret .= $this->adminobjects->getSelectUserGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName);
-					break;						
+					break;
+					case 11:
+						$ret .= $this->adminobjects->getUploadImageGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName);
+					break;
 					case 13:
 						$ret .= $this->adminobjects->getTextDateSelectGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName);
 					break;

@@ -169,6 +169,22 @@ EOT;
 		return $ret;
 	}
 	/*
+	*  @public function getUploadImageGetVar
+	*  @param string $lpFieldName
+	*  @param string $rpFieldName
+	*  @param string $tableName
+	*  @param string $fieldName	
+	*/
+	public function getUploadImageGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName) {    
+		$ret = <<<EOT
+\t\t\t\t// Get Var {$fieldName}
+\t\t\t\t\${$fieldName} = \${$tableName}_arr[\$i]->getVar('{$fieldName}');
+\t\t\t\t\$upload_image = \${$fieldName} ? \${$fieldName} : 'blank.gif';
+\t\t\t\t\${$lpFieldName}['{$rpFieldName}'] = \$upload_image;\n
+EOT;
+		return $ret;
+	}
+	/*
 	*  @public function getTextAreaGetVar
 	*  @param string $lpFieldName
 	*  @param string $rpFieldName
