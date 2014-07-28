@@ -41,11 +41,11 @@ class TDMCreateStructure
 	/*
 	* @var string
 	*/ 
-	private $path = null;
+	protected $path = null;
 	/*
 	* @var mixed
 	*/
-	//private $uploadPath = null;
+	protected $uploadPath = null;
 	/*
 	* @var string
 	*/
@@ -74,26 +74,40 @@ class TDMCreateStructure
         return $instance;
     }
 	/*
-	*  @public function getPath
+	*  @public function setPath
 	*  @param string $path
 	*/
-	public function getPath($path) {		
-		$this->path = $path;
-	} 
+	/*public function setPath($path) {		
+		$this->path = TDMC_PATH . DIRECTORY_SEPARATOR . $path;
+	}*/
+	/*
+	*  @public function setUploadPath
+	*  @param string $path
+	*/
+	/*public function setUploadPath($path) {		
+		$this->uploadPath = TDMC_UPLOAD_PATH . DIRECTORY_SEPARATOR . $path;
+	}*/
 	/*
 	*  @public function getPath
 	*  @param string $path
 	*/
-	/*public function getPath($path) {		
-		$this->path = TDMC_PATH . DIRECTORY_SEPARATOR . $path;
+	/*public function getPath() {		
+		return $this->path;
 	}*/
 	/*
 	*  @public function getUploadPath
 	*  @param string $path
 	*/
-	/*public function getUploadPath($path) {		
-		$this->uploadPath = TDMC_UPLOAD_PATH . DIRECTORY_SEPARATOR . $path;
+	/*public function getUploadPath() {		
+		return $this->uploadPath;
 	}*/
+	/*
+	*  @public function getPath
+	*  @param string $path
+	*/
+	public function getPath($path) {		
+		$this->path = $path;
+	} 	
 	/* 
 	*  @public function isDir
 	*  @param string $dname                                 

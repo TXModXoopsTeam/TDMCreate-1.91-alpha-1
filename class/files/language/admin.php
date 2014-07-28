@@ -19,16 +19,21 @@
  * @version         $Id: admin.php 12258 2014-01-02 09:33:29Z timgno $
  */
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
-
+require_once 'defines.php';
 class LanguageAdmin extends TDMCreateFile
 {	
+	/*
+	* @var mixed
+	*/
+	private $defines = null;
 	/*
 	*  @public function constructor
 	*  @param null
 	*/
 	public function __construct() { 
 		parent::__construct();
-		$this->tdmcfile = TDMCreateFile::getInstance();		
+		$this->tdmcfile = TDMCreateFile::getInstance();
+		$this->defines = LanguageDefines::getInstance();
 	}	
 	/*
 	*  @static function &getInstance
@@ -60,19 +65,15 @@ class LanguageAdmin extends TDMCreateFile
 	*/
 	public function getLanguageAdminIndex($language, $tables) 
 	{    
-		$ret = <<<EOT
-// ---------------- Admin Index ----------------
-define('{$language}STATISTICS', "Statistics");
-// There are\n
-EOT;
+		$ret = $this->defines->getAboveHeadDefines('Admin Index');		
+		$ret .= $this->defines->getDefine($language, 'STATISTICS', "Statistics");		
+		$ret .= $this->defines->getAboveDefines('There are');
 		foreach (array_keys($tables) as $t)
 		{
 			$tableName = $tables[$t]->getVar('table_name');
 			$stuTableName = strtoupper($tableName);
 			$stlTableName = strtolower($tableName);
-			$ret .= <<<EOT
-define('{$language}THEREARE_{$stuTableName}', "There are <span class='bold'>%s</span> {$stlTableName} in the database");\n
-EOT;
+			$ret .= $this->defines->getDefine($language, "THEREARE_{$stuTableName}", "There are <span class='bold'>%s</span> {$stlTableName} in the database");			
 		}		
 		return $ret;
 	}
@@ -83,51 +84,39 @@ EOT;
 	*/
 	public function getLanguageAdminPages($language, $tables) 
 	{ 		
-		$ret = <<<EOT
-// ---------------- Admin Files ----------------
-// There aren't\n
-EOT;
+		$ret = $this->defines->getAboveHeadDefines('Admin Files');
+		$ret .= $this->defines->getAboveDefines('There aren\'t');		
 		foreach (array_keys($tables) as $t)
 		{
 			$tableName = $tables[$t]->getVar('table_name');			
 			$stuTableName = strtoupper($tableName);
 			$stlTableName = strtolower($tableName);
-			$ret .= <<<EOT
-define('{$language}THEREARENT_{$stuTableName}', "There aren't {$stlTableName}");\n
-EOT;
+			$ret .= $this->defines->getDefine($language, "THEREARENT_{$stuTableName}", "There aren't {$stlTableName}");			
 		}
-		$ret .= <<<EOT
-// Save/Delete
-define('{$language}FORMOK', "Successfully saved");
-define('{$language}FORMDELOK', "Successfully deleted");
-define('{$language}FORMSUREDEL', "Are you sure to delete: <b><span style='color : Red'>%s </span></b>");
-define('{$language}FORMSURERENEW', "Are you sure to update: <b><span style='color : Red'>%s </span></b>");\n
-EOT;
-		$ret .= <<<EOT
-// Buttons\n
-EOT;
+		$ret .= $this->defines->getAboveDefines('Save/Delete');		
+		$ret .= $this->defines->getDefine($language, "FORMOK", "Successfully saved");
+		$ret .= $this->defines->getDefine($language, "FORMDELOK", "Successfully deleted");
+		$ret .= $this->defines->getDefine($language, "FORMSUREDEL", "Are you sure to delete: <b><span style='color : Red'>%s </span></b>");
+		$ret .= $this->defines->getDefine($language, "FORMSURERENEW", "Are you sure to update: <b><span style='color : Red'>%s </span></b>");
+		$ret .= $this->defines->getAboveDefines('Buttons');
+		//
 		foreach (array_keys($tables) as $t)
 		{
 			$tableName = $tables[$t]->getVar('table_name');
 			$tableFieldname = $tables[$t]->getVar('table_fieldname');
 			$stuTableFieldname = strtoupper($tableFieldname);
-            $ucfTableFieldname = ucfirst($tableFieldname);			
-			$ret .= <<<EOT
-define('{$language}ADD_{$stuTableFieldname}', "Add {$ucfTableFieldname}");\n
-EOT;
+            $ucfTableFieldname = ucfirst($tableFieldname);	
+			$ret .= $this->defines->getDefine($language, "ADD_{$stuTableFieldname}", "Add {$ucfTableFieldname}");			
 		}
-		$ret .= <<<EOT
-// Lists\n
-EOT;
+		$ret .= $this->defines->getAboveDefines('Lists');
+		//
 		foreach (array_keys($tables) as $t)
 		{
 			$tableName = $tables[$t]->getVar('table_name');
 			$tableFieldname = $tables[$t]->getVar('table_fieldname');
 			$stuTableName = strtoupper($tableName);
-            $ucfTableName = ucfirst($tableName);			
-			$ret .= <<<EOT
-define('{$language}{$stuTableName}_LIST', "List of {$ucfTableName}");\n
-EOT;
+            $ucfTableName = ucfirst($tableName);
+			$ret .= $this->defines->getDefine($language, "{$stuTableName}_LIST", "List of {$ucfTableName}");	
 		}
 		return $ret;
 	}
@@ -138,65 +127,57 @@ EOT;
 	*/
 	public function getLanguageAdminClass($language, $tables) 
 	{    
-		$ret = <<<EOT
-// ---------------- Admin Classes ----------------\n
-EOT;
+		$ret = $this->defines->getAboveHeadDefines('Admin Classes');
+		//
 		foreach (array_keys($tables) as $t)
 		{
 			$tableId = $tables[$t]->getVar('table_id');
 			$tableName = $tables[$t]->getVar('table_name');
 			$stuTableName = strtoupper($tableName);
             $ucfTableName = ucfirst($tableName);			
-			$ret .= <<<EOT
-// {$ucfTableName} add/edit
-define('{$language}{$stuTableName}_ADD', "Add {$tableName}");
-define('{$language}{$stuTableName}_EDIT', "Edit {$tableName}");
-// Elements of {$ucfTableName}\n
-EOT;
+			$ret .= $this->defines->getAboveDefines("{$ucfTableName} add/edit");			
+			$ret .= $this->defines->getDefine($language, "{$stuTableName}_ADD", "Add {$tableName}");
+			$ret .= $this->defines->getDefine($language, "{$stuTableName}_EDIT", "Edit {$tableName}");
+			$ret .= $this->defines->getAboveDefines("Elements of {$ucfTableName}");
+			//
 			$fields = $this->getTableFields($tableId);
 			foreach(array_keys($fields) as $f) 
 			{	
 				$fieldName = $fields[$f]->getVar('field_name');
 				$fieldElement = $fields[$f]->getVar('field_element');
 				$stuFieldName = strtoupper($fieldName);
-				$fieldNameDesc = ucfirst(str_replace('_', ' ', $fieldName));
-				$ret .= <<<EOT
-define('{$language}{$stuFieldName}', "{$fieldNameDesc}");\n
-EOT;
+				//
+				$rpFieldName = $this->tdmcfile->getRightString($fieldName);
+				$lpFieldName = substr($fieldName, 0, strpos($fieldName, '_'));
+				//
+				$fieldNameDesc = ucfirst($rpFieldName);
+				//
+				$ret .= $this->defines->getDefine($language, $stuFieldName, $fieldNameDesc);
+				//
 				switch($fieldElement)
 				{
-					case 9:
-						$ret .= <<<EOT
-define('{$language}FORM_UPLOAD_IMAGE_LIST_{$stuTableName}', "{$fieldNameDesc} in frameworks images");\n
-EOT;
-					break;
 					case 10:
-						$ret .= <<<EOT
-define('{$language}FORM_UPLOAD_IMAGE_{$stuTableName}', "{$fieldNameDesc} in uploads images");\n
-EOT;
+						$ret .= $this->defines->getDefine($language, "FORM_UPLOAD_IMAGE_LIST_{$stuTableName}", "{$fieldNameDesc} in frameworks images");						
 					break;
 					case 11:
-						$ret .= <<<EOT
-define('{$language}FORM_UPLOAD_FILE_{$stuTableName}', "{$fieldNameDesc} in uploads files");\n
-EOT;
+						$ret .= $this->defines->getDefine($language, "FORM_UPLOAD_IMAGE_{$stuTableName}", "{$fieldNameDesc} in uploads images");	
+					break;
+					case 12:
+						$ret .= $this->defines->getDefine($language, "FORM_UPLOAD_FILE_{$stuTableName}", "{$fieldNameDesc} in uploads files");		
 					break;
 				}
 			}
 		}
-		$ret .= <<<EOT
-// General
-define('{$language}FORMUPLOAD', "Upload file");
-define('{$language}FORMIMAGE_PATH', "Files in %s ");
-define('{$language}FORMACTION', "Action");
-define('{$language}FORMEDIT', "Modification");
-define('{$language}FORMDEL', "Clear");\n
-EOT;
-		$ret .= <<<EOT
-// Permissions
-define('{$language}PERMISSIONS_APPROVE', "Permissions to approve");
-define('{$language}PERMISSIONS_SUBMIT', "Permissions to submit");
-define('{$language}PERMISSIONS_VIEW', "Permissions to view");\n
-EOT;
+		$ret .= $this->defines->getAboveDefines('General');		
+		$ret .= $this->defines->getDefine($language, 'FORMUPLOAD', "Upload file");
+		$ret .= $this->defines->getDefine($language, 'FORMIMAGE_PATH', "Files in %s ");
+		$ret .= $this->defines->getDefine($language, 'FORMACTION', "Action");
+		$ret .= $this->defines->getDefine($language, 'FORMEDIT', "Modification");
+		$ret .= $this->defines->getDefine($language, 'FORMDEL', "Clear");
+		$ret .= $this->defines->getAboveDefines('Permissions');		
+		$ret .= $this->defines->getDefine($language, 'PERMISSIONS_APPROVE', "Permissions to approve");
+		$ret .= $this->defines->getDefine($language, 'PERMISSIONS_SUBMIT', "Permissions to submit");
+		$ret .= $this->defines->getDefine($language, 'PERMISSIONS_VIEW', "Permissions to view");		
 		return $ret;
 	}
 	/*
@@ -205,35 +186,31 @@ EOT;
 	*/
 	public function getLanguageAdminPermissions($language) 
 	{    
-		$ret = <<<EOT
-// ---------------- Admin Permissions ----------------
-// Permissions
-define('{$language}GLOBAL', "Permissions global");
-define('{$language}GLOBAL_DESC', "Permissions global");
-define('{$language}GLOBAL_4', "Permissions global");
-define('{$language}GLOBAL_8', "Permissions global");
-define('{$language}GLOBAL_16', "Permissions global");
-define('{$language}APPROVE', "Permissions to approve");
-define('{$language}APPROVE_DESC', "Permissions to approve");
-define('{$language}SUBMIT', "Permissions to submit");
-define('{$language}SUBMIT_DESC', "Permissions to submit");
-define('{$language}VIEW', "Permissions to view");
-define('{$language}VIEW_DESC', "Permissions to view");
-define('{$language}NOPERMSSET', "No permission set");\n
-EOT;
+		$ret = $this->defines->getAboveHeadDefines('Admin Permissions');
+		$ret .= $this->defines->getAboveDefines('Permissions');	
+		$ret .= $this->defines->getDefine($language, 'GLOBAL', "Permissions global");
+		$ret .= $this->defines->getDefine($language, 'GLOBAL_DESC', "Permissions global");
+		$ret .= $this->defines->getDefine($language, 'GLOBAL_4', "Permissions global");
+		$ret .= $this->defines->getDefine($language, 'GLOBAL_8', "Permissions global");
+		$ret .= $this->defines->getDefine($language, 'GLOBAL_16', "Permissions global");
+		$ret .= $this->defines->getDefine($language, 'APPROVE', "Permissions to approve");
+		$ret .= $this->defines->getDefine($language, 'APPROVE_DESC', "Permissions to approve");
+		$ret .= $this->defines->getDefine($language, 'SUBMIT', "Permissions to submit");
+		$ret .= $this->defines->getDefine($language, 'SUBMIT_DESC', "Permissions to submit");
+		$ret .= $this->defines->getDefine($language, 'VIEW', "Permissions to view");
+		$ret .= $this->defines->getDefine($language, 'VIEW_DESC', "Permissions to view");
+		$ret .= $this->defines->getDefine($language, 'NOPERMSSET', "No permission set");
 		return $ret;
 	}
 	/*
 	*  @public function getLanguageAdminFoot
-	*  @param null
+	*  @param string $language
 	*/
 	public function getLanguageAdminFoot($language) 
 	{    
-		$ret = <<<EOT
-// ---------------- Admin Others ----------------
-define('{$language}MAINTAINEDBY', " is maintained by ");
-// ---------------- ----------------
-EOT;
+		$ret = $this->defines->getAboveHeadDefines('Admin Others');		
+		$ret .= $this->defines->getDefine($language, 'MAINTAINEDBY', " is maintained by ");
+		$ret .= $this->defines->getBelowDefines('End');		
 		return $ret;
 	}
 	/*
@@ -255,7 +232,7 @@ EOT;
 		}
 		$content .= $this->getLanguageAdminFoot($language);
 		//
-		$this->tdmcfile->create($moduleDirname, 'language/'.$GLOBALS['xoopsConfig']['language'], $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$this->tdmcfile->create($moduleDirname, 'language/english', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

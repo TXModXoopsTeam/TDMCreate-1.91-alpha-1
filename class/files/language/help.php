@@ -59,6 +59,7 @@ class LanguageHelp extends TDMCreateFile
 		$filename = $this->getFileName();
 		$moduleName = $module->getVar('mod_name');
 		$moduleDirname = $module->getVar('mod_dirname');
+		$language = $GLOBALS['xoopsConfig']['language'];
 		$content = <<<EOT
 <div id="help-template" class="outer">
     <h1 class="head">Help:
@@ -88,7 +89,10 @@ Detailed instructions on installing modules are available in the <a href="http:/
     <!-- -----Help Content ---------- -->
 </div>
 EOT;
-		$this->tdmcfile->create($moduleDirname, 'language/'.$GLOBALS['xoopsConfig']['language'].'/help', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		if($language != 'english' ) {	
+			$this->tdmcfile->create($moduleDirname, 'language/'.$language.'/help', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		}
+		$this->tdmcfile->create($moduleDirname, 'language/english/help', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

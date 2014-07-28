@@ -45,13 +45,14 @@ class AdminHeader extends TDMCreateFile
 	*  @public function write
 	*  @param string $module
 	*  @param mixed $table
+	*  @param array $tables
 	*  @param string $filename
 	*/
 	public function write($module, $table, $tables, $filename) {    
-		$this->setModule($module);
-		$this->setFileName($filename);
+		$this->setModule($module);		
 		$this->setTable($table);
 		$this->setTables($tables);
+		$this->setFileName($filename);
 	}
 	/*
 	*  @public function render
@@ -63,39 +64,35 @@ class AdminHeader extends TDMCreateFile
 		$tables = $this->getTables();
 		$filename = $this->getFileName();
 		$moduleDirname = $module->getVar('mod_dirname');		
-		$ucfModuleName = ucfirst($moduleDirname);		
+		$ucfModuleDirname = ucfirst($moduleDirname);		
 		$language = $this->getLanguage('AM');
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .= <<<EOT
 \nrequire_once dirname(dirname(dirname(dirname(__FILE__)))). '/include/cp_header.php';
 \$thisPath = dirname(dirname(__FILE__));
 include_once \$thisPath.'/include/common.php';
-//\n
-EOT;
-		if (is_object($table)) {
-			if ( $table->getVar('table_name') != '' ) {
-				$content .= <<<EOT
-// Get instance of module
-\${$moduleDirname} = {$ucfModuleName}Helper::getInstance();\n
-EOT;
-			}	
-		}
-		$content .= <<<EOT
-//
 \$sysPathIcon16 = '../' . \$xoopsModule->getInfo('sysicons16');
 \$sysPathIcon32 = '../' . \$xoopsModule->getInfo('sysicons32');
 \$pathModuleAdmin = \$GLOBALS['xoopsModule']->getInfo('dirmoduleadmin');
 //
 \$modPathIcon16 = \$xoopsModule->getInfo('modicons16');
-\$modPathIcon32 = \$xoopsModule->getInfo('modicons32');
-//\n
+\$modPathIcon32 = \$xoopsModule->getInfo('modicons32');\n
 EOT;
-		foreach (array_keys($tables) as $i)
-		{
-			$tableName = $tables[$i]->getVar('table_name');
-			$content .= <<<EOT
+		if (is_object($table)) {
+			if ( $table->getVar('table_name') != '' ) {
+				$content .= <<<EOT
+// Get instance of module
+\${$moduleDirname} = {$ucfModuleDirname}Helper::getInstance();\n
+EOT;
+			}			
+			foreach (array_keys($tables) as $t)
+			{
+				$tableName = $tables[$t]->getVar('table_name');
+				$content .= <<<EOT
+// {$tableName}
 \${$tableName}Handler =& \${$moduleDirname}->getHandler('{$tableName}');\n
 EOT;
+			}
 		}
 		$content .=<<<EOT
 //

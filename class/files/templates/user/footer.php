@@ -81,11 +81,13 @@ EOT;
 <br />\n
 EOT;
 			}
-			$content .= <<<EOT
+		}
+		$content .= <<<EOT
 <{if \$xoops_isadmin}>
    <div class="center bold"><a href="<{\$admin}>"><{\$smarty.const.{$language}ADMIN}></a></div><br />
 <{/if}>\n
 EOT;
+		if (is_object($table)) {	
 			if ( $table->getVar('table_comments') == 1 ) {
 				$content .= <<<EOT
 <div class="pad2 marg2">

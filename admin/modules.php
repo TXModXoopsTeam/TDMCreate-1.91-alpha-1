@@ -61,7 +61,8 @@ switch ($op)
 				$mod['release'] = $mods_arr[$i]->getVar('mod_release');	
 				$mod['status'] = $mods_arr[$i]->getVar('mod_status');	
 				$mod['admin'] = $mods_arr[$i]->getVar('mod_admin');	
-				$mod['user'] = $mods_arr[$i]->getVar('mod_user');	
+				$mod['user'] = $mods_arr[$i]->getVar('mod_user');
+				$mod['blocks'] = $mods_arr[$i]->getVar('mod_blocks');
 				$mod['search'] = $mods_arr[$i]->getVar('mod_search');				
 				$mod['comments'] = $mods_arr[$i]->getVar('mod_comments');	
 				$mod['notifications'] = $mods_arr[$i]->getVar('mod_notifications');
@@ -205,19 +206,32 @@ switch ($op)
 	break;
 
 	case 'display':
-        $mod_admin = XoopsRequest::getInt('mod_admin');
-		$mod_user = XoopsRequest::getInt('mod_user');
-		$mod_search = XoopsRequest::getInt('mod_search');
-		$mod_comments = XoopsRequest::getInt('mod_comments');
-		$mod_notifications = XoopsRequest::getInt('mod_notifications');
-		$mod_permissions = XoopsRequest::getInt('mod_permissions');	
-		
-		if ( $mod_id > 0 ) {          
+        //if ( $mod_id > 0 ) {
+			$mod_admin = XoopsRequest::getInt('mod_admin');
+			$mod_user = XoopsRequest::getInt('mod_user');
+			$mod_blocks = XoopsRequest::getInt('mod_blocks');
+			$mod_search = XoopsRequest::getInt('mod_search');
+			$mod_comments = XoopsRequest::getInt('mod_comments');
+			$mod_notifications = XoopsRequest::getInt('mod_notifications');
+			$mod_permissions = XoopsRequest::getInt('mod_permissions');
+			
+		//foreach($_POST['mod_id'] as $key => $value)
+		//{    
+			/*$mod_admin = TDMCreate_CleanVars($_REQUEST, 'mod_admin');
+			$mod_user = TDMCreate_CleanVars($_REQUEST, 'mod_user');
+			$mod_blocks = TDMCreate_CleanVars($_REQUEST, 'mod_blocks');
+			$mod_search = TDMCreate_CleanVars($_REQUEST, 'mod_search');
+			$mod_comments = TDMCreate_CleanVars($_REQUEST, 'mod_comments');
+			$mod_notifications = TDMCreate_CleanVars($_REQUEST, 'mod_notifications');
+			$mod_permissions = TDMCreate_CleanVars($_REQUEST, 'mod_permissions');	*/
+			
 			$modulesObj =& $tdmcreate->getHandler('modules')->get($mod_id);
-            if(isset($mod_adminm)) {
+            if(isset($mod_admin)) {
 				$modulesObj->setVar('mod_admin', $mod_admin);
 			} elseif(isset($mod_user)) {
 				$modulesObj->setVar('mod_user', $mod_user);
+			} elseif(isset($mod_blocks)) {
+				$modulesObj->setVar('mod_blocks', $mod_blocks);
 			} elseif(isset($mod_search)) {
 				$modulesObj->setVar('mod_search', $mod_search);
 			} elseif(isset($mod_comments)) {
@@ -232,7 +246,7 @@ switch ($op)
 			} else {
 				redirect_header('modules.php', 1, _AM_TDMCREATE_TOGGLE_FAILED);
 			}
-        }		
+        //}		
     break;
 }
 include 'footer.php';

@@ -51,8 +51,8 @@ class IncludeNotifications extends TDMCreateFile
 	*/
 	public function write($module, $table, $filename) {    
 		$this->setModule($module);
-		$this->setFileName($filename);
 		$this->setTable($table);
+		$this->setFileName($filename);		
 	}
 	/*
 	*  @static function getNotificationsFunction
@@ -72,15 +72,15 @@ class IncludeNotifications extends TDMCreateFile
 			}
 			if($fields[$f]->getVar('field_main') == 1) {
 				$fpmf = $fieldName;
-			}			
+			}				
 		}
 
 		$ret = <<<EOT
 \n// comment callback functions
 function {$moduleDirname}_notify_iteminfo(\$category, \$item_id)
 {
-	global \$xoopsModule, \$xoopsModuleConfig, \$xoopsConfig;
-
+	global \$xoopsModule, \$xoopsModuleConfig, \$xoopsDB;
+	//
 	if (empty(\$xoopsModule) || \$xoopsModule->getVar('dirname') != '{$moduleDirname}')
 	{
 		\$module_handler =& xoops_gethandler('module');
@@ -90,11 +90,8 @@ function {$moduleDirname}_notify_iteminfo(\$category, \$item_id)
 	} else {
 		\$module =& \$xoopsModule;
 		\$config =& \$xoopsModuleConfig;
-	}
+	}	
 	//
-	xoops_loadLanguage('main', '{$moduleDirname}');
-	//
-	global \$xoopsDB;
 	switch(\$category) {
 		case 'global':
 			\$item['name'] = '';
@@ -103,7 +100,7 @@ function {$moduleDirname}_notify_iteminfo(\$category, \$item_id)
 		break;
 		case 'category':
 			// Assume we have a valid category id
-			\$sql = 'SELECT {$fpif}, {$fpmf} FROM ' . \$xoopsDB->prefix('{$moduleDirname}_{$tableName}') . ' WHERE {$fpif} = '. \$item_id;
+			\$sql = 'SELECT {$fpmf} FROM ' . \$xoopsDB->prefix('{$moduleDirname}_{$tableName}') . ' WHERE {$fpif} = '. \$item_id;
 			\$result = \$xoopsDB->query(\$sql); // TODO: error check
 			\$result_array = \$xoopsDB->fetchArray(\$result);
 			\$item['name'] = \$result_array['{$fpmf}'];

@@ -44,10 +44,14 @@ class UserHeader extends TDMCreateFile
 	/*
 	*  @public function write
 	*  @param string $module
+	*  @param mixed $table
+	*  @param array $tables
 	*  @param string $filename
 	*/
-	public function write($module, $filename) {    
-		$this->setModule($module);
+	public function write($module, $table, $tables, $filename) {    
+		$this->setModule($module);		
+		$this->setTable($table);
+		$this->setTables($tables);
 		$this->setFileName($filename);
 	}
 	/*
@@ -56,6 +60,8 @@ class UserHeader extends TDMCreateFile
 	*/
 	public function render() {    
 		$module = $this->getModule();
+		$table = $this->getTable();
+		$tables = $this->getTables();
 		$moduleDirname = $module->getVar('mod_dirname');
 		$filename = $this->getFileName();
 		$stuModuleDirname = strtoupper($moduleDirname);
@@ -66,6 +72,21 @@ require_once dirname(dirname(dirname(__FILE__))) . '/mainfile.php';
 \$dirname = \$GLOBALS['xoopsModule']->getVar('dirname');
 \$pathname = XOOPS_ROOT_PATH. '/modules/'.\$dirname;
 include_once \$pathname . '/include/common.php';
+// Get instance of module
+\${$moduleDirname} = {$ucfModuleDirname}Helper::getInstance();\n
+EOT;
+		if (is_object($table)) {
+			foreach (array_keys($tables) as $t)
+			{
+				$tableName = $tables[$t]->getVar('table_name');
+				$content .= <<<EOT
+// {$tableName}
+\${$tableName}Handler =& \${$moduleDirname}->getHandler('{$tableName}');\n
+EOT;
+			}
+		}
+		$content .=<<<EOT
+//
 \$myts =& MyTextSanitizer::getInstance(); 
 \$style = {$stuModuleDirname}_URL . '/assets/css/style.css';
 if(file_exists(\$style)) { return true; }
@@ -79,8 +100,6 @@ if(file_exists(\$style)) { return true; }
 //
 xoops_loadLanguage('modinfo', \$dirname);
 xoops_loadLanguage('main', \$dirname);
-//
-\${$moduleDirname} = {$ucfModuleDirname}Helper::getInstance();
 EOT;
 		$this->tdmcfile->create($moduleDirname, '/', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();

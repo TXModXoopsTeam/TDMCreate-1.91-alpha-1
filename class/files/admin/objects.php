@@ -39,7 +39,7 @@ class AdminObjects
 	*  @param string $tableName
 	*  @param string $fieldName
 	*/
-	public function getSimpleSetVar($tableName, $fieldName) {    
+	public function getSimpleSetVar($tableName, $fieldName) { 		
 		$ret = <<<EOT
 		// Set Var {$fieldName}
 		\${$tableName}Obj->setVar('{$fieldName}', \$_POST['{$fieldName}']);\n
@@ -165,6 +165,23 @@ EOT;
 		$ret = <<<EOT
 \t\t\t\t// Get Var {$fieldName}
 \t\t\t\t\${$lpFieldName}['{$rpFieldName}'] = \${$tableName}_arr[\$i]->getVar('{$fieldName}');\n
+EOT;
+		return $ret;
+	}
+	/*
+	*  @public function getTopicGetVar
+	*  @param string $lpFieldName
+	*  @param string $rpFieldName
+	*  @param string $tableName
+	*  @param string $tableNameTopic
+	*  @param string $fieldNameParent
+	*  @param string $fieldNameTopic
+	*/
+	public function getTopicGetVar($lpFieldName, $rpFieldName, $tableName, $tableNameTopic, $fieldNameParent, $fieldNameTopic) {		
+		$ret = <<<EOT
+\t\t\t\t// Get Var {$fieldNameParent}
+\t\t\t\t\${$rpFieldName} =& \${$tableNameTopic}Handler->get(\${$tableName}_arr[\$i]->getVar('{$fieldNameParent}'));
+\t\t\t\t\${$lpFieldName}['{$rpFieldName}'] = \${$rpFieldName}->getVar('{$fieldNameTopic}');\n
 EOT;
 		return $ret;
 	}

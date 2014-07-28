@@ -19,16 +19,21 @@
  * @version         $Id: include_search.php 12258 2014-01-02 09:33:29Z timgno $
  */
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
-
+require_once 'defines.php';
 class LanguageMain extends TDMCreateFile
 {	
+	/*
+	* @var mixed
+	*/
+	private $defines = null;
 	/*
 	*  @public function constructor
 	*  @param null
 	*/
 	public function __construct() {  
 		parent::__construct();
-		$this->tdmcfile = TDMCreateFile::getInstance();		
+		$this->tdmcfile = TDMCreateFile::getInstance();
+		$this->defines = LanguageDefines::getInstance();
 	}	
 	/*
 	*  @static function &getInstance
@@ -45,66 +50,79 @@ class LanguageMain extends TDMCreateFile
 	/*
 	*  @public function write
 	*  @param string $module
-	*  @param mixed $table
 	*  @param mixed $tables
 	*  @param string $filename
 	*/
-	public function write($module, $table, $tables, $filename) {    
+	public function write($module, $tables, $filename) {    
 		$this->setModule($module);
 		$this->setFileName($filename);
-		$this->setTable($table);
 		$this->setTables($tables);
+	}
+	/*
+	*  @private function geLanguagetMain
+	*  @param string $module
+	*  @param string $language
+	*/
+	private function geLanguagetMain($module, $language) 
+	{    
+		$tables = $this->getTables();
+		$ret = $this->defines->getAboveHeadDefines('Main');
+		$ret .= $this->defines->getDefine($language, 'INDEX', "Home");
+		$ret .= $this->defines->getDefine($language, 'TITLE', "{$module->getVar('mod_name')}");
+		$ret .= $this->defines->getDefine($language, 'DESC', "{$module->getVar('mod_description')}");
+		$ret .= $this->defines->getDefine($language, 'INDEX_DESC', "Welcome to the homepage of your new module!<br /> 
+As you can see, you've created a page with a list of links at the top to navigate between the pages of your module. This description is only visible on the homepage of this module, the other pages you will see the content you created when you built this module with the module TDMCreate, and after creating new content in admin of this module. In order to expand this module with other resources, just add the code you need to extend the functionality of the same. The files are grouped by type, from the header to the footer to see how divided the source code.");		
+		$ret .= $this->defines->getAboveHeadDefines('Contents');		
+		foreach (array_keys($tables) as $i) 
+		{
+			$tableName = $tables[$i]->getVar('table_name');
+			$stuTableName = strtoupper($tableName);
+			$ucfTableName = UcFirstAndToLower($tableName);
+			$ret .= $this->defines->getAboveDefines($ucfTableName);
+			$ret .= $this->defines->getDefine($language, $stuTableName, $ucfTableName);
+			$ret .= $this->defines->getDefine($language, "{$stuTableName}_DESC", "{$ucfTableName} description");			
+			$ret .= $this->defines->getAboveDefines("Caption of {$ucfTableName}");
+			$fields = $this->getTableFields($tables[$i]->getVar('table_id'));
+			foreach (array_keys($fields) as $f) 
+			{	
+				$fieldName = $fields[$f]->getVar('field_name');                
+				$stuFieldName = strtoupper($fieldName);
+				//
+				$rpFieldName = $this->tdmcfile->getRightString($fieldName);
+				$lpFieldName = substr($fieldName, 0, strpos($fieldName, '_'));
+				//
+				$fieldNameDesc = ucfirst($rpFieldName);
+				//
+				$ret .= $this->defines->getDefine($language, $stuFieldName, $fieldNameDesc);				
+			}
+		}
+		return $ret;
+	}
+	/*
+	*  @private function geLanguagetMainFooter
+	*  @param string $language
+	*/
+	private function geLanguagetMainFooter($language) 
+	{    
+		$ret = $this->defines->getAboveDefines('Admin link');
+		$ret .= $this->defines->getDefine($language, 'ADMIN', "Admin");
+		$ret .= $this->defines->getBelowDefines('End');
+		return $ret;
 	}
 	/*
 	*  @public function render
 	*  @param null
 	*/
 	public function render() {    
-		$module = $this->getModule();
-		$tables = $this->getTables();
-		$filename = $this->getFileName();
-		$moduleName = $module->getVar('mod_name');
-		$moduleDirname = $module->getVar('mod_dirname');
-		$moduleDescription = $module->getVar('mod_description');        
-		$ucf_mod_name = ucfirst($moduleName);
+		$module = $this->getModule();		
+		$filename = $this->getFileName();		
+		$moduleDirname = $module->getVar('mod_dirname');		   
 		$language = $this->getLanguage($moduleDirname, 'MA');
 		$content = $this->getHeaderFilesComments($module, $filename);
-		$content .= <<<EOT
-// ---------------- Main ----------------
-define('{$language}INDEX', "Home");
-define('{$language}TITLE', "{$ucf_mod_name}");
-define('{$language}DESC', "{$moduleDescription}");
-define('{$language}INDEX_DESC', "Welcome to the homepage of your new module!<br /> 
-As you can see, you've created a page with a list of links at the top to navigate between the pages of your module. This description is only visible on the homepage of this module, the other pages you will see the content you created when you built this module with the module TDMCreate, and after creating new content in admin of this module. In order to expand this module with other resources, just add the code you need to extend the functionality of the same. The files are grouped by type, from the header to the footer to see how divided the source code.");\n
-EOT;
-		foreach (array_keys($tables) as $i) 
-		{
-			$tableName = $tables[$i]->getVar('table_name');
-			$lng_stu_table_name = $language.strtoupper($tableName);
-			$ucf_table_name = UcFirstAndToLower($tableName);
-			$content .= <<<EOT
-// {$ucf_table_name}
-define('{$lng_stu_table_name}', "{$ucf_table_name}");
-define('{$lng_stu_table_name}_DESC', "{$ucf_table_name} description");
-// Caption of {$ucf_table_name}\n
-EOT;
-			$fields = $this->getTableFields($tables[$i]->getVar('table_id'));
-			foreach (array_keys($fields) as $f) 
-			{	
-				$field_name = $fields[$f]->getVar('field_name');                
-				$lng_stu_fields = $language.strtoupper($field_name);
-				$ucf_field_name = ucfirst(str_replace('_', ' ', $field_name));
-				$content .= <<<EOT
-define('{$lng_stu_fields}', "{$ucf_field_name}");\n
-EOT;
-			}	
-		}
-		$content .= <<<EOT
-// Admin link
-define('{$language}ADMIN', "Admin");
-// ---------------- ----------------
-EOT;
-		$this->tdmcfile->create($moduleDirname, 'language/'.$GLOBALS['xoopsConfig']['language'], $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$content .= $this->geLanguagetMain($module, $language);
+		$content .= $this->geLanguagetMainFooter($language);
+		//
+		$this->tdmcfile->create($moduleDirname, 'language/english', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

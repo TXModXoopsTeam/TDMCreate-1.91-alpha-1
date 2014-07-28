@@ -19,16 +19,21 @@
  * @version         $Id: blocks.php 12258 2014-01-02 09:33:29Z timgno $
  */
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
-
+require_once 'defines.php';
 class LanguageBlocks extends TDMCreateFile
 {	
+	/*
+	* @var mixed
+	*/
+	private $defines = null;
 	/*
 	*  @public function constructor
 	*  @param null
 	*/
 	public function __construct() {    
 		parent::__construct();
-		$this->tdmcfile = TDMCreateFile::getInstance();		
+		$this->tdmcfile = TDMCreateFile::getInstance();
+		$this->defines = LanguageDefines::getInstance();
 	}	
 	/*
 	*  @static function &getInstance
@@ -54,42 +59,62 @@ class LanguageBlocks extends TDMCreateFile
 		$this->setTables($tables);
 	}
 	/*
+	*  @private function getLanguageBlock
+	*  @param string $language
+	*  @param string $module	
+	*/
+	private function getLanguageBlock($module, $language) 
+	{    
+		$tables = $this->getTables();       
+		$ret = $this->defines->getAboveDefines('Admin Edit');		
+		$ret .= $this->defines->getDefine($language, 'DISPLAY', "How Many Tables to Display");
+		$ret .= $this->defines->getDefine($language, 'TITLELENGTH', "Title Length");
+		$ret .= $this->defines->getDefine($language, 'CATTODISPLAY', "Categories to Display");
+		$ret .= $this->defines->getDefine($language, 'ALLCAT', "All Categories");
+		foreach (array_keys($tables) as $t) 
+		{
+			$tableName = $tables[$t]->getVar('table_name');			
+			$ucfTableName = ucfirst($tableName);
+			$ret .= $this->defines->getAboveDefines($ucfTableName);
+			$fields = $this->getTableFields($tables[$t]->getVar('table_id'));
+			foreach (array_keys($fields) as $f) 
+			{	
+				$fieldName = $fields[$f]->getVar('field_name');               				
+				$stuFieldName = strtoupper($fieldName);
+				//
+				$rpFieldName = $this->tdmcfile->getRightString($fieldName);
+				$lpFieldName = substr($fieldName, 0, strpos($fieldName, '_'));
+				//
+				$fieldNameDesc = ucfirst($rpFieldName);
+				//
+				$ret .= $this->defines->getDefine($language, $stuFieldName, $fieldNameDesc);
+			}	
+		}		
+		return $ret;
+	}
+	/*
+	*  @private function getFooter
+	*  @param null
+	*/
+	private function getLanguageFooter() 
+	{    
+		$ret = $this->defines->getBelowDefines('End');
+		return $ret;
+	}
+	/*
 	*  @public function render
 	*  @param null
 	*/
 	public function render() {    
 		$module = $this->getModule();
-		$tables = $this->getTables();
 		$filename = $this->getFileName();
 		$moduleDirname = $module->getVar('mod_dirname');        
 		$language = $this->getLanguage($moduleDirname, 'MB');
 		$content = $this->getHeaderFilesComments($module, $filename);
-		$content .= <<<EOT
-// Main
-define('{$language}DISPLAY', "How Many Tables to Display");
-define('{$language}TITLELENGTH', "Title Length");
-define('{$language}CATTODISPLAY', "Categories to Display");
-define('{$language}ALLCAT', "All Categories");\n
-EOT;
-		foreach (array_keys($tables) as $t) 
-		{
-			$tableName = $tables[$t]->getVar('table_name');			
-			$ucf_table_name = ucfirst($tableName);
-			$content .= <<<EOT
-// {$ucf_table_name}\n
-EOT;
-			$fields = $this->getTableFields($tables[$t]->getVar('table_id'));
-			foreach (array_keys($fields) as $f) 
-			{	
-				$fieldName = $fields[$f]->getVar('field_name');               				
-				$lng_fields = $language.strtoupper($fieldName);
-				$ucf_table_field = ucfirst($tableName.' '.str_replace('_', ' ', $fieldName));
-				$content .= <<<EOT
-define('{$lng_fields}', "{$ucf_table_field}");\n
-EOT;
-			}	
-		}
-		$this->tdmcfile->create($moduleDirname, 'language/'.$GLOBALS['xoopsConfig']['language'], $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
+		$content .= $this->getLanguageBlock($module, $language);
+		$content .= $this->getLanguageFooter();
+		//	
+		$this->tdmcfile->create($moduleDirname, 'language/english', $filename, $content, _AM_TDMCREATE_FILE_CREATED, _AM_TDMCREATE_FILE_NOTCREATED);
 		return $this->tdmcfile->renderFile();
 	}
 }

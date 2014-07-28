@@ -71,7 +71,7 @@ EOT;
 		{
 			$fieldName = $fields[$f]->getVar('field_name');			
 			$langStuFieldName = $language.strtoupper($fieldName);
-			if( $fields[$f]->getVar('field_user') == 1 ) {	
+			if( ($fields[$f]->getVar('field_user') == 1) || ($table->getVar('table_autoincrement') == 1) ) {
 				$ret .= <<<EOT
 			<th class="center"><{\$smarty.const.{$langStuFieldName}}></th>\n
 EOT;
@@ -103,7 +103,7 @@ EOT;
 			$fieldName = $fields[$f]->getVar('field_name');
 			$fieldElement = $fields[$f]->getVar('field_element');
 			$rpFieldName = $this->tdmcfile->getRightString($fieldName);
-			if( $fields[$f]->getVar('field_user') == 1 ) {
+			if( ($fields[$f]->getVar('field_user') == 1) || ($table->getVar('table_autoincrement') == 1) ) {
 				switch( $fieldElement ) { 			    
 					case 9:							
 						$ret .= <<<EOT
@@ -155,7 +155,7 @@ EOT;
 		{
 			$fieldName = $fields[$f]->getVar('field_name');
 			$fieldElement = $fields[$f]->getVar('field_element');			
-			if( $fields[$f]->getVar('field_user') == 1 ) {	
+			if( ($fields[$f]->getVar('field_user') == 1) || ($table->getVar('table_autoincrement') == 1) ) {
 				switch( $fieldElement ) { 			    
 					case 9:			
 						$ret .= <<<EOT

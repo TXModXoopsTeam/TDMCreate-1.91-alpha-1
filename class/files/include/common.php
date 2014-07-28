@@ -89,13 +89,9 @@ if (!defined('{$stuModuleDirname}_MODULE_PATH')) {
                      <img src='".\$local_logo."' alt='{$moduleAuthorWebsiteName}' /></a>";
 					 
 include_once XOOPS_ROOT_PATH.'/class/xoopsrequest.php';
-EOT;
-		if (is_object($table)) {	
-			$ret .= <<<EOT
 include_once {$stuModuleDirname}_PATH.'/class/helper.php';
 include_once {$stuModuleDirname}_PATH.'/include/functions.php';
 EOT;
-		}
 		return $ret;
 	}
 	/*

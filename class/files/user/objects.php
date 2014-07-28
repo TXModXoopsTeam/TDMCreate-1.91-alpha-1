@@ -16,7 +16,7 @@
  * @package         tdmcreate
  * @since           2.5.0
  * @author          Txmod Xoops http://www.txmodxoops.org
- * @version         $Id: user_objects.php 12258 2014-01-02 09:33:29Z timgno $
+ * @version         $Id: objects.php 12258 2014-01-02 09:33:29Z timgno $
  */
 defined('XOOPS_ROOT_PATH') or die('Restricted access');
 
@@ -78,8 +78,25 @@ EOT;
 	*/
 	public function getSimpleGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName) {    
 		$ret = <<<EOT
-\t\t\t// Get Var {$fieldName}
-\t\t\t\${$lpFieldName}['{$rpFieldName}'] = \${$tableName}_arr[\$i]->getVar('{$fieldName}');\n
+\t\t// Get Var {$fieldName}
+\t\t\${$lpFieldName}['{$rpFieldName}'] = \${$tableName}_arr[\$i]->getVar('{$fieldName}');\n
+EOT;
+		return $ret;
+	}
+	/*
+	*  @public function getTopicGetVar
+	*  @param string $lpFieldName
+	*  @param string $rpFieldName
+	*  @param string $tableName
+	*  @param string $tableNameTopic
+	*  @param string $fieldNameParent
+	*  @param string $fieldNameTopic
+	*/
+	public function getTopicGetVar($lpFieldName, $rpFieldName, $tableName, $tableNameTopic, $fieldNameParent, $fieldNameTopic) {		
+		$ret = <<<EOT
+\t\t// Get Var {$fieldNameParent}
+\t\t\${$rpFieldName} =& \${$tableNameTopic}Handler->get(\${$tableName}_arr[\$i]->getVar('{$fieldNameParent}'));
+\t\t\${$lpFieldName}['{$rpFieldName}'] = \${$rpFieldName}->getVar('{$fieldNameTopic}');\n
 EOT;
 		return $ret;
 	}
@@ -92,10 +109,10 @@ EOT;
 	*/
 	public function getUploadImageGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName) {    
 		$ret = <<<EOT
-\t\t\t\t// Get Var {$fieldName}
-\t\t\t\t\${$fieldName} = \${$tableName}_arr[\$i]->getVar('{$fieldName}');
-\t\t\t\t\$upload_image = \${$fieldName} ? \${$fieldName} : 'blank.gif';
-\t\t\t\t\${$lpFieldName}['{$rpFieldName}'] = \$upload_image;\n
+\t\t// Get Var {$fieldName}
+\t\t\${$fieldName} = \${$tableName}_arr[\$i]->getVar('{$fieldName}');
+\t\t\$upload_image = \${$fieldName} ? \${$fieldName} : 'blank.gif';
+\t\t\${$lpFieldName}['{$rpFieldName}'] = \$upload_image;\n
 EOT;
 		return $ret;
 	}
@@ -108,8 +125,8 @@ EOT;
 	*/
 	public function getTextAreaGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName) {    
 		$ret = <<<EOT
-\t\t\t// Get Var {$fieldName}
-\t\t\t\${$lpFieldName}['{$rpFieldName}'] = strip_tags(\${$tableName}_arr[\$i]->getVar('{$fieldName}'));\n
+\t\t// Get Var {$fieldName}
+\t\t\${$lpFieldName}['{$rpFieldName}'] = strip_tags(\${$tableName}_arr[\$i]->getVar('{$fieldName}'));\n
 EOT;
 		return $ret;
 	}
@@ -122,8 +139,8 @@ EOT;
 	*/
 	public function getSelectUserGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName) {    
 		$ret = <<<EOT
-\t\t\t// Get Var {$fieldName}
-\t\t\t\${$lpFieldName}['{$rpFieldName}'] = XoopsUser::getUnameFromId(\${$tableName}_arr[\$i]->getVar('{$fieldName}'), 's');\n
+\t\t// Get Var {$fieldName}
+\t\t\${$lpFieldName}['{$rpFieldName}'] = XoopsUser::getUnameFromId(\${$tableName}_arr[\$i]->getVar('{$fieldName}'), 's');\n
 EOT;
 		return $ret;
 	}
@@ -136,8 +153,8 @@ EOT;
 	*/
 	public function getTextDateSelectGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName) {    
 		$ret = <<<EOT
-\t\t\t// Get Var {$fieldName}
-\t\t\t\${$lpFieldName}['{$rpFieldName}'] = formatTimeStamp(\${$tableName}_arr[\$i]->getVar('{$fieldName}'), 's');\n
+\t\t// Get Var {$fieldName}
+\t\t\${$lpFieldName}['{$rpFieldName}'] = formatTimeStamp(\${$tableName}_arr[\$i]->getVar('{$fieldName}'), 's');\n
 EOT;
 		return $ret;
 	}

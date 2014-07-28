@@ -67,10 +67,10 @@ class UserPages extends TDMCreateFile
 		$table = $this->getTable();        		
 		$tableName = $table->getVar('table_name');
 		$tableFieldname = $table->getVar('table_fieldname');
-		$tableAutoincrement = $table->getVar('table_autoincrement');		
 		$stuModuleDirname = strtoupper($moduleDirname);
         $stuTableName = strtoupper($tableName);
         $stlTableName = strtolower($tableName);
+		$ucfTableName = ucfirst($tableName);
 		$ret = <<<EOT
 \ninclude_once 'header.php';
 \$GLOBALS['xoopsOption']['template_main'] = '{$moduleDirname}_{$tableName}.tpl';	
@@ -79,14 +79,13 @@ include_once XOOPS_ROOT_PATH . '/header.php';
 \$limit = \${$moduleDirname}->getConfig('userpager');
 // Define Stylesheet
 \$xoTheme->addStylesheet( \$style );
-// Get Handler
-\${$stlTableName}Handler =& \${$moduleDirname}->getHandler('{$stlTableName}');
 //
 \$GLOBALS['xoopsTpl']->assign('{$moduleDirname}_upload_url', {$stuModuleDirname}_UPLOAD_URL);
 //
-\$criteria = new CriteriaCompo();
-\${$stlTableName}_count = \${$stlTableName}Handler->getCount(\$criteria);
-\${$stlTableName}_arr = \${$stlTableName}Handler->getAll(\$criteria);
+\$criteria{$ucfTableName} = new CriteriaCompo();
+\${$stlTableName}_count = \${$stlTableName}Handler->getCount(\$criteria{$ucfTableName});
+\${$stlTableName}_arr = \${$stlTableName}Handler->getAll(\$criteria{$ucfTableName});
+unset(\$criteria{$ucfTableName});
 \$keywords = array();
 if (\${$stlTableName}_count > 0) {
 	foreach (array_keys(\${$stlTableName}_arr) as \$i) 
@@ -97,6 +96,7 @@ EOT;
 		foreach(array_keys($fields) as $f) 
 		{
 			$fieldName = $fields[$f]->getVar('field_name');
+			$fieldParent = $fields[$f]->getVar('field_parent');
 			// Verify if table_fieldname is not empty
 			$lpFieldName = !empty($tableFieldname) ? substr($fieldName, 0, strpos($fieldName, '_')) : $tableName;
 			$rpFieldName = $this->tdmcfile->getRightString($fieldName);	
@@ -104,7 +104,7 @@ EOT;
 				$fpmf = $fieldName; // fpmf = fields parameters main field
 			}
 			$fieldElement = $fields[$f]->getVar('field_element');				
-			if( ($fields[$f]->getVar('field_user') == 1) || ($tableAutoincrement == 1) ) {	
+			if( ($fields[$f]->getVar('field_user') == 1) || ($table->getVar('table_autoincrement') == 1) ) {	
 				switch($fieldElement) {
 					case 3:
 					case 4:
@@ -120,7 +120,30 @@ EOT;
 						$ret .= $this->userobjects->getTextDateSelectGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName);
 					break;
 					default:
-						$ret .= $this->userobjects->getSimpleGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName);
+						if( ($fieldParent == 1) && !$table->getVar('table_category') ) {
+							if($fieldElement > 13) {					
+								$fieldElements = $this->tdmcreate->getHandler('fieldelements')->get($fieldElement);
+								$fieldElementTid = $fieldElements->getVar('fieldelement_tid');
+								$fieldElementName = $fieldElements->getVar('fieldelement_name');
+								$rpFieldElementName = strtolower(str_replace('Table : ', '', $fieldElementName));
+							}
+							//
+							$fieldNameParent = $fieldName;
+							//
+							$criteriaFieldsTopic = new CriteriaCompo();
+							$criteriaFieldsTopic->add(new Criteria('field_tid', $fieldElementTid));
+							$fieldsTopic = $this->tdmcreate->getHandler('fields')->getObjects($criteriaFieldsTopic);
+							unset($criteriaFieldsTopic);
+							foreach(array_keys($fieldsTopic) as $ft) 
+							{
+								if( $fieldsTopic[$ft]->getVar('field_main') == 1 ) {
+									$fieldNameTopic = $fieldsTopic[$ft]->getVar('field_name');
+								}
+							}
+							$ret .= $this->userobjects->getTopicGetVar($lpFieldName, $rpFieldName, $tableName, $rpFieldElementName, $fieldNameParent, $fieldNameTopic);
+						} else {
+							$ret .= $this->userobjects->getSimpleGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName);
+						}						
 					break;
 				}				
 			}			

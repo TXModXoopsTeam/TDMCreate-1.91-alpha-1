@@ -68,7 +68,7 @@ include_once XOOPS_ROOT_PATH.'/header.php';
 // Define Stylesheet
 \$xoTheme->addStylesheet( \$style );
 // keywords
-{$moduleDirname}_meta_keywords(xoops_getModuleOption('keywords', \$dirname));
+{$moduleDirname}_meta_keywords(\${$moduleDirname}->getConfig('keywords'));
 // description
 {$moduleDirname}_meta_description({$language}DESC);
 //

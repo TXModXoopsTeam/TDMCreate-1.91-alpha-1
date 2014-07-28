@@ -43,12 +43,12 @@ CREATE TABLE `tdmcreate_modules` (
   `mod_status`              VARCHAR(150)        NOT NULL DEFAULT 'Beta 1',
   `mod_admin`               TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',  
   `mod_user`                TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-  `mod_blocks`              TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+  `mod_blocks`              TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
   `mod_search`              TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
   `mod_comments`            TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
   `mod_notifications`       TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
   `mod_permissions`         TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-  `mod_inroot_copy`         TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+  `mod_inroot_copy`         TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
   `mod_donations`           VARCHAR(50)         NOT NULL DEFAULT '6KJ7RW5DR3VTJ',
   `mod_subversion`          VARCHAR(10)         NOT NULL DEFAULT '12550',
   PRIMARY KEY (`mod_id`),
@@ -110,7 +110,8 @@ CREATE TABLE `tdmcreate_fields` (
   `field_required`  TINYINT(1)      	  NOT NULL DEFAULT '0',
   PRIMARY KEY (`field_id`),
   KEY `field_mid` (`field_mid`),
-  KEY `field_tid` (`field_tid`)
+  KEY `field_tid` (`field_tid`),
+  KEY `field_name` (`field_name`)
 )ENGINE =MyISAM;
 
 #

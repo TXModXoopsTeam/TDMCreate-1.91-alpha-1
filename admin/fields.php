@@ -22,14 +22,14 @@ include 'header.php';
 // Recovered value of arguments op in the URL $ 
 $op = XoopsRequest::getString('op', 'list');
 // Get fields Variables
-$field_mid = TDMCreate_CleanVars($_REQUEST, 'field_mid');
+/*$fieldMid = TDMCreate_CleanVars($_REQUEST, 'field_mid');
 $fieldTid = TDMCreate_CleanVars($_REQUEST, 'field_tid');
 $fieldNumb = TDMCreate_CleanVars($_REQUEST, 'field_numb');  
-$fieldName = TDMCreate_CleanVars($_REQUEST, 'field_name', '', 'string');/**/   
-/*$field_mid = XoopsRequest::getInt('field_mid');
+$fieldName = TDMCreate_CleanVars($_REQUEST, 'field_name', '', 'string');*/   
+$fieldMid = XoopsRequest::getInt('field_mid');
 $fieldTid = XoopsRequest::getInt('field_tid');
 $fieldNumb = XoopsRequest::getInt('field_numb');
-$fieldName = XoopsRequest::getString('field_name', ''); */
+$fieldName = XoopsRequest::getString('field_name'); /**/
 //
 switch ($op) 
 {   
@@ -53,66 +53,67 @@ switch ($op)
 		$GLOBALS['xoopsTpl']->assign('sysPathIcon32', $sysPathIcon32);
 		//var_dump($sysPathIcon32);
 		// Redirect if there aren't modules
-		$nb_modules = $tdmcreate->getHandler('modules')->getCount();
-		if ( $nb_modules == 0 ) {
+		$countModules = $tdmcreate->getHandler('modules')->getCount();
+		if ( $countModules == 0 ) {
 			redirect_header('modules.php?op=new', 2, _AM_TDMCREATE_NOTMODULES );
 		} 
-		unset($nb_modules);	
+		unset($countModules);	
 		// Redirect if there aren't tables
-		$nb_tables = $tdmcreate->getHandler('tables')->getCount();
-		if ($nb_tables == 0)  {
+		$countTables = $tdmcreate->getHandler('tables')->getCount();
+		if ($countTables == 0)  {
 			redirect_header('tables.php?op=new', 2, _AM_TDMCREATE_NOTTABLES );
 		} 	
-        unset($nb_tables);		
+        unset($countTables);		
 		// Get the list of tables
 		$criteria = new CriteriaCompo();
 		$criteria->setSort('table_id ASC, table_name');
 		$criteria->setOrder('ASC');	
-		$nb_tables = $tdmcreate->getHandler('tables')->getCount($criteria);
-		$tables_arr = $tdmcreate->getHandler('tables')->getAll($criteria);
+		$countTables = $tdmcreate->getHandler('tables')->getCount($criteria);
+		$tablesAll = $tdmcreate->getHandler('tables')->getAll($criteria);
 		unset($criteria);		
-		if ($nb_tables > 0) 
+		if ($countTables > 0) 
 		{	
-			foreach (array_keys($tables_arr) as $tid) 
+			foreach (array_keys($tablesAll) as $tid) 
 			{	
 				// Display tables list
 				$table['id'] = $tid;				
-				$table['mid'] = $tables_arr[$tid]->getVar('table_mid');
-                $table['name'] = ucfirst($tables_arr[$tid]->getVar('table_name'));				
-				$table['image'] = $tables_arr[$tid]->getVar('table_image');	
-				$table['nbfields'] = $tables_arr[$tid]->getVar('table_nbfields');
-				$table['autoincrement'] = $tables_arr[$tid]->getVar('table_autoincrement');	
-				$table['blocks'] = $tables_arr[$tid]->getVar('table_blocks');						
-				$table['admin'] = $tables_arr[$tid]->getVar('table_admin');	
-				$table['user'] = $tables_arr[$tid]->getVar('table_user');					
-				$table['search'] = $tables_arr[$tid]->getVar('table_search');				
+				$table['mid'] = $tablesAll[$tid]->getVar('table_mid');
+                $table['name'] = ucfirst($tablesAll[$tid]->getVar('table_name'));				
+				$table['image'] = $tablesAll[$tid]->getVar('table_image');	
+				$table['nbfields'] = $tablesAll[$tid]->getVar('table_nbfields');
+				$table['autoincrement'] = $tablesAll[$tid]->getVar('table_autoincrement');	
+				$table['blocks'] = $tablesAll[$tid]->getVar('table_blocks');						
+				$table['admin'] = $tablesAll[$tid]->getVar('table_admin');	
+				$table['user'] = $tablesAll[$tid]->getVar('table_user');					
+				$table['search'] = $tablesAll[$tid]->getVar('table_search');				
                 // Get the list of fields
 				$criteria = new CriteriaCompo();
+				$criteria->add(new Criteria('field_mid', $table['mid']));
 				$criteria->add(new Criteria('field_tid', $tid));
 				$criteria->setSort('field_id ASC, field_name');
 				$criteria->setOrder('ASC');	
-				$nb_fields = $tdmcreate->getHandler('fields')->getCount($criteria);
-				$fields_arr = $tdmcreate->getHandler('fields')->getObjects($criteria);
+				$countFields = $tdmcreate->getHandler('fields')->getCount($criteria);
+				$fieldsAll = $tdmcreate->getHandler('fields')->getObjects($criteria);
 				unset($criteria);
 				// Display fields list
 				$fields = array();
 				$lid = 1;
-				if ( $nb_fields > 0 ) 
+				if ( $countFields > 0 ) 
 				{					
-					foreach (array_keys($fields_arr) as $fid) 
+					foreach (array_keys($fieldsAll) as $fid) 
 					{						
 						$field['id'] = $fid;
 						$field['lid'] = $lid;
-						$field['name'] = str_replace('_', ' ', ucfirst($fields_arr[$fid]->getVar('field_name')));
-						$field['parent'] = $fields_arr[$fid]->getVar('field_parent');
-						$field['inlist'] = $fields_arr[$fid]->getVar('field_inlist');
-						$field['inform'] = $fields_arr[$fid]->getVar('field_inform');
-						$field['admin'] = $fields_arr[$fid]->getVar('field_admin');	
-						$field['user'] = $fields_arr[$fid]->getVar('field_user');
-						$field['block'] = $fields_arr[$fid]->getVar('field_block');
-						$field['main'] = $fields_arr[$fid]->getVar('field_main');
-						$field['search'] = $fields_arr[$fid]->getVar('field_search');
-						$field['required'] = $fields_arr[$fid]->getVar('field_required');
+						$field['name'] = str_replace('_', ' ', ucfirst($fieldsAll[$fid]->getVar('field_name')));
+						$field['parent'] = $fieldsAll[$fid]->getVar('field_parent');
+						$field['inlist'] = $fieldsAll[$fid]->getVar('field_inlist');
+						$field['inform'] = $fieldsAll[$fid]->getVar('field_inform');
+						$field['admin'] = $fieldsAll[$fid]->getVar('field_admin');	
+						$field['user'] = $fieldsAll[$fid]->getVar('field_user');
+						$field['block'] = $fieldsAll[$fid]->getVar('field_block');
+						$field['main'] = $fieldsAll[$fid]->getVar('field_main');
+						$field['search'] = $fieldsAll[$fid]->getVar('field_search');
+						$field['required'] = $fieldsAll[$fid]->getVar('field_required');
 						$fields[] = $field;
 						unset($field);	
                         $lid++;							
@@ -123,14 +124,18 @@ switch ($op)
 				$GLOBALS['xoopsTpl']->append('tables_list', $table);                
 				unset($table);				
 			}
-			if ( $nb_tables > $limit ) {
+			if ( $countTables > $limit ) {
 				include_once XOOPS_ROOT_PATH . '/class/pagenav.php';
-				$pagenav = new XoopsPageNav($nb_tables, $limit, $start, 'start', 'op=list&limit=' . $limit);
+				$pagenav = new XoopsPageNav($countTables, $limit, $start, 'start', 'op=list&limit=' . $limit);
 				$GLOBALS['xoopsTpl']->assign('pagenav', $pagenav->renderNav(4));
 			} 			
 		} else {
 			$GLOBALS['xoopsTpl']->assign('error', _AM_TDMCREATE_THEREARENT_FIELDS);
-		}	
+		}
+		var_dump($fieldMid);
+		var_dump($fieldTid);
+		var_dump($fieldNumb);
+		var_dump($fieldName);
 	break;
 	
     case 'new': 
@@ -144,10 +149,10 @@ switch ($op)
 		$GLOBALS['xoopsTpl']->assign('buttons', $adminMenu->renderButton());
 		// Form Add
         $fieldsObj =& $tdmcreate->getHandler('fields')->create();        	
-		$form = $fieldsObj->getFormNew($field_mid, $fieldTid, $fieldNumb, $fieldName);
+		$form = $fieldsObj->getFormNew($fieldMid, $fieldTid, $fieldNumb, $fieldName);
 		$GLOBALS['xoopsTpl']->assign('form', $form->render());
 		// Test -> Will be removed
-		var_dump($field_mid);
+		var_dump($fieldMid);
 		var_dump($fieldTid);
 		var_dump($fieldNumb);
 		var_dump($fieldName);		
@@ -172,9 +177,9 @@ switch ($op)
 					$fieldsObj =& $fields->get($value);									
 				break;					
 			}            			
-			if (isset($field_mid) && isset($fieldTid) && !empty($_POST['field_name'][$key])) {
+			if (isset($fieldMid) && isset($fieldTid) && !empty($_POST['field_name'][$key])) {
 				// Set Data		
-				$fieldsObj->setVar( 'field_mid', $field_mid );
+				$fieldsObj->setVar( 'field_mid', $fieldMid );
 				$fieldsObj->setVar( 'field_tid', $fieldTid );								
 				$fieldsObj->setVar( 'field_numb', $fieldNumb );
 				$fieldsObj->setVar( 'field_name', (isset($_POST['field_name'][$key]) ? $_POST['field_name'][$key] : '') );
@@ -205,7 +210,7 @@ switch ($op)
 		if ($fieldsObj->isNew()) {		    
 			// Fields Elements Handler
 			$fieldelementObj =& $tdmcreate->getHandler('fieldelements')->create();
-			$fieldelementObj->setVar( 'fieldelement_mid', $field_mid );
+			$fieldelementObj->setVar( 'fieldelement_mid', $fieldMid );
 			$fieldelementObj->setVar( 'fieldelement_tid', $fieldTid );
 			$fieldelementObj->setVar( 'fieldelement_name', 'Table : '.ucfirst($table_name) );
 			$fieldelementObj->setVar( 'fieldelement_value', 'XoopsFormTables-'.ucfirst($table_name) );
@@ -234,7 +239,7 @@ switch ($op)
 		// Form Edit
 		$fieldId = XoopsRequest::getInt('field_id');
 		$fieldsObj = $tdmcreate->getHandler('fields')->get( $fieldId );        		
-		$form = $fieldsObj->getFormEdit($field_mid, $fieldTid);
+		$form = $fieldsObj->getFormEdit($fieldMid, $fieldTid);
 		$GLOBALS['xoopsTpl']->assign('form', $form->render());
 		// Test -> Will be removed
 		var_dump($fieldTid);
@@ -270,61 +275,46 @@ switch ($op)
         exit;
     break;	
 	
-	case 'display':
-		$fieldId = XoopsRequest::getInt('field_id');
-		// Get the list of fields
-		$criteria = new CriteriaCompo();
-		$criteria->add(new Criteria('field_tid', $fieldTid));
-	    $fields = $tdmcreate->getHandler('fields')->getObjects($criteria);
-        $fieldsObj =& $tdmcreate->getHandler('fields')->get($fieldId);
-		if (isset($_GET['field_tid'])) {
-            if (isset($_GET['field_parent'])) {
-				foreach ($fields as $field) {
-					$fld_parent = $field->getVar('field_parent');                
-					$field_parent = ($field->getVar('field_id') == $fld_parent) ? '1' : '0';				
-					$fieldsObj->setVar('field_parent', $field_parent);
-				}
-            } elseif (isset($_GET['field_inlist'])) {
-                $fld_inlist = intval($_GET['field_inlist']);                
-				$field_inlist = ($fld_inlist == 1) ? '0' : '1';				
-				$fieldsObj->setVar('field_inlist', $field_inlist);
-            } elseif (isset($_GET['field_inform'])) {
-                $fld_inform = intval($_GET['field_inform']);                
-				$field_inform = ($fld_inform == 1) ? '0' : '1';				
-				$fieldsObj->setVar('field_inform', $field_inform);
-            } elseif (isset($_GET['field_admin'])) {
-                $fld_admin = intval($_GET['field_admin']);                
-				$field_admin = ($fld_admin == 1) ? '0' : '1';				
-				$fieldsObj->setVar('field_admin', $field_admin);
-            } elseif (isset($_GET['field_user'])) {
-                $fld_user = intval($_GET['field_user']);                
-				$field_user = ($fld_user == 1) ? '0' : '1';				
-				$fieldsObj->setVar('field_user', $field_user);
-            } elseif (isset($_GET['field_block'])) {
-                $fld_block = intval($_GET['field_block']);                
-				$field_block = ($fld_block == 1) ? '0' : '1';				
-				$fieldsObj->setVar('field_block', $field_block);
-            } elseif (isset($_GET['field_main'])) {               
-				foreach ($fields as $field) {
-					$fld_main = $field->getVar('field_main');                
-					$field_main = ($field->getVar('field_id') == $fld_main) ? '1' : '0';				
-					$fieldsObj->setVar('field_main', $field_main);
-				}
-            } elseif (isset($_GET['field_search'])) {
-                $fld_search = intval($_GET['field_search']);                
-				$field_search = ($fld_search == 1) ? '0' : '1';				
-				$fieldsObj->setVar('field_search', $field_search);
-            } elseif (isset($_GET['field_required'])) {
-                $fld_required = intval($_GET['field_required']);                
-				$field_required = ($fld_required == 1) ? '0' : '1';				
-				$fieldsObj->setVar('field_required', $field_required);
-            }
-			if ($tdmcreate->getHandler('fields')->insert($fieldsObj, true)) {
-				redirect_header('fields.php', 3, _AM_TDMCREATE_TOGGLE_SUCCESS);
-			} else {
-				redirect_header('fields.php', 3, _AM_TDMCREATE_TOGGLE_FAILED);
-			}
-        }
+	case 'display':	
+		//
+		$fields = $tdmcreate->getHandler('fields');
+		// Fields Handler
+		foreach($_REQUEST['field_id'] as $key => $value)
+		{
+			/*$fieldId = XoopsRequest::getInt('field_id');
+			$fieldParent = XoopsRequest::getInt('field_parent');
+			$fieldInlist = XoopsRequest::getInt('field_inlist');
+			$fieldInform = XoopsRequest::getInt('field_inform');
+			$fieldAdmin = XoopsRequest::getInt('field_admin');
+			$fieldUser = XoopsRequest::getInt('field_user');
+			$fieldBlock = XoopsRequest::getInt('field_block');
+			$fieldMain = XoopsRequest::getInt('field_main');
+			$fieldSearch = XoopsRequest::getInt('field_search');
+			$fieldRequired = XoopsRequest::getInt('field_required');*/	
+			
+			$fieldsObj =& $fields->get($value);				         
+			/*$fieldsObj->setVar('field_parent', $fieldParent);
+			$fieldsObj->setVar('field_inlist', $fieldInlist);
+			$fieldsObj->setVar('field_inform', $fieldInform);
+			$fieldsObj->setVar('field_admin', $fieldAdmin);
+			$fieldsObj->setVar('field_user', $fieldUser);
+			$fieldsObj->setVar('field_block', $fieldBlock);
+			$fieldsObj->setVar('field_main', $fieldMain);	
+			$fieldsObj->setVar('field_search', $fieldSearch);
+			$fieldsObj->setVar('field_required', $fieldRequired);*/
+			$fieldsObj->setVar( 'field_parent', $_POST['field_parent'][$key]);
+			$fieldsObj->setVar( 'field_inlist', $_POST['field_inlist'][$key]);
+			$fieldsObj->setVar( 'field_inform', $_POST['field_inform'][$key]);
+			$fieldsObj->setVar( 'field_admin', $_POST['field_admin'][$key]);
+			$fieldsObj->setVar( 'field_user', $_POST['field_user'][$key]); 
+			$fieldsObj->setVar( 'field_block', $_POST['field_block'][$key]); 
+			$fieldsObj->setVar( 'field_main', $_POST['field_main'][$key]); 
+			$fieldsObj->setVar( 'field_search',  $_POST['field_search'][$key]); 
+			$fieldsObj->setVar( 'field_required', $_POST['field_required'][$key]);	
+			//
+			$fields->insert($fieldsObj, true);			
+		}
+		redirect_header('fields.php', 3, _AM_TDMCREATE_TOGGLE_SUCCESS);		       
     break;	
 }
 include 'footer.php';

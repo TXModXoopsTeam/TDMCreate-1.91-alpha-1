@@ -61,7 +61,7 @@ class AdminPages extends TDMCreateFile
 	*  @param string $moduleDirname
 	*  @param string $tableName
 	*/
-	public function getAdminPagesHeader($moduleDirname, $tableName, $fpif) {  
+	public function getAdminPagesHeader($moduleDirname, $table, $fpif) {  
 		
 		$ret = <<<EOT
 include_once 'header.php';
@@ -79,15 +79,17 @@ EOT;
 	/*
 	*  @public function getAdminPagesList
 	*  @param string $moduleDirname
-	*  @param string $tableName
+	*  @param string $table
 	*  @param string $tableFieldname	
 	*  @param string $language
 	*  @param string $fields
 	*  @param string $fpif
 	*  @param string $fpmf
 	*/
-	public function getAdminPagesList($moduleDirname, $tableName, $tableFieldname, $tableAutoincrement, $language, $fields, $fpif, $fpmf) {  
+	public function getAdminPagesList($moduleDirname, $table, $tableFieldname, $language, $fields, $fpif, $fpmf) {  
 		$stuModuleDirname = strtoupper($moduleDirname);
+		$tableName = $table->getVar('table_name');
+		$tableAutoincrement = $table->getVar('table_autoincrement');
 		$stuTableName = strtoupper($tableName);
 		$stuTableFieldname = strtoupper($tableFieldname);
 		$ret = <<<EOT
@@ -116,6 +118,7 @@ EOT;
 		foreach(array_keys($fields) as $f) 
 		{
 			$fieldName = $fields[$f]->getVar('field_name');
+			$fieldParent = $fields[$f]->getVar('field_parent');
 			// Verify if table_fieldname is not empty
 			$lpFieldName = !empty($tableFieldname) ? substr($fieldName, 0, strpos($fieldName, '_')) : $tableName;				
 			$rpFieldName = $this->tdmcfile->getRightString($fieldName);
@@ -137,7 +140,30 @@ EOT;
 						$ret .= $this->adminobjects->getTextDateSelectGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName);
 					break;
 					default:
-						$ret .= $this->adminobjects->getSimpleGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName);
+						if( ($fieldParent == 1) && !$table->getVar('table_category') ) {
+							if($fieldElement > 13) {					
+								$fieldElements = $this->tdmcreate->getHandler('fieldelements')->get($fieldElement);
+								$fieldElementTid = $fieldElements->getVar('fieldelement_tid');
+								$fieldElementName = $fieldElements->getVar('fieldelement_name');
+								$rpFieldElementName = strtolower(str_replace('Table : ', '', $fieldElementName));
+							}
+							//
+							$fieldNameParent = $fieldName;
+							//
+							$criteriaFieldsTopic = new CriteriaCompo();
+							$criteriaFieldsTopic->add(new Criteria('field_tid', $fieldElementTid));
+							$fieldsTopic = $this->tdmcreate->getHandler('fields')->getObjects($criteriaFieldsTopic);
+							unset($criteriaFieldsTopic);
+							foreach(array_keys($fieldsTopic) as $ft) 
+							{
+								if( $fieldsTopic[$ft]->getVar('field_main') == 1 ) {
+									$fieldNameTopic = $fieldsTopic[$ft]->getVar('field_name');
+								}
+							}
+							$ret .= $this->adminobjects->getTopicGetVar($lpFieldName, $rpFieldName, $tableName, $rpFieldElementName, $fieldNameParent, $fieldNameTopic);
+						} else {
+							$ret .= $this->adminobjects->getSimpleGetVar($lpFieldName, $rpFieldName, $tableName, $fieldName);
+						}
 					break;
 				}				
 			}
@@ -326,8 +352,7 @@ EOT;
 		$table = $this->getTable();
 		$moduleDirname = $module->getVar('mod_dirname');      
 		$tableName = $table->getVar('table_name');	
-		$tableFieldname = $table->getVar('table_fieldname');
-		$tableAutoincrement = $table->getVar('table_autoincrement');
+		$tableFieldname = $table->getVar('table_fieldname');		
 		$language = $this->getLanguage($moduleDirname, 'AM');
 		$fields = $this->getTableFields($table->getVar('table_id'));
 		foreach(array_keys($fields) as $f) 
@@ -342,7 +367,7 @@ EOT;
 		}		
 		$content = $this->getHeaderFilesComments($module, $filename);
 		$content .=	$this->getAdminPagesHeader($moduleDirname, $tableName, $fpif);
-		$content .=	$this->getAdminPagesList($moduleDirname, $tableName, $tableFieldname, $tableAutoincrement, $language, $fields, $fpif, $fpmf);
+		$content .=	$this->getAdminPagesList($moduleDirname, $table, $tableFieldname, $language, $fields, $fpif, $fpmf);
 		$content .=	$this->getAdminPagesNew($moduleDirname, $tableName, $language);		
 		$content .=	$this->getAdminPagesSave($moduleDirname, $tableName, $language, $fields, $fpif, $fpmf);
 		$content .=	$this->getAdminPagesEdit($moduleDirname, $tableName, $tableFieldname, $language, $fpif);
