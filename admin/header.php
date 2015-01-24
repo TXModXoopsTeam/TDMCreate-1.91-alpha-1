@@ -30,7 +30,7 @@ $modPathIcon16 = $GLOBALS['xoopsModule']->getInfo('modicons16');
 $modPathIcon32 = $GLOBALS['xoopsModule']->getInfo('modicons32');
 $pathModuleAdmin = $GLOBALS['xoopsModule']->getInfo('dirmoduleadmin');
 // TDMCreate Instance
-$tdmcreate = TDMCreate::getInstance();
+$tdmcreate = TDMCreateHelper::getInstance();
 // MyTextSanitizer
 $myts =& MyTextSanitizer::getInstance();
 if (!isset($xoopsTpl) || !is_object($xoopsTpl)) {

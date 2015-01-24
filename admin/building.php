@@ -43,7 +43,7 @@ switch ($op) {
 			}
         }			
 		// Structure			
-		include_once TDMC_PATH . '/class/files/architecture.php';
+		include_once TDMC_PATH . '/class/files/TDMCreateArchitecture.php';
 		$handler = TDMCreateArchitecture::getInstance();
 		$handler->getPath( TDMC_PATH );
 		$handler->getUploadPath( TDMC_UPLOAD_PATH );

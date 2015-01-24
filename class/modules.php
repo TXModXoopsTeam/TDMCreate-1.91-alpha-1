@@ -40,7 +40,7 @@ class TDMCreateModules extends XoopsObject
 	*/
 	public function __construct()
 	{
-		$this->tdmcreate = TDMCreate::getInstance();
+		$this->tdmcreate = TDMCreateHelper::getInstance();
 		$this->initVar('mod_id',XOBJ_DTYPE_INT);
 		$this->initVar('mod_name',XOBJ_DTYPE_TXTBOX, $this->tdmcreate->getConfig('name'));
 		$this->initVar('mod_dirname',XOBJ_DTYPE_TXTBOX, $this->tdmcreate->getConfig('dirname'));

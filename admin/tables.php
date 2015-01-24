@@ -57,14 +57,14 @@ switch ($op)
 		$numbModules = $tdmcreate->getHandler('modules')->getCount($criteria);
 		// Redirect if there aren't modules
 		if ( $numbModules == 0 ) {
-			redirect_header('modules.php?op=new', 2, _AM_TDMCREATE_NOTMODULES );
+			redirect_header('modules.php?op=new', 10, _AM_TDMCREATE_NOTMODULES );
 		}       
 		$mods_arr = $tdmcreate->getHandler('modules')->getAll($criteria);
 		unset($criteria);	
         $numbTables = $tdmcreate->getHandler('tables')->getObjects(null);
 		// Redirect if there aren't tables
 		if ($numbTables == 0)  {
-			redirect_header('tables.php?op=new', 2, _AM_TDMCREATE_NOTTABLES );
+			redirect_header('tables.php?op=new', 10, _AM_TDMCREATE_NOTTABLES );
 		} 	
         unset($numbTables);		
 		// Display modules list
@@ -146,7 +146,8 @@ switch ($op)
 	case 'save':
 		if ( !$GLOBALS['xoopsSecurity']->check() ) {
 			redirect_header('tables.php', 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
-		}
+		}		
+		//
 		$tables =& $tdmcreate->getHandler('tables');				
 		if (!isset($tableId)) {
 			// Checking if table name exist

@@ -43,6 +43,7 @@ if(!is_dir($images))
 	mkdir($images, 0777);
 	chmod($images, 0777);
 copy($indexFile, $images.'/index.html');
+copy($blankFile, $images.'/blank.gif');
 
 // Making of "repository" images folder
 $repository = $images.'/repository';
@@ -50,7 +51,7 @@ if(!is_dir($repository))
 	mkdir($repository, 0777);
 	chmod($repository, 0777);
 copy($indexFile, $repository.'/index.html');
-copy($blankFile, $repository.'/blank.gif');
+//copy($blankFile, $repository.'/blank.gif');
 copy($emptyFile, $repository.'/empty.png');
 
 // Making of "tables" images folder
@@ -59,4 +60,4 @@ if(!is_dir($tables))
 	mkdir($tables, 0777);
 	chmod($tables, 0777);
 copy($indexFile, $tables.'/index.html');
-copy($blankFile, $tables.'/blank.gif');
+//copy($blankFile, $tables.'/blank.gif');

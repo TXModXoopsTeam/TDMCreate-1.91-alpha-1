@@ -132,10 +132,10 @@ switch ($op)
 		} else {
 			$GLOBALS['xoopsTpl']->assign('error', _AM_TDMCREATE_THEREARENT_FIELDS);
 		}
-		var_dump($fieldMid);
+		/*var_dump($fieldMid);
 		var_dump($fieldTid);
 		var_dump($fieldNumb);
-		var_dump($fieldName);
+		var_dump($fieldName);*/
 	break;
 	
     case 'new': 
@@ -152,10 +152,10 @@ switch ($op)
 		$form = $fieldsObj->getFormNew($fieldMid, $fieldTid, $fieldNumb, $fieldName);
 		$GLOBALS['xoopsTpl']->assign('form', $form->render());
 		// Test -> Will be removed
-		var_dump($fieldMid);
+		/*var_dump($fieldMid);
 		var_dump($fieldTid);
 		var_dump($fieldNumb);
-		var_dump($fieldName);		
+		var_dump($fieldName);	*/	
     break;	
 	
 	case 'save':
@@ -242,7 +242,7 @@ switch ($op)
 		$form = $fieldsObj->getFormEdit($fieldMid, $fieldTid);
 		$GLOBALS['xoopsTpl']->assign('form', $form->render());
 		// Test -> Will be removed
-		var_dump($fieldTid);
+		//var_dump($fieldTid);
 	break;
 
     case 'drag':        
@@ -273,7 +273,23 @@ switch ($op)
 			unset($i);
         }
         exit;
-    break;	
+    break;
+
+	case 'delete':
+		$tablesObj =& $tdmcreate->getHandler('tables')->get($fieldTid);
+		if (isset($_REQUEST['ok']) && $_REQUEST['ok'] == 1) {
+			if ( !$GLOBALS['xoopsSecurity']->check() ) {
+				redirect_header('fields.php', 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
+			}
+			if ($tdmcreate->getHandler('tables')->delete($tablesObj)) {
+				redirect_header('fields.php', 3, _AM_TDMCREATE_FORMDELOK);
+			} else {
+				echo $tablesObj->getHtmlErrors();
+			}
+		} else {
+			xoops_confirm(array('ok' => 1, 'field_tid' => $fieldTid, 'op' => 'delete'), $_SERVER['REQUEST_URI'], sprintf(_AM_TDMCREATE_FORMSUREDEL, $tablesObj->getVar('table_name')));
+		}
+	break;
 	
 	case 'display':	
 		//

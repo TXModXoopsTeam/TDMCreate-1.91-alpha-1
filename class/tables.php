@@ -38,7 +38,7 @@ class TDMCreateTables extends XoopsObject
 	*/
 	public function __construct()
 	{
-		$this->tdmcreate = TDMCreate::getInstance();
+		$this->tdmcreate = TDMCreateHelper::getInstance();
 		$this->initVar('table_id',XOBJ_DTYPE_INT);
 		$this->initVar('table_mid',XOBJ_DTYPE_INT);
 		$this->initVar('table_category',XOBJ_DTYPE_INT);
@@ -106,7 +106,7 @@ class TDMCreateTables extends XoopsObject
 		//
 		$modules = $this->tdmcreate->getHandler('modules')->getObjects(null);
     	$mods_select = new XoopsFormSelect(_AM_TDMCREATE_TABLE_MODULES, 'table_mid', $table_mid);		
-    	$mods_select->addOption($action, _AM_TDMCREATE_TABLE_MODSELOPT);
+    	$mods_select->addOption('', _AM_TDMCREATE_TABLE_MODSELOPT);
 		foreach ($modules as $mod) {//$mods_select->addOptionArray();
 			$mods_select->addOption($mod->getVar('mod_id'), $mod->getVar('mod_name'));
 		}				

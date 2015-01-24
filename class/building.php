@@ -36,7 +36,7 @@ class TDMCreateBuilding extends XoopsObject
 	public function __construct()
 	{
 		$this->XoopsObject();
-        $this->tdmcreate = TDMCreate::getInstance();		
+        $this->tdmcreate = TDMCreateHelper::getInstance();		
 	}
 	
 	/*
@@ -62,7 +62,7 @@ class TDMCreateBuilding extends XoopsObject
 		$form->setExtra('enctype="multipart/form-data"');
 		$moduleObj =& $this->tdmcreate->getHandler('modules')->getObjects(null);
         $mod_select = new XoopsFormSelect(_AM_TDMCREATE_CONST_MODULES, 'mod_id', 'mod_id');
-        $mod_select->addOption($action, _AM_TDMCREATE_BUILD_MODSELOPT);
+        $mod_select->addOption('', _AM_TDMCREATE_BUILD_MODSELOPT);
 		foreach ($moduleObj as $mod) {
 			$mod_select->addOption($mod->getVar('mod_id'), $mod->getVar('mod_name'));
 		}
