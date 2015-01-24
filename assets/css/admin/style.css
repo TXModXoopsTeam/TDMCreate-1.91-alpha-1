@@ -125,3 +125,28 @@ img.imageToggle {
 	border: 1px solid #333;
 	background-color: #efefef;
 }
+
+.field-list tr {	margin: 0; padding: 0; /*list-style: none;*/ }
+
+.field-list tr td { display: block; }
+
+.field-list tr td {
+	padding: 5px 2px;
+	margin-bottom: 3px;
+	background-color: #efefef;
+	background-image: -moz-linear-gradient(top, #efefef, #e1e1e1);
+	background-image: -webkit-gradient(linear, left top,left bottom, from(#efefef), to(#e1e1e1));
+	background-image: linear-gradient(top, #efefef, #e1e1e1);
+	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, StartColorStr=#efefef, EndColorStr=#e1e1e1); /* vale solo per IE */
+	text-shadow:1px 1px 0 #fff;	
+	color:#ff8400;
+}
+
+.field-list tr td img.move {
+	margin-right: 20px;
+	cursor: move;
+	vertical-align: middle;
+}
+.field-list tr td strong {
+	vertical-align: middle;
+}

@@ -99,6 +99,7 @@ switch ($op)
 					{						
 						$field['id'] = $fid;
 						$field['lid'] = $lid;
+						$field['order'] = $fieldsAll[$fid]->getVar('field_order');
 						$field['name'] = str_replace('_', ' ', ucfirst($fieldsAll[$fid]->getVar('field_name')));
 						$field['parent'] = $fieldsAll[$fid]->getVar('field_parent');
 						$field['inlist'] = $fieldsAll[$fid]->getVar('field_inlist');
@@ -152,7 +153,8 @@ switch ($op)
         }	
 		$fieldId = XoopsRequest::getInt('field_id');
 		// Fields Handler
-		$fields = $tdmcreate->getHandler('fields');		
+		$fields = $tdmcreate->getHandler('fields');	
+        $orderId = 1;		
 		// Set Variables		
 		foreach($_POST['field_id'] as $key => $value) 
 		{				
@@ -166,6 +168,7 @@ switch ($op)
 				$fieldsObj->setVar( 'field_mid', $fieldMid );
 				$fieldsObj->setVar( 'field_tid', $fieldTid );								
 				$fieldsObj->setVar( 'field_numb', $fieldNumb );
+				$fieldsObj->setVar( 'field_order', (isset($_POST['field_order'][$key]) ? $_POST['field_order'][$key] : $orderId) );
 				$fieldsObj->setVar( 'field_name', (isset($_POST['field_name'][$key]) ? $_POST['field_name'][$key] : '') );
 				$fieldsObj->setVar( 'field_type', (isset($_POST['field_type'][$key]) ? $_POST['field_type'][$key] : '') ); 
 				$fieldsObj->setVar( 'field_value', (isset($_POST['field_value'][$key]) ? $_POST['field_value'][$key] : '') );
@@ -186,7 +189,9 @@ switch ($op)
 				// Insert Data
 				$tdmcreate->getHandler('fields')->insert($fieldsObj);
 			}
+			$orderId++;
 		}
+		unset($orderId);
 		// Get table name from field table id
 		$tables =& $tdmcreate->getHandler('tables')->get($fieldTid);
 		$table_name = $tables->getVar('table_name');
@@ -226,24 +231,12 @@ switch ($op)
 		$form = $fieldsObj->getFormEdit($fieldMid, $fieldTid);
 		$GLOBALS['xoopsTpl']->assign('form', $form->render());		
 	break;
-
-    case 'drag':        
-        $side = TDMCreate_CleanVars( $_POST, 'field_id', 0, 'int' );
-		$fieldId = XoopsRequest::getInt('field_id');
-        if ( $fieldId > 0 ) {
-            $fieldsObj = $tdmcreate->getHandler('fields')->get( $fieldId );
-            $fieldsObj->setVar('field_id', $side);
-            if (!$tdmcreate->getHandler('fields')->insert( $fieldsObj )) {
-                redirect_header('fields.php', 5, _AM_TDMCREATE_FIELD_SIDE_ERROR);
-            }
-        }
-    break;
-
+    
     case 'order':        
-		foreach($_GET['fieldItem'] as $id => $order) {
+		foreach($_GET['fieldItem'] as $order => $id) {
 			if( $order > 0 ) {
-				$fieldsObj = $tdmcreate->getHandler('fields')->get( $order );
-				$fieldsObj->setVar('field_id', $id);
+				$fieldsObj = $tdmcreate->getHandler('fields')->get( $id );
+				$fieldsObj->setVar('field_order', $order);
 				if (!$tdmcreate->getHandler('fields')->insert( $fieldsObj )) {
 					redirect_header('fields.php', 5, _AM_TDMCREATE_FIELD_ORDER_ERROR);
 				}

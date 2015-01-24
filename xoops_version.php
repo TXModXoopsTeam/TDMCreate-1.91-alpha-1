@@ -71,6 +71,7 @@ $modversion['adminmenu'] = "admin/menu.php";
 $modversion['templates'][] = array( 'file' => 'tdmcreate_about.tpl', 'description' => '', 'type' => 'admin' );
 $modversion['templates'][] = array( 'file' => 'tdmcreate_building.tpl', 'description' => '', 'type' => 'admin' );
 $modversion['templates'][] = array( 'file' => 'tdmcreate_fields.tpl', 'description' => '', 'type' => 'admin' );
+$modversion['templates'][] = array( 'file' => 'tdmcreate_fields_item.tpl', 'description' => '', 'type' => 'admin' );
 $modversion['templates'][] = array( 'file' => 'tdmcreate_footer.tpl', 'description' => '', 'type' => 'admin' );
 $modversion['templates'][] = array( 'file' => 'tdmcreate_header.tpl', 'description' => '', 'type' => 'admin' );
 $modversion['templates'][] = array( 'file' => 'tdmcreate_index.tpl', 'description' => '', 'type' => 'admin' );

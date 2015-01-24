@@ -32,10 +32,10 @@
 );*/
 // Quando la pagina è caricata definisci l'ordine attuale e gli elementi da riordinare
 $(document).ready(function() {
-    $("tbody #sortable").sortable({ //definisco il contenitore di elementi da riordinare
+    $('.field-list').sortable({ //definisco il contenitore di elementi da riordinare
       handle : '.move', //definisco con la classe .move quali sono gli elementi trascinabili
       update : function () { //aggiorno l'ordine ed eseguo una callback
-		var order = $('tbody #sortable').sortable('serialize'); // salvo una variabile che contiene l'array con il nuovo ordine degli elementi
+		var order = $('.field-list').sortable('serialize'); // salvo una variabile che contiene l'array con il nuovo ordine degli elementi
   		$("#info").load("modules/tdmcreate/admin/fields.php?"+order);
       }
     });

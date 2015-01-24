@@ -43,7 +43,8 @@ class TDMCreateFields extends XoopsObject
 		$this->initVar('field_id', XOBJ_DTYPE_INT);
 		$this->initVar('field_mid', XOBJ_DTYPE_INT);
 		$this->initVar('field_tid', XOBJ_DTYPE_INT);
-		$this->initVar('field_numb', XOBJ_DTYPE_INT);	
+		$this->initVar('field_numb', XOBJ_DTYPE_INT);
+        $this->initVar('field_order', XOBJ_DTYPE_INT);		
 		$this->initVar('field_name', XOBJ_DTYPE_TXTBOX);		
 		$this->initVar('field_type', XOBJ_DTYPE_TXTBOX);
 		$this->initVar('field_value', XOBJ_DTYPE_TXTBOX);
