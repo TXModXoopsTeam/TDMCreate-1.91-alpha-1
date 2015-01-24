@@ -25,15 +25,31 @@ class TDMCreateFormRadio extends XoopsFormElement
      * @var array
      * @access private
      */
-    var $_options = array();
+    private $_options = array();
 
     /**
+     * Pre-selected value
+     *
+     * @var integer
+     * @access private
+     */
+    private $_id = null;
+	
+	/**
      * Pre-selected value
      *
      * @var string
      * @access private
      */
-    var $_value = null;
+    private $_value = null;
+	
+	/**
+     * Checked for selection
+     *
+     * @var boolean
+     * @access private
+     */
+    private $checked;
 
     /**
      * HTML to seperate the elements
@@ -41,35 +57,37 @@ class TDMCreateFormRadio extends XoopsFormElement
      * @var string
      * @access private
      */
-    var $_delimeter;
-
-    /**
+    private $_delimeter;
+	
+	/**
      * Column number for rendering
      *
      * @var int
      * @access public
      */
-    var $columns;
-
+    public $columns;
+    
     /**
      * Constructor
      *
      * @param string $caption   Caption
      * @param string $name      "name" attribute
+	 * @param integer $id      "id" attribute
      * @param string $value     Pre-selected value
      * @param string $delimeter
      */
-    function TDMCreateFormRadio($caption, $name, $value = null, $delimeter = '&nbsp;')
+    function TDMCreateFormRadio($caption, $name, $value = null, $checked = false, $delimeter = '&nbsp;')
     {
         $this->setCaption($caption);
         $this->setName($name);
         if (isset($value)) {
             $this->setValue($value);
         }
-        $this->_delimeter = $delimeter;
-    }
-
-    /**
+        $this->checked = $checked;
+		$this->_delimeter = $delimeter;
+    }    
+	
+	/**
      * Get the "value" attribute
      *
      * @param  bool   $encode To sanitizer the text?
@@ -159,39 +177,38 @@ class TDMCreateFormRadio extends XoopsFormElement
     {
         $ret = '';
         $ele_name = $this->getName();
-        $ele_title = $this->getTitle();
         $ele_value = $this->getValue();
         $ele_options = $this->getOptions();
         $ele_extra = $this->getExtra();
         $ele_delimeter = empty($this->columns) ? $this->getDelimeter() : '';
         if (! empty($this->columns)) {
             $ret .= '<table><tr>';
-        }
+        }      
         $i = 0;
-        $id_ele = 0;
         foreach ($ele_options as $value => $name) {
-            $id_ele++;
             if (! empty($this->columns)) {
                 if ($i % $this->columns == 0) {
                     $ret .= '<tr>';
                 }
                 $ret .= '<td>';
             }
-			$ent_title = htmlspecialchars($ele_title, ENT_QUOTES);
-			$ent_value = htmlspecialchars($value, ENT_QUOTES);
-            $ret .= "<input type='radio' name='{$ele_name}' id='{$ele_name}[{$ent_value}]{$id_ele}' title='{$ent_title}' value='{$ent_value}'";
-            if (isset($ele_value) && $value == $ele_value) {
-                $ret .= " checked='checked'";
+			if (isset($ele_value) && $value == $ele_value) {
+                $check = " checked='checked'";
             }
-            $ret .= $ele_extra . " />" . "<label name='xolb_{$ele_name}[{$ent_value}]' for='{$ele_name}[{$ent_value}]{$id_ele}'>{$name}</label>" . $ele_delimeter ;
-            if (! empty($this->columns)) {
+            if ($this->checked) {			
+				$ret .= "<input type='radio' name='{$ele_name}' id='{$ele_name}{$ele_value}' value='{$value}{$check}'";
+            } else {				
+				$ret .= "<input type='radio' name='{$ele_name}' id='{$ele_name}{$ele_value}' value='{$value}'";		
+            }				
+            $ret .= $ele_extra . " />" . "<label name='xolb_{$ele_name}' for='" . $ele_name . $ele_value. "'>" . $name . "</label>" . $ele_delimeter ;            
+			if (! empty($this->columns)) {
                 $ret .= '</td>';
                 if (++ $i % $this->columns == 0) {
                     $ret .= '</tr>';
                 }
             }
-        }
-        if (! empty($this->columns)) {
+		}
+		if (! empty($this->columns)) {
             if ($span = $i % $this->columns) {
                 $ret .= '<td colspan="' . ($this->columns - $span) . '"></td></tr>';
             }

@@ -117,3 +117,11 @@ img.imageToggle {
 	margin: 0 0.1em 1em 0;
 	height: 50px;
 }
+
+#info {
+	display: block;
+	padding: 10px;
+	margin-bottom: 20px;
+	border: 1px solid #333;
+	background-color: #efefef;
+}

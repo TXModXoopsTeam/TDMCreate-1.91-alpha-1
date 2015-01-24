@@ -12,7 +12,7 @@ function showImgSelected2(imgId, selectId, imgDir, extra, xoopsUrl) {
 	if (selectDom.options[selectDom.selectedIndex].value != "") {
 		imgDom.src = xoopsUrl + imgDir + "/" + selectDom.options[selectDom.selectedIndex].value + extra;
 	} else {
-		imgDom.src = xoopsUrl + "/modules/tdmcreate/assets/images/icons/blank.gif";
+		imgDom.src = xoopsUrl + "/modules/TDMCreate/assets/images/icons/blank.gif";
 	}
 }
 
@@ -27,7 +27,7 @@ function createNewModuleLogo(xoopsUrl) {  // this is JavaScript  function
 	moduleImageSelected = moduleImageDom.options[moduleImageDom.selectedIndex].value;
 	$.ajax({
 		type:'GET',
-		url:xoopsUrl + "/modules/tdmcreate/class/logoGenerator.php?f=phpFunction&iconName=" + iconName + "&caption=" + caption,
+		url:xoopsUrl + "/modules/TDMCreate/class/logoGenerator.php?f=phpFunction&iconName=" + iconName + "&caption=" + caption,
 		// call php function , phpFunction=function Name , x= parameter
 		data:{},
 		dataType:"html",

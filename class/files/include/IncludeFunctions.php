@@ -144,13 +144,25 @@ EOT;
 	/*
 	*  @public function getRewriteUrl
 	*  @param string $moduleDirname
+	*  @param string $tableName
 	*/
-	public function getRewriteUrl($moduleDirname) {		
+	public function getRewriteUrl($moduleDirname, $tableName) {		
+		$ucfModuleDirname = ucfirst($moduleDirname);
 		$ret = <<<EOT
-\nfunction {$moduleDirname}_RewriteUrl($module, $array, $type = 'content') {
-    $comment = '';
-    $lenght_id = xoops_getModuleOption('lenght_id', $module);
-    $friendly_url = xoops_getModuleOption('friendly_url', $module);
+\n/**
+ * Rewrite all url
+ *
+ * @String  $module  module name
+ * @String  $array   array
+ * @return  $type    string replacement for any blank case
+ */
+function {$moduleDirname}_RewriteUrl(\$module, \$array, \$type = 'content') 
+{
+    \$comment = '';
+	\${$moduleDirname} = {$ucfModuleDirname}Helper::getInstance();
+	\${$tableName} = \${$moduleDirname}->getHandler('{$tableName}');
+    \$lenght_id = \${$moduleDirname}->getConfig('lenght_id');
+    \$rewrite_url = \${$moduleDirname}->getConfig('rewrite_url');
 
     if (\$lenght_id != 0) {
         \$id = \$array['content_id'];
@@ -163,10 +175,10 @@ EOT;
     if (isset(\$array['topic_alias']) && \$array['topic_alias']) {
         \$topic_name = \$array['topic_alias'];
     } else {
-        \$topic_name = fmcontent_Filter(xoops_getModuleOption('static_name', \$module));
+        \$topic_name = {$moduleDirname}_Filter(xoops_getModuleOption('static_name', \$module));
     }
 
-    switch (\$friendly_url) {
+    switch (\$rewrite_url) {
 
         case 'none':
             if(\$topic_name) {
@@ -181,7 +193,7 @@ EOT;
             if(\$topic_name) {
                 \$topic_name = \$topic_name . '/';
             }   
-           \ $rewrite_base = xoops_getModuleOption('rewrite_mode', \$module);
+            \$rewrite_base = xoops_getModuleOption('rewrite_mode', \$module);
             \$rewrite_ext = xoops_getModuleOption('rewrite_ext', \$module);
             \$module_name = '';
             if(xoops_getModuleOption('rewrite_name', \$module)) {
@@ -220,6 +232,41 @@ EOT;
             return XOOPS_URL . \$rewrite_base . \$module_name . \$type . \$topic_name . \$page . \$rewrite_ext;
             break; 
     }
+}
+EOT;
+        return $ret;
+	}
+	
+	/*
+	*  @public function getRewriteFilter
+	*  @param string $moduleDirname
+	*  @param string $tableName
+	*/
+	public function getRewriteFilter($moduleDirname, $tableName) {		
+		$ucfModuleDirname = ucfirst($moduleDirname);
+		$ret = <<<EOT
+\n/**
+ * Replace all escape, character, ... for display a correct url
+ *
+ * @String  $url    string to transform
+ * @String  $type   string replacement for any blank case
+ * @return  $url
+ */
+function {$moduleDirname}_Filter(\$url, \$type = '', \$module = '{$moduleDirname}') {
+
+    // Get regular expression from module setting. default setting is : `[^a-z0-9]`i
+    \${$moduleDirname} = {$ucfModuleDirname}Helper::getInstance();
+	\${$tableName} = \${$moduleDirname}->getHandler('{$tableName}');
+	\$regular_expression = \${$moduleDirname}->getConfig('regular_expression');
+    
+    \$url = strip_tags(\$url);
+    \$url = preg_replace("`\[.*\]`U", "", \$url);
+    \$url = preg_replace('`&(amp;)?#?[a-z0-9]+;`i', '-', \$url);
+    \$url = htmlentities($url, ENT_COMPAT, 'utf-8');
+    \$url = preg_replace("`&([a-z])(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig);`i", "\\1", \$url);
+    \$url = preg_replace(array($regular_expression, "`[-]+`"), "-", \$url);
+    \$url = (\$url == "") ? \$type : strtolower(trim(\$url, '-'));
+    return \$url;
 }
 EOT;
         return $ret;

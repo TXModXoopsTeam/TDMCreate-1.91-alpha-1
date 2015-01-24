@@ -154,7 +154,7 @@ class TDMCreateFields extends XoopsObject
     } 
 	
 	/* 
-    *  @public function getFormNewLine
+    *  @private function getFormNewLine
     * 
     *  @param mixed $form 
     *  @param mixed $class 
@@ -166,9 +166,9 @@ class TDMCreateFields extends XoopsObject
 	*  
 	*  @author timgno - modified in getFormNewLine by goffy
     */ 
-    public function getFormNewLine($form, $class, $i, $field_mid, $field_tid, $f_name, $table_autoincrement)
+    private function getFormNewLine($form, $class, $i, $field_mid, $field_tid, $f_name, $table_autoincrement)
     { 
-        $form->addElement(new XoopsFormHidden('field_id['.$i.']', 'new'));    
+        $form->addElement(new XoopsFormHidden('field_id['.$i.']', 0));    
         $form->addElement(new XoopsFormHidden('field_mid', $field_mid)); 
         $form->addElement(new XoopsFormHidden('field_tid', $field_tid)); 
                          
@@ -248,10 +248,10 @@ class TDMCreateFields extends XoopsObject
             $field_block = 0; 
                 $check_field_block = new XoopsFormCheckBox('', 'field_block['.$i.']', $field_block);
                 $check_field_block->addOption(1, _AM_TDMCREATE_FIELD_BLOCK); 
-                $parameters_tray->addElement($check_field_block); 
-             
-			$field_main = ($i == 2) ? true : false;
-				$check_field_main = new TDMCreateFormRadio('', 'field_main', $i, $field_main);
+                $parameters_tray->addElement($check_field_block);              
+			
+			$main = ($table_autoincrement == 1) ? 2 : 1;
+				$check_field_main = new TDMCreateFormRadio('', 'field_main['.$i.']', $main);
 				$check_field_main->addOption($i, _AM_TDMCREATE_FIELD_MAINFIELD );            
 				$parameters_tray->addElement($check_field_main);
              
@@ -296,7 +296,7 @@ class TDMCreateFields extends XoopsObject
         unset($criteria); 
         $id = 1; 
         foreach($fields as $field)    { 
-            $main_field = $id;
+            $main = $id;
 			$class = ($class == 'even') ? 'odd' : 'even'; 
             $field_id = intval($field->getVar('field_id')); 
             if ($id>$table_nbfields) {   //delete additional fields, if number of fields is reduced - goffy
@@ -378,13 +378,10 @@ class TDMCreateFields extends XoopsObject
                     $check_field_block->addOption(1, _AM_TDMCREATE_FIELD_BLOCK); 
                     $parameters_tray->addElement($check_field_block);                      
                       
-					$field_main[$id] = $field->getVar('field_main'); 
-					if($field_main[$id] == 1) {
-						$check_field_main = new TDMCreateFormRadio('', 'field_main', $main_field, true);
-					} else {
-						$check_field_main = new TDMCreateFormRadio('', 'field_main', $id);
-					}
-					$check_field_main->addOption($main_field, _AM_TDMCREATE_FIELD_MAINFIELD );
+					$field_main[$field_id] = $field->getVar('field_main'); 
+					$main_field = ($field_main[$field_id] == 1) ? $id : 1; 
+					$check_field_main = new TDMCreateFormRadio('', 'field_main', $main_field);
+					$check_field_main->addOption($main, _AM_TDMCREATE_FIELD_MAINFIELD );
 					$parameters_tray->addElement($check_field_main);
                      
                     $check_field_search = new XoopsFormCheckBox(' ', 'field_search['.$id.']', $field->getVar('field_search')); 
@@ -398,8 +395,8 @@ class TDMCreateFields extends XoopsObject
                 }             
                 $id++; 
             } 
-			var_dump($main_field);
-			//var_dump($id);
+			var_dump($main);
+			var_dump($id);
 			//var_dump($field_id);
         } 
         // If you change number fields in tables, 

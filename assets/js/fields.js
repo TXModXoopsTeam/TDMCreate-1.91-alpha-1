@@ -1,5 +1,5 @@
 // Jquery function for side fields
-$(document).ready( function() {
+/*$(document).ready( function() {
 		// Controls Drag & Drop
 		$('tbody tr.sortable td:nth-child(1) img').sortable({					
 				update: function(event, ui) {
@@ -29,4 +29,14 @@ $(document).ready( function() {
 		  icon.closest( ".portlet" ).find( ".portlet-content" ).toggle();
 		});
 	}	
-);
+);*/
+// Quando la pagina è caricata definisci l'ordine attuale e gli elementi da riordinare
+$(document).ready(function() {
+    $("tbody #sortable").sortable({ //definisco il contenitore di elementi da riordinare
+      handle : '.move', //definisco con la classe .move quali sono gli elementi trascinabili
+      update : function () { //aggiorno l'ordine ed eseguo una callback
+		var order = $('tbody #sortable').sortable('serialize'); // salvo una variabile che contiene l'array con il nuovo ordine degli elementi
+  		$("#info").load("modules/tdmcreate/admin/fields.php?"+order);
+      }
+    });
+});

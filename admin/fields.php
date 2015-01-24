@@ -22,15 +22,11 @@ include 'header.php';
 // Recovered value of arguments op in the URL $ 
 $op = XoopsRequest::getString('op', 'list');
 // Get fields Variables
-/*$fieldMid = TDMCreate_CleanVars($_REQUEST, 'field_mid');
-$fieldTid = TDMCreate_CleanVars($_REQUEST, 'field_tid');
-$fieldNumb = TDMCreate_CleanVars($_REQUEST, 'field_numb');  
-$fieldName = TDMCreate_CleanVars($_REQUEST, 'field_name', '', 'string');*/   
 $fieldMid = XoopsRequest::getInt('field_mid');
 $fieldTid = XoopsRequest::getInt('field_tid');
 $fieldNumb = XoopsRequest::getInt('field_numb');
 $fieldName = XoopsRequest::getString('field_name'); /**/
-//
+// switch op
 switch ($op) 
 {   
     case 'list': 
@@ -51,7 +47,6 @@ switch ($op)
 		$GLOBALS['xoopsTpl']->assign('tdmc_upload_imgtab_url', TDMC_UPLOAD_IMGTAB_URL);
 		$GLOBALS['xoopsTpl']->assign('modPathIcon16', $modPathIcon16);
 		$GLOBALS['xoopsTpl']->assign('sysPathIcon32', $sysPathIcon32);
-		//var_dump($sysPathIcon32);
 		// Redirect if there aren't modules
 		$countModules = $tdmcreate->getHandler('modules')->getCount();
 		if ( $countModules == 0 ) {
@@ -124,6 +119,7 @@ switch ($op)
 				$GLOBALS['xoopsTpl']->append('tables_list', $table);                
 				unset($table);				
 			}
+			unset($fields);
 			if ( $countTables > $limit ) {
 				include_once XOOPS_ROOT_PATH . '/class/pagenav.php';
 				$pagenav = new XoopsPageNav($countTables, $limit, $start, 'start', 'op=list&limit=' . $limit);
@@ -131,11 +127,7 @@ switch ($op)
 			} 			
 		} else {
 			$GLOBALS['xoopsTpl']->assign('error', _AM_TDMCREATE_THEREARENT_FIELDS);
-		}
-		/*var_dump($fieldMid);
-		var_dump($fieldTid);
-		var_dump($fieldNumb);
-		var_dump($fieldName);*/
+		}		
 	break;
 	
     case 'new': 
@@ -150,12 +142,7 @@ switch ($op)
 		// Form Add
         $fieldsObj =& $tdmcreate->getHandler('fields')->create();        	
 		$form = $fieldsObj->getFormNew($fieldMid, $fieldTid, $fieldNumb, $fieldName);
-		$GLOBALS['xoopsTpl']->assign('form', $form->render());
-		// Test -> Will be removed
-		/*var_dump($fieldMid);
-		var_dump($fieldTid);
-		var_dump($fieldNumb);
-		var_dump($fieldName);	*/	
+		$GLOBALS['xoopsTpl']->assign('form', $form->render());			
     break;	
 	
 	case 'save':
@@ -169,13 +156,10 @@ switch ($op)
 		// Set Variables		
 		foreach($_POST['field_id'] as $key => $value) 
 		{				
-			switch($value){
-				case 'new':
-					$fieldsObj =& $fields->create();					
-				break;
-				default:					
-					$fieldsObj =& $fields->get($value);									
-				break;					
+			if(isset($value)){
+				$fieldsObj =& $fields->get($value);				
+			} else { 					
+				$fieldsObj =& $fields->create();										
 			}            			
 			if (isset($fieldMid) && isset($fieldTid) && !empty($_POST['field_name'][$key])) {
 				// Set Data		
@@ -240,9 +224,7 @@ switch ($op)
 		$fieldId = XoopsRequest::getInt('field_id');
 		$fieldsObj = $tdmcreate->getHandler('fields')->get( $fieldId );        		
 		$form = $fieldsObj->getFormEdit($fieldMid, $fieldTid);
-		$GLOBALS['xoopsTpl']->assign('form', $form->render());
-		// Test -> Will be removed
-		//var_dump($fieldTid);
+		$GLOBALS['xoopsTpl']->assign('form', $form->render());		
 	break;
 
     case 'drag':        
@@ -258,21 +240,15 @@ switch ($op)
     break;
 
     case 'order':        
-        if ( isset($_POST['field_id'] ) ) {
-            $i = 0;
-            foreach($_POST['field_id'] as $order) {
-                if( $order > 0 ) {
-                    $fieldsObj = $tdmcreate->getHandler('fields')->get( $order );
-                    $fieldsObj->setVar('field_id', $i);
-                    if (!$tdmcreate->getHandler('fields')->insert( $fieldsObj )) {
-                        redirect_header('fields.php', 5, _AM_TDMCREATE_FIELD_ORDER_ERROR);
-                    }
-                    $i++;
-                }
-            }
-			unset($i);
-        }
-        exit;
+		foreach($_GET['fieldItem'] as $id => $order) {
+			if( $order > 0 ) {
+				$fieldsObj = $tdmcreate->getHandler('fields')->get( $order );
+				$fieldsObj->setVar('field_id', $id);
+				if (!$tdmcreate->getHandler('fields')->insert( $fieldsObj )) {
+					redirect_header('fields.php', 5, _AM_TDMCREATE_FIELD_ORDER_ERROR);
+				}
+			}
+		}
     break;
 
 	case 'delete':
